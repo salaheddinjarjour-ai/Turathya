@@ -338,7 +338,7 @@
 
       searchTimeout = setTimeout(async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(query)}`);
+          const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`);
           const data = await response.json();
 
           displaySearchSuggestions(data.auctions || [], data.lots || []);

@@ -1,5 +1,7 @@
-// API Configuration
-const API_BASE_URL = 'http://localhost:3000/api';
+// API Configuration — auto-detect backend URL based on environment
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3000/api'
+    : 'https://turathya-backend.onrender.com/api';
 
 // Get token from localStorage
 function getToken() {
@@ -16,7 +18,7 @@ function getCurrentUser() {
 function setAuth(token, user) {
     localStorage.setItem('turathya_token', token);
     localStorage.setItem('turathya_user', JSON.stringify(user));
-    
+
     // Update header to reflect logged-in state
     if (typeof updateHeaderAuthState === 'function') {
         updateHeaderAuthState();
@@ -27,7 +29,7 @@ function setAuth(token, user) {
 function clearAuth() {
     localStorage.removeItem('turathya_token');
     localStorage.removeItem('turathya_user');
-    
+
     // Update header to reflect logged-out state
     if (typeof updateHeaderAuthState === 'function') {
         updateHeaderAuthState();
@@ -476,7 +478,9 @@ function getSocketServerUrl() {
         const apiUrl = new URL(API_BASE_URL);
         return `${apiUrl.protocol}//${apiUrl.host}`;
     } catch {
-        return 'http://localhost:3000';
+        return (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000'
+            : 'https://turathya-backend.onrender.com';
     }
 }
 

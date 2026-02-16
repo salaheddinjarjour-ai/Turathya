@@ -1,0 +1,34 @@
+# Render Blueprint — Turathya Auction Platform
+# See https://docs.render.com/infrastructure-as-code
+
+databases:
+  - name: turathya-db
+    plan: free
+    databaseName: turathya
+    user: turathya
+
+services:
+  - type: web
+    name: turathya-backend
+    plan: free
+    runtime: node
+    rootDir: zauction-backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && node dist/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: turathya-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://turathya.netlify.app
+      - key: EMAIL_OTP_REQUIRED
+        value: "false"
+      - key: WHATSAPP_OTP_ENABLED
+        value: "false"
+      - key: WHATSAPP_LIVE_NOTIFICATIONS_ENABLED
+        value: "false"

@@ -1,8 +1,6 @@
 [build]
-  # This is a static site, so we modify the publish folder to the current directory
+  # This is a static site — no build step needed
   publish = "."
-  # Delegate build command to package.json
-  command = "npm run build"
 
 # Cache control for static assets
 [[headers]]

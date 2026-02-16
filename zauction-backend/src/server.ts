@@ -21,9 +21,16 @@ dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
+
+// Build allowed origins from FRONTEND_URL env var + localhost defaults
+const allowedOrigins = ['http://localhost:8000', 'http://127.0.0.1:8000'];
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.unshift(process.env.FRONTEND_URL);
+}
+
 const io = new Server(httpServer, {
     cors: {
-        origin: ['http://localhost:8000', 'http://127.0.0.1:8000'],
+        origin: allowedOrigins,
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -33,7 +40,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:8000', 'http://127.0.0.1:8000'],
+    origin: allowedOrigins,
     credentials: true
 }));
 app.use(express.json());
