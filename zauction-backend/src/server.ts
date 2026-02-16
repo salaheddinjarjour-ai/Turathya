@@ -23,26 +23,41 @@ const app = express();
 const httpServer = createServer(app);
 
 // Build allowed origins from FRONTEND_URL env var + localhost defaults
-const allowedOrigins = ['http://localhost:8000', 'http://127.0.0.1:8000'];
+const allowedOrigins: string[] = ['http://localhost:8000', 'http://127.0.0.1:8000'];
 if (process.env.FRONTEND_URL) {
-    allowedOrigins.unshift(process.env.FRONTEND_URL);
+    // Remove trailing slash if present
+    const frontendUrl = process.env.FRONTEND_URL.replace(/\/+$/, '');
+    allowedOrigins.unshift(frontendUrl);
 }
+console.log('🔒 Allowed CORS origins:', allowedOrigins);
+
+// CORS origin checker function
+const corsOriginCheck = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (server-to-server, curl, health checks)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+    }
+    console.warn(`⚠️ Blocked CORS request from origin: ${origin}`);
+    return callback(null, false);
+};
+
+const corsOptions = {
+    origin: corsOriginCheck,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
 
 const io = new Server(httpServer, {
-    cors: {
-        origin: allowedOrigins,
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
+    cors: corsOptions
 });
 
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors({
-    origin: allowedOrigins,
-    credentials: true
-}));
+// Middleware — handle preflight OPTIONS first, then apply CORS
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
