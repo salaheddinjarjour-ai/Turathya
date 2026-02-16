@@ -1,4 +1,4 @@
-# 🎯 Zauction - Premium Auction Platform
+# Turathya
 
 A full-stack auction platform with real-time bidding, user management, and internationalization support.
 
