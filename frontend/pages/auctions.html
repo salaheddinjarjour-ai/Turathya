@@ -138,7 +138,7 @@
 
             return `
                 <a href="auction.html?id=${auction.id}${archiveParam}" class="${cardClass}">
-                    <img src="${auction.image_data || auction.image_url || '../assets/images/placeholder.png'}" alt="${auction.title}" class="card-image">
+                    <img loading="lazy" src="${auction.image_data || auction.image_url || '../assets/images/placeholder.jpg'}" alt="${auction.title}" class="card-image">
                     <div class="card-content">
                         <div class="label mb-2">${auction.category || 'Auction'}</div>
                         <h3 class="card-title">${auction.title}</h3>

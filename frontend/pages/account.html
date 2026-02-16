@@ -155,7 +155,7 @@
                     const lotId = item.lot_id;
                     return `
             <a href="lot.html?id=${lotId}" class="card">
-              <img src="${item.primary_image || '../assets/images/placeholder.png'}" alt="${item.title}" class="card-image">
+              <img loading="lazy" src="${item.primary_image || '../assets/images/placeholder.jpg'}" alt="${item.title}" class="card-image">
               <div class="card-content">
                 <div class="label mb-2">${i18n.t('auction.lot')} ${item.lot_number}</div>
                 <h4 class="card-title" style="font-size: var(--text-lg);">${item.title}</h4>

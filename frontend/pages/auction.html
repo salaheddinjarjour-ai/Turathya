@@ -155,11 +155,11 @@
                 }
 
                 container.innerHTML = lots.map(lot => {
-                    const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.png';
+                    const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
                     const currentBid = lot.current_bid && lot.current_bid > 0;
 
                     return '<a href="lot.html?id=' + lot.id + '" class="card">' +
-                        '<img src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
+                        '<img loading="lazy" src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
                         '<div class="card-content">' +
                         '<div class="label mb-2">Lot ' + lot.lot_number + '</div>' +
                         '<h4 class="card-title" style="font-size: var(--text-lg);">' + lot.title + '</h4>' +

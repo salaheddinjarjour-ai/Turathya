@@ -216,7 +216,7 @@
                     priceValue = lot.current_bid && lot.current_bid > 0 ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid);
                 }
 
-                const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.png';
+                const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
                 const countdownHtml = isClosed ? '' : '<span class="text-xs font-medium" data-countdown="' + lot.end_date + '" data-compact></span>';
 
                 const card = document.createElement('a');
@@ -224,7 +224,7 @@
                 card.className = cardClass;
                 card.innerHTML =
                     '<div class="relative">' +
-                    '<img src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
+                    '<img loading="lazy" src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
                     (!isClosed ? '<div class="absolute top-2 right-2"><span class="badge badge-accent bg-white">Live</span></div>' : '') +
                     '</div>' +
                     '<div class="card-content">' +

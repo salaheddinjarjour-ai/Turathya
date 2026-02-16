@@ -30,7 +30,7 @@ class MediaGallery {
     }
 
     getFallbackPoster(media) {
-        return media.fallbackPoster || '../assets/images/placeholder.png';
+        return media.fallbackPoster || '../assets/images/placeholder.jpg';
     }
 
     render() {

@@ -280,7 +280,7 @@
 
         function prepareMediaItems(lot) {
             const items = [];
-            const fallbackCover = lot.image_data || lot.auction_image || '../assets/images/placeholder.png';
+            const fallbackCover = lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
 
             // Prioritize lot_media table if it exists
             if (lot.media && lot.media.length > 0) {
@@ -318,7 +318,7 @@
             if (items.length === 0) {
                 items.push({
                     type: 'image',
-                    src: '../assets/images/placeholder.png',
+                    src: '../assets/images/placeholder.jpg',
                     alt: lot.title
                 });
             }

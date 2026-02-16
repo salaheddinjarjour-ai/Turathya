@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <link rel="icon" type="image/png" href="assets/images/Beigelogo.png">
+  <link rel="icon" type="image/png" href="assets/images/Beigelogo.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description"
@@ -26,6 +26,12 @@
       pointer-events: none;
     }
   </style>
+  <!-- Preconnect to external origins -->
+  <link rel="preconnect" href="https://turathya-backend.onrender.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+
+  <!-- Critical CSS -->
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/typography.css">
@@ -33,7 +39,8 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/components/lang-toggle.css">
   <link rel="stylesheet" href="css/pages/landing.css">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <!-- AOS loaded async — not render-critical -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" media="print" onload="this.media='all'">
 </head>
 
 <body id="landing-page">
@@ -45,7 +52,7 @@
     <!-- Hero Video Background -->
     <div class="hero-video-container">
       <video id="hero-video" class="hero-video" autoplay muted playsinline preload="auto"
-        poster="assets/images/hero-poster.png" aria-hidden="true">
+        poster="assets/images/hero-poster.jpg" aria-hidden="true">
         <source src="assets/videos/hero-background.mp4" type="video/mp4">
         <!-- Fallback for browsers that don't support video -->
         Your browser does not support the video tag.
@@ -242,7 +249,7 @@
 
           return `
           <a href="pages/auction.html?id=${auction.id}" class="card">
-            <img src="${auction.image_data || auction.image_url || 'assets/images/placeholder.png'}" alt="${auction.title}" class="card-image">
+            <img loading="lazy" src="${auction.image_data || auction.image_url || 'assets/images/placeholder.jpg'}" alt="${auction.title}" class="card-image">
             <div class="card-content">
               <div class="label mb-2">${auction.category || 'Auction'}</div>
               <h3 class="card-title">${auction.title}</h3>
@@ -295,12 +302,12 @@
         }
 
         container.innerHTML = topEndingSoon.map(auction => {
-          const imageUrl = auction.image_data || auction.image_url || 'assets/images/placeholder.png';
+          const imageUrl = auction.image_data || auction.image_url || 'assets/images/placeholder.jpg';
           const lotCount = auction.lot_count || 0;
 
           return `
             <a href="pages/auction.html?id=${auction.id}" class="card">
-              <img src="${imageUrl}" alt="${auction.title}" class="card-image">
+              <img loading="lazy" src="${imageUrl}" alt="${auction.title}" class="card-image">
               <div class="card-content">
                 <div class="label mb-2">${auction.category || 'Auction'}</div>
                 <h4 class="card-title">${auction.title}</h4>
@@ -382,7 +389,7 @@
 
           return `
               <a href="pages/auction.html?id=${auction.id}" class="suggestion-card suggestion-card-auction">
-                <img src="${auction.image_data || 'assets/images/placeholder.png'}" 
+                <img loading="lazy" src="${auction.image_data || 'assets/images/placeholder.jpg'}" 
                      alt="${auction.title}" 
                      class="suggestion-card-image">
                 <div class="suggestion-card-content">
@@ -406,7 +413,7 @@
             <div class="search-suggestions-title">Lots</div>
             ${lots.map(lot => `
               <a href="pages/lot.html?id=${lot.id}" class="suggestion-card">
-                <img src="${lot.primary_image || 'assets/images/placeholder.png'}" 
+                <img loading="lazy" src="${lot.primary_image || 'assets/images/placeholder.jpg'}" 
                      alt="${lot.title}" 
                      class="suggestion-card-image">
                 <div class="suggestion-card-content">
@@ -439,22 +446,15 @@
     });
 
     // Load data on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      loadFeaturedAuctions();
+    document.addEventListener('DOMContentLoaded', () > {
+      FeaturedAuctions();
       loadEndingSoon();
     });
   </script>
-  <script src="js/hero-video.js"></script>
+  <script defer src="js/hero-video.js"></script>
   <!-- Initialize AOS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-    AOS.init({
-      once: true,
-      offset: 100,
-      duration: 800,
-      easing: 'ease-out-cubic',
-    });
-  </script>
+  <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"
+    onload="AOS.init({once:true,offset:100,duration:800,easing:'ease-out-cubic'})"></script>
 </body>
 
 </html>
