@@ -7,12 +7,12 @@
         "dev": "nodemon src/server.ts",
         "build": "tsc",
         "start": "node dist/server.js",
-        "start:prod": "npx prisma migrate deploy && npx prisma db seed || true && node dist/server.js",
+        "start:prod": "npx prisma db push --accept-data-loss && (npx prisma db seed || echo 'Seed skipped') && node dist/server.js",
         "postinstall": "prisma generate",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "prisma": {
-        "seed": "ts-node prisma/seed.ts"
+        "seed": "node prisma/seed.js"
     },
     "keywords": [
         "auction",
