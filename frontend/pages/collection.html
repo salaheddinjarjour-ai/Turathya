@@ -4,16 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Zauction Collection - A comprehensive index of all lots, past and present.">
-    <title>Collection - Zauction</title>
+    <meta name="description" content="TURATHYA Collection - A comprehensive index of all lots, past and present.">
+    <title>Collection - TURATHYA</title>
 
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages/collection.css">
-    <link rel="stylesheet" href="../css/rtl.css">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
 </head>
 
@@ -73,13 +88,7 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Zauction. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="site-footer"></div>
     <script defer src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/utils.js"></script>
@@ -113,7 +122,7 @@
                 applyFilters();
             } catch (error) {
                 console.error('Failed to load collection:', error);
-                document.getElementById('collection-grid').innerHTML = 
+                document.getElementById('collection-grid').innerHTML =
                     '<p class="text-muted col-span-full text-center py-12" data-i18n="errors.loadCollection">Failed to load collection</p>';
                 if (window.i18n) window.i18n.translatePage();
             }
@@ -143,7 +152,7 @@
                 option.textContent = cat;
                 categorySelect.appendChild(option);
             });
-            
+
             // Translate newly added filter options
             if (window.i18n) window.i18n.translatePage();
         }
@@ -154,7 +163,7 @@
                 const now = new Date();
                 const endDate = lot.end_date ? new Date(lot.end_date) : null;
                 const isClosed = endDate && endDate < now;
-                
+
                 // Status Filter
                 if (filters.status === 'active' && isClosed) return false;
                 if (filters.status === 'closed' && !isClosed) return false;
@@ -197,7 +206,7 @@
                         priceValue = formatCurrency(lot.final_price || lot.current_bid || 0);
                     } else {
                         priceValue = 'Unsold';
-                        priceLabel = lot.estimate_low && lot.estimate_high 
+                        priceLabel = lot.estimate_low && lot.estimate_high
                             ? 'Est. ' + formatCurrency(lot.estimate_low) + ' - ' + formatCurrency(lot.estimate_high)
                             : '';
                     }
@@ -212,24 +221,24 @@
                 const card = document.createElement('a');
                 card.href = 'lot.html?id=' + lot.id + (isClosed ? '&archive=true' : '');
                 card.className = cardClass;
-                card.innerHTML = 
+                card.innerHTML =
                     '<div class="relative">' +
-                        '<img src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
-                        (!isClosed ? '<div class="absolute top-2 right-2"><span class="badge badge-gold bg-white">Live</span></div>' : '') +
+                    '<img src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
+                    (!isClosed ? '<div class="absolute top-2 right-2"><span class="badge badge-accent bg-white">Live</span></div>' : '') +
                     '</div>' +
                     '<div class="card-content">' +
-                        '<div class="text-xs text-muted mb-1">' + (auction ? auction.title : '') + '</div>' +
-                        '<h4 class="card-title text-base">' + lot.title + '</h4>' +
-                        '<div class="flex justify-between items-end mt-4">' +
-                            '<div>' +
-                                '<p class="price text-sm">' + priceValue + '</p>' +
-                                '<p class="text-xs text-muted">' + priceLabel + '</p>' +
-                            '</div>' +
-                        '</div>' +
+                    '<div class="text-xs text-muted mb-1">' + (auction ? auction.title : '') + '</div>' +
+                    '<h4 class="card-title text-base">' + lot.title + '</h4>' +
+                    '<div class="flex justify-between items-end mt-4">' +
+                    '<div>' +
+                    '<p class="price text-sm">' + priceValue + '</p>' +
+                    '<p class="text-xs text-muted">' + priceLabel + '</p>' +
+                    '</div>' +
+                    '</div>' +
                     '</div>' +
                     '<div class="card-footer text-xs text-muted">' +
-                        'Lot ' + lot.lot_number +
-                        (isClosed ? '' : ' • ' + countdownHtml) +
+                    'Lot ' + lot.lot_number +
+                    (isClosed ? '' : ' • ' + countdownHtml) +
                     '</div>';
 
                 container.appendChild(card);
@@ -238,7 +247,7 @@
             if (!filters.status.includes('closed')) {
                 initCountdowns();
             }
-            
+
             // Translate newly rendered lot cards
             if (window.i18n) window.i18n.translatePage();
         }

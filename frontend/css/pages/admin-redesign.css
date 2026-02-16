@@ -1,8 +1,8 @@
 /* Admin Redesign Layout */
 body {
     background-color: var(--color-off-white);
-    background-image: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 20%);
+    background-image: radial-gradient(circle at 10% 20%, rgba(47, 79, 62, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(47, 79, 62, 0.05) 0%, transparent 20%);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -20,7 +20,7 @@ body {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(212, 175, 55, 0.2);
+    border-right: 1px solid rgba(47, 79, 62, 0.2);
     display: flex;
     flex-direction: column;
     padding: 2rem 1.5rem;
@@ -30,14 +30,18 @@ body {
 }
 
 .admin-logo {
-    font-family: var(--font-heading);
-    font-size: 1.75rem;
-    color: var(--color-charcoal);
+    display: flex;
+    align-items: center;
     margin-bottom: 3rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    display: block;
     text-decoration: none;
+}
+
+.admin-logo img {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
 }
 
 .sidebar-nav {
@@ -60,15 +64,15 @@ body {
 }
 
 .nav-item:hover {
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(47, 79, 62, 0.1);
     color: var(--color-charcoal);
     transform: translateX(4px);
 }
 
 .nav-item.active {
-    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+    background: linear-gradient(135deg, var(--color-olive) 0%, var(--color-olive-dark) 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 12px rgba(47, 79, 62, 0.3);
 }
 
 .sidebar-footer {
@@ -117,8 +121,8 @@ body {
 
 .stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.15);
-    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 30px rgba(47, 79, 62, 0.15);
+    border-color: rgba(47, 79, 62, 0.3);
 }
 
 .stat-label {
@@ -146,7 +150,7 @@ body {
 
 .action-card {
     background: rgba(255, 255, 255, 0.6);
-    border: 1px dashed var(--color-gold);
+    border: 1px dashed var(--color-olive);
     border-radius: var(--radius-md);
     padding: 1.5rem;
     text-align: center;
@@ -164,14 +168,14 @@ body {
 .action-card:hover {
     background: white;
     border-style: solid;
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 8px 30px rgba(47, 79, 62, 0.2);
     transform: translateY(-4px);
 }
 
 .action-icon {
     font-size: 2rem;
     margin-bottom: 0.75rem;
-    color: var(--color-gold);
+    color: var(--color-olive);
 }
 
 .action-text {
@@ -200,25 +204,177 @@ body {
     }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Form Refactor */
+.admin-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--space-8) 0;
+}
+
+.admin-fieldset legend {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--theme-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-4);
+    display: table;
+    /* Required for some spacing consistency */
+    display: block;
+}
+
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    /* Left col slightly wider */
+    gap: var(--space-8);
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-actions {
+    margin-top: var(--space-4);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Make full width on mobile */
+@media (max-width: 1024px) {
+    .form-grid-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+}
+
+/* Responsive Sidebar */
+.mobile-header-bar {
+    display: none;
+    /* Hidden on desktop */
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--theme-border);
+}
+
+.mobile-sidebar-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--theme-text);
+    padding: var(--space-2);
+}
+
+.mobile-sidebar-close {
+    display: none;
+    /* Hidden on desktop */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--theme-text);
+}
+
+@media (max-width: 1024px) {
     .admin-sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 280px;
+        box-shadow: var(--shadow-xl);
+        background: var(--theme-surface);
+        /* Ensure opaque background */
     }
 
-    .sidebar-nav {
-        display: none;
-        /* In real app, toggle via burger menu */
+    .admin-sidebar.open {
+        transform: translateX(0);
     }
 
     .admin-main {
         margin-left: 0;
-        padding: 1.5rem;
+        padding: var(--space-4);
     }
-}
+
+    .mobile-header-bar {
+        display: flex;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        border-bottom: 1px solid var(--theme-border);
+        margin-bottom: var(--space-4);
+        padding-bottom: var(--space-4);
+    }
+
+    .admin-logo {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+        font-size: 1.5rem;
+    }
+
+    .mobile-sidebar-close {
+        display: block;
+    }
+
+    /* Overlay when sidebar is open */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+
+    /* Empty States */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-12) var(--space-6);
+        text-align: center;
+        background-color: var(--theme-surface-2);
+        border-radius: var(--radius-sm);
+        color: var(--theme-text-muted);
+    }
+
+    .empty-state-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(47, 79, 62, 0.1);
+        color: var(--theme-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: var(--space-4);
+    }
+
+    .empty-state-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .empty-state-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--theme-text);
+        margin-bottom: var(--space-2);
+    }
+
+    .empty-state-text {
+        font-size: 0.875rem;
+        color: var(--theme-text-muted);
+        max-width: 300px;
+    }

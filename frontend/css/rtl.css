@@ -147,6 +147,214 @@ body.rtl .card-actions {
     justify-content: flex-start;
 }
 
+/* ==================== RTL SUPPORT ==================== */
+
+/* Helper for RTL detection */
+body.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Typography Overrides */
+body.rtl p,
+body.rtl h1,
+body.rtl h2,
+body.rtl h3,
+body.rtl h4,
+body.rtl h5,
+body.rtl h6,
+body.rtl .text-left {
+    text-align: right;
+}
+
+body.rtl .text-right {
+    text-align: left;
+}
+
+/* Layout Utilities (Logical Properties) */
+/* 
+   Ideally, we should use logical properties (margin-inline-start) everywhere, 
+   but for existing CSS that uses margin-left/right, we need overrides.
+*/
+
+body.rtl .ml-1 {
+    margin-left: 0;
+    margin-right: var(--space-1);
+}
+
+body.rtl .ml-2 {
+    margin-left: 0;
+    margin-right: var(--space-2);
+}
+
+body.rtl .ml-3 {
+    margin-left: 0;
+    margin-right: var(--space-3);
+}
+
+body.rtl .ml-4 {
+    margin-left: 0;
+    margin-right: var(--space-4);
+}
+
+body.rtl .mr-1 {
+    margin-right: 0;
+    margin-left: var(--space-1);
+}
+
+body.rtl .mr-2 {
+    margin-right: 0;
+    margin-left: var(--space-2);
+}
+
+body.rtl .mr-3 {
+    margin-right: 0;
+    margin-left: var(--space-3);
+}
+
+body.rtl .mr-4 {
+    margin-right: 0;
+    margin-left: var(--space-4);
+}
+
+body.rtl .pl-1 {
+    padding-left: 0;
+    padding-right: var(--space-1);
+}
+
+body.rtl .pl-2 {
+    padding-left: 0;
+    padding-right: var(--space-2);
+}
+
+body.rtl .pl-3 {
+    padding-left: 0;
+    padding-right: var(--space-3);
+}
+
+body.rtl .pl-4 {
+    padding-left: 0;
+    padding-right: var(--space-4);
+}
+
+body.rtl .pr-1 {
+    padding-right: 0;
+    padding-left: var(--space-1);
+}
+
+body.rtl .pr-2 {
+    padding-right: 0;
+    padding-left: var(--space-2);
+}
+
+body.rtl .pr-3 {
+    padding-right: 0;
+    padding-left: var(--space-3);
+}
+
+body.rtl .pr-4 {
+    padding-right: 0;
+    padding-left: var(--space-4);
+}
+
+/* Component Specific RTL Fixes */
+
+/* Navigation */
+body.rtl .nav {
+    flex-direction: row-reverse;
+    /* Or just let normal flow handle it if flex-direction is row */
+}
+
+body.rtl .nav-link.active::after {
+    left: auto;
+    right: 0;
+}
+
+/* Inputs */
+body.rtl .search-input {
+    padding-left: var(--space-12);
+    padding-right: var(--space-12);
+    background-position: calc(100% - var(--space-3)) center;
+}
+
+body.rtl .form-error {
+    border-left: none;
+    border-right: 3px solid var(--theme-error);
+}
+
+/* Buttons with Icons */
+body.rtl .btn svg {
+    margin-right: -4px;
+    margin-left: 8px;
+    /* Flip margins for icons */
+}
+
+/* Product Cards */
+body.rtl .card-footer {
+    flex-direction: row-reverse;
+}
+
+/* Modals */
+body.rtl .modal-header {
+    flex-direction: row-reverse;
+}
+
+body.rtl .modal-footer {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    /* Or flex-end if we want buttons on left */
+}
+
+body.rtl .modal-close {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Tables */
+body.rtl .table th,
+body.rtl .table td {
+    text-align: right;
+}
+
+/* Sidebar / Admin specific */
+body.rtl .admin-sidebar {
+    right: 0;
+    left: auto;
+    border-right: none;
+    border-left: 1px solid rgba(47, 79, 62, 0.2);
+    /* Was hardcoded gold rgba */
+}
+
+/* Footer */
+body.rtl .footer-content {
+    direction: rtl;
+}
+
+/* Watchlist/Cart Flyout (if applicable) */
+body.rtl .flyout {
+    left: 0;
+    right: auto;
+    transform: translateX(-100%);
+}
+
+body.rtl .flyout.active {
+    transform: translateX(0);
+}
+
+/* Icons direction (arrows) */
+body.rtl .icon-arrow-right {
+    transform: scaleX(-1);
+}
+
+body.rtl .icon-chevron-right {
+    transform: rotate(180deg);
+}
+
+/* Pagination */
+body.rtl .pagination {
+    flex-direction: row-reverse;
+}
+
 /* ==================== FORMS ==================== */
 
 /* Form Groups */
@@ -192,11 +400,6 @@ body.rtl td:last-child {
 
 body.rtl .modal-header {
     text-align: right;
-}
-
-body.rtl .modal-close {
-    right: auto;
-    left: 1.5rem;
 }
 
 /* ==================== BREADCRUMBS ==================== */
@@ -256,13 +459,6 @@ body.rtl .media-grid {
 /* ==================== ADMIN DASHBOARD ==================== */
 
 /* Sidebar */
-body.rtl .admin-sidebar {
-    right: 0;
-    left: auto;
-    border-right: none;
-    border-left: 1px solid rgba(212, 175, 55, 0.2);
-}
-
 body.rtl .admin-main {
     margin-right: 260px;
     margin-left: 0;
@@ -489,4 +685,20 @@ body.rtl .pe-4 {
 
 body.rtl .pe-5 {
     padding-inline-end: 3rem;
+}
+
+/* ==================== ALIGNMENT FIXES ==================== */
+
+/* Hero Section - Keep centered in RTL */
+body.rtl .hero-content,
+body.rtl .hero-title,
+body.rtl .hero-subtitle {
+    text-align: center;
+}
+
+/* Trust Section (Features) - Keep centered in RTL */
+body.rtl .trust-item,
+body.rtl .trust-item h3,
+body.rtl .trust-item p {
+    text-align: center;
 }

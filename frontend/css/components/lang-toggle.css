@@ -33,12 +33,12 @@
 
 .lang-toggle.active {
     color: var(--text-primary, #fff);
-    background: var(--primary-color, #d4af37);
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    background: var(--primary-color, #2F4F3E);
+    box-shadow: 0 2px 8px rgba(47, 79, 62, 0.3);
 }
 
 .lang-toggle:focus {
-    outline: 2px solid var(--primary-color, #d4af37);
+    outline: 2px solid var(--primary-color, #2F4F3E);
     outline-offset: 2px;
 }
 
@@ -80,7 +80,7 @@ body.rtl .lang-toggle-container {
 
 /* Accessibility */
 .lang-toggle:focus-visible {
-    outline: 2px solid var(--primary-color, #d4af37);
+    outline: 2px solid var(--primary-color, #2F4F3E);
     outline-offset: 2px;
 }
 

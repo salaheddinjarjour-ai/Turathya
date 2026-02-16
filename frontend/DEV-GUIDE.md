@@ -1,4 +1,4 @@
-# Zauction - Development Guide
+# TURATHYA - Development Guide
 
 ## 🚀 Quick Start - Run Local Preview
 
@@ -40,7 +40,7 @@ Then open your browser to: `http://localhost:8000`
 ## 📁 Project Structure
 
 ```
-Zauction/
+TURATHYA/
 ├── index.html              # Homepage
 ├── pages/                  # All main pages
 │   ├── login.html

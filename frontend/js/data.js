@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - DEMO DATA & LOCALSTORAGE MANAGEMENT
+// TURATHYA - DEMO DATA & LOCALSTORAGE MANAGEMENT
 // Auction data, lots, users, bids
 // ============================================
 
@@ -7,16 +7,16 @@
 function initializeData() {
   // Mock data disabled - data now comes from backend API
   // Clear any old mock data from localStorage
-  localStorage.removeItem('zauction_auctions');
-  localStorage.removeItem('zauction_lots');
-  localStorage.removeItem('zauction_initialized_v2');
+  localStorage.removeItem('turathya_auctions');
+  localStorage.removeItem('turathya_lots');
+  localStorage.removeItem('turathya_initialized_v2');
   
   // Only initialize empty arrays if they don't exist
-  if (!localStorage.getItem('zauction_bids')) {
-    localStorage.setItem('zauction_bids', JSON.stringify([]));
+  if (!localStorage.getItem('turathya_bids')) {
+    localStorage.setItem('turathya_bids', JSON.stringify([]));
   }
-  if (!localStorage.getItem('zauction_watchlist')) {
-    localStorage.setItem('zauction_watchlist', JSON.stringify([]));
+  if (!localStorage.getItem('turathya_watchlist')) {
+    localStorage.setItem('turathya_watchlist', JSON.stringify([]));
   }
 }
 
@@ -688,7 +688,7 @@ const DEMO_USERS = [
 
 // Auctions
 function getAuctions() {
-  return JSON.parse(localStorage.getItem('zauction_auctions') || '[]');
+  return JSON.parse(localStorage.getItem('turathya_auctions') || '[]');
 }
 
 function getAuctionById(id) {
@@ -709,7 +709,7 @@ function saveAuction(auction) {
   } else {
     auctions.push(auction);
   }
-  localStorage.setItem('zauction_auctions', JSON.stringify(auctions));
+  localStorage.setItem('turathya_auctions', JSON.stringify(auctions));
 }
 
 // Featured, Ongoing, and Past Auctions
@@ -728,7 +728,7 @@ function getPastAuctions() {
 
 // Lots
 function getLots() {
-  return JSON.parse(localStorage.getItem('zauction_lots') || '[]');
+  return JSON.parse(localStorage.getItem('turathya_lots') || '[]');
 }
 
 function getLotById(id) {
@@ -749,7 +749,7 @@ function saveLot(lot) {
   } else {
     lots.push(lot);
   }
-  localStorage.setItem('zauction_lots', JSON.stringify(lots));
+  localStorage.setItem('turathya_lots', JSON.stringify(lots));
 }
 
 // Featured, Active, and Closed Lots
@@ -768,7 +768,7 @@ function getClosedLots(auctionId) {
 
 // Bids
 function getBids() {
-  return JSON.parse(localStorage.getItem('zauction_bids') || '[]');
+  return JSON.parse(localStorage.getItem('turathya_bids') || '[]');
 }
 
 function getBidsByLotId(lotId) {
@@ -786,7 +786,7 @@ function placeBid(lotId, userId, amount) {
     timestamp: new Date().toISOString()
   };
   bids.push(bid);
-  localStorage.setItem('zauction_bids', JSON.stringify(bids));
+  localStorage.setItem('turathya_bids', JSON.stringify(bids));
 
   // Update lot current bid
   const lot = getLotById(lotId);
@@ -801,22 +801,22 @@ function placeBid(lotId, userId, amount) {
 
 // Watchlist
 function getWatchlist(userId) {
-  const watchlist = JSON.parse(localStorage.getItem('zauction_watchlist') || '[]');
+  const watchlist = JSON.parse(localStorage.getItem('turathya_watchlist') || '[]');
   return watchlist.filter(w => w.userId === userId);
 }
 
 function addToWatchlist(userId, lotId) {
-  const watchlist = JSON.parse(localStorage.getItem('zauction_watchlist') || '[]');
+  const watchlist = JSON.parse(localStorage.getItem('turathya_watchlist') || '[]');
   if (!watchlist.find(w => w.userId === userId && w.lotId === lotId)) {
     watchlist.push({ userId, lotId, addedDate: new Date().toISOString() });
-    localStorage.setItem('zauction_watchlist', JSON.stringify(watchlist));
+    localStorage.setItem('turathya_watchlist', JSON.stringify(watchlist));
   }
 }
 
 function removeFromWatchlist(userId, lotId) {
-  let watchlist = JSON.parse(localStorage.getItem('zauction_watchlist') || '[]');
+  let watchlist = JSON.parse(localStorage.getItem('turathya_watchlist') || '[]');
   watchlist = watchlist.filter(w => !(w.userId === userId && w.lotId === lotId));
-  localStorage.setItem('zauction_watchlist', JSON.stringify(watchlist));
+  localStorage.setItem('turathya_watchlist', JSON.stringify(watchlist));
 }
 
 function isInWatchlist(userId, lotId) {
@@ -826,7 +826,7 @@ function isInWatchlist(userId, lotId) {
 
 // Users
 function getUsers() {
-  return JSON.parse(localStorage.getItem('zauction_users') || '[]');
+  return JSON.parse(localStorage.getItem('turathya_users') || '[]');
 }
 
 function getUserById(id) {
@@ -847,13 +847,13 @@ function saveUser(user) {
   } else {
     users.push(user);
   }
-  localStorage.setItem('zauction_users', JSON.stringify(users));
+  localStorage.setItem('turathya_users', JSON.stringify(users));
 }
 
 function deleteUser(userId) {
   let users = getUsers();
   users = users.filter(u => u.id !== userId);
-  localStorage.setItem('zauction_users', JSON.stringify(users));
+  localStorage.setItem('turathya_users', JSON.stringify(users));
 }
 
 // Initialize data on page load

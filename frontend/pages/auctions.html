@@ -5,9 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description"
-        content="Browse all current auctions at Zauction - Premium timed auctions for antiques and rare objects.">
-    <title>All Auctions - Zauction</title>
+        content="Browse all current auctions at TURATHYA - Premium timed auctions for antiques and rare objects.">
+    <title>All Auctions - TURATHYA</title>
 
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
@@ -15,7 +31,6 @@
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
     <link rel="stylesheet" href="../css/pages/auctions.css">
-    <link rel="stylesheet" href="../css/rtl.css">
 </head>
 
 <body>
@@ -35,7 +50,7 @@
                     <h2 data-i18n="auction.featured">Featured Auctions</h2>
                     <p class="text-graphite" data-i18n="auction.curatedHighlights">Carefully curated highlights</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
                     <!-- Populated by JavaScript -->
                 </div>
             </section>
@@ -66,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg" id="ongoing-auctions">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="ongoing-auctions">
                     <!-- Populated by JavaScript -->
                 </div>
             </section>
@@ -77,54 +92,14 @@
                     <h2 data-i18n="auction.past">Past Auctions</h2>
                     <p class="text-graphite" data-i18n="auction.viewResults">View results from completed auctions</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg" id="past-auctions">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="past-auctions">
                     <!-- Populated by JavaScript -->
                 </div>
             </section>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>About</h4>
-                    <ul class="footer-links">
-                        <li><a href="info/about.html">About Zauction</a></li>
-                        <li><a href="info/team.html">Our Team</a></li>
-                        <li><a href="info/contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Bidding</h4>
-                    <ul class="footer-links">
-                        <li><a href="info/how-bidding-works.html">How Bidding Works</a></li>
-                        <li><a href="info/buyers-guide.html">Buyer's Guide</a></li>
-                        <li><a href="info/condition-reports.html">Condition Reports</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Services</h4>
-                    <ul class="footer-links">
-                        <li><a href="info/fees-payments.html">Fees & Payments</a></li>
-                        <li><a href="info/shipping-pickup.html">Shipping & Pickup</a></li>
-                        <li><a href="info/authentication.html">Authentication</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="info/terms.html">Terms of Service</a></li>
-                        <li><a href="info/privacy.html">Privacy Policy</a></li>
-                        <li><a href="info/cookies.html">Cookie Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Zauction. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="site-footer"></div>
 
     <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
@@ -150,7 +125,7 @@
                     ? (startsSoon
                         ? '<span class="badge badge-info">Starts Soon</span>'
                         : '<span class="badge badge-info">Didn\'t Start</span>')
-                    : (isEndingSoon(auction.end_date) ? '<span class="badge badge-gold">Ending Soon</span>' : '');
+                    : (isEndingSoon(auction.end_date) ? '<span class="badge badge-accent">Ending Soon</span>' : '');
 
             const endDateText = isPast
                 ? `Ended ${formatDate(auction.end_date)}`
@@ -181,41 +156,41 @@
             try {
                 // Get recently viewed/searched auctions from localStorage
                 const recentAuctionIds = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
-                
+
                 // Get auctions with most bidders
                 const { auctions: mostBiddedAuctions } = await auctionsAPI.getAll({ featured: 'true' });
-                
+
                 const now = new Date();
                 const activeMostBiddedAuctions = mostBiddedAuctions.filter(a => new Date(a.end_date) > now);
-                
+
                 let featuredAuctions = [];
-                
+
                 // If user has recent searches/views, prioritize those
                 if (recentAuctionIds.length > 0) {
                     const { auctions: allAuctions } = await auctionsAPI.getAll({});
-                    
+
                     // Get recent auctions that are still active (not ended)
                     const recentAuctions = allAuctions.filter(a => {
                         const endDate = new Date(a.end_date);
                         return recentAuctionIds.includes(a.id) && endDate > now;
                     });
-                    
+
                     // Combine: recent first, then most bidded (avoiding duplicates)
                     featuredAuctions = recentAuctions;
-                    
+
                     activeMostBiddedAuctions.forEach(auction => {
                         if (!featuredAuctions.find(a => a.id === auction.id)) {
                             featuredAuctions.push(auction);
                         }
                     });
-                    
+
                     // Limit to 6 total
                     featuredAuctions = featuredAuctions.slice(0, 6);
                 } else {
                     // No recent activity, just show most bidded
                     featuredAuctions = activeMostBiddedAuctions;
                 }
-                
+
                 const container = document.getElementById('featured-auctions');
                 const section = document.getElementById('featured-section');
 
@@ -230,20 +205,20 @@
                 document.getElementById('featured-section').style.display = 'none';
             }
         }
-        
+
         // Track auction views for featured section
         function trackAuctionView(auctionId) {
             const recentAuctions = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
-            
+
             // Remove if already exists (to update position)
             const filtered = recentAuctions.filter(id => id !== auctionId);
-            
+
             // Add to beginning
             filtered.unshift(auctionId);
-            
+
             // Keep only last 5
             const updated = filtered.slice(0, 5);
-            
+
             localStorage.setItem('recentAuctions', JSON.stringify(updated));
         }
 
@@ -258,13 +233,13 @@
                 // Get all auctions, then filter for active and upcoming based on end_date
                 const { auctions: allAuctions } = await auctionsAPI.getAll(filters);
                 const now = new Date();
-                
+
                 // Filter auctions that haven't ended yet
                 const auctions = allAuctions.filter(a => {
                     const endDate = new Date(a.end_date);
                     return endDate > now; // Not ended yet = ongoing
                 });
-                
+
                 let filteredAuctions = auctions;
 
                 // Apply client-side search filter
@@ -288,7 +263,7 @@
                 container.innerHTML = filteredAuctions.map(auction => renderAuctionCard(auction, false)).join('');
             } catch (error) {
                 console.error('Failed to load ongoing auctions:', error);
-                document.getElementById('ongoing-auctions').innerHTML = 
+                document.getElementById('ongoing-auctions').innerHTML =
                     '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load auctions</p>';
             }
         }
@@ -299,13 +274,13 @@
                 // Get all auctions, then filter for ended ones based on end_date
                 const { auctions: allAuctions } = await auctionsAPI.getAll({});
                 const now = new Date();
-                
+
                 // Filter auctions that have already ended
                 const auctions = allAuctions.filter(a => {
                     const endDate = new Date(a.end_date);
                     return endDate < now; // Already ended = past
                 });
-                
+
                 const container = document.getElementById('past-auctions');
                 const section = document.getElementById('past-section');
 

@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - BIDDING SYSTEM
+// TURATHYA - BIDDING SYSTEM
 // Place bids, validate, update UI
 // ============================================
 

@@ -1,50 +1,104 @@
 /* ============================================
-   ZAUCTION - DESIGN SYSTEM VARIABLES
+   TURATHYA - DESIGN SYSTEM VARIABLES
    Premium Timed Auction Platform
    ============================================ */
 
 :root {
-  /* ==================== COLORS ==================== */
+  /* ==================== SEMANTIC THEME TOKENS ==================== */
+  /* These are the variables the Theme Editor will manipulate */
+  --theme-bg: #F4F1EA;
+  /* Was --color-ivory (Refined) */
+  --theme-surface: #F4F1EA;
+  /* Ivory as surface per new identity? Or keep white? Prompt says "Keep beige / ivory base". Let's map to refined ivory/white. */
+  /* User said "PRIMARY BACKGROUND SYSTEM... --color-ivory: #F4F1EA". */
+  /* Usually surface is white or ivory. Let's stick to the requested palette. */
+  --theme-surface-default: #FFFFFF;
+  /* Keep a white option if needed, but defaults below */
 
-  /* Primary Palette - Warm & Refined */
-  --color-ivory: #FAF8F3;
-  --color-ivory-dark: #F5F2EB;
-  --color-parchment: #F0EDE5;
+  --theme-bg: #F4F1EA;
+  --theme-surface: #FFFFFF;
+  --theme-surface-2: #E6DFD2;
+  /* Mapped to new --color-parchment */
 
-  /* Text Colors - Charcoal & Graphite */
-  --color-charcoal: #2C2C2C;
-  --color-graphite: #4A4A4A;
-  --color-graphite-light: #6B6B6B;
-  --color-text-muted: #8A8A8A;
+  --theme-text: #262626;
+  /* Mapped to new --color-charcoal */
+  --theme-text-muted: #8C8C8C;
+  /* Mapped to new --color-text-muted */
+
+  --theme-accent: #2F4F3E;
+  /* Mapped to new --color-olive */
+  --theme-accent-2: #3E6B55;
+  /* Mapped to new --color-olive-light (Used for hovers) */
+  --theme-accent-dark: #1F372C;
+  /* Mapped to new --color-olive-dark */
+
+  --theme-border: #D8D2C6;
+  /* Mapped to new --color-border */
+
+  --theme-success: #3E6B55;
+  --theme-error: #9C4F4F;
+  --theme-warning: #7A6A3A;
+
+  /* ==================== COLORS (MAPPED TO TOKENS) ==================== */
+
+  /* Primary Palette - Beige Refinement */
+  --color-ivory: #F4F1EA;
+  --color-ivory-dark: #EDE8DD;
+  --color-parchment: #E6DFD2;
+
+  /* Text Colors - Deep Charcoal */
+  --color-charcoal: #262626;
+  --color-graphite: #3F3F3F;
+  --color-graphite-light: #666666;
+  --color-text-muted: #8C8C8C;
   --color-text-light: var(--color-text-muted);
 
-  /* Accent - Antique Gold/Copper */
-  --color-gold: #B8956A;
-  --color-gold-light: #D4B895;
-  /* Lighter gold for gradients */
-  --color-gold-dark: #9A7A52;
-  --color-copper: #B87333;
+  /* Accent - Deep Olive (Replaces Gold) */
+  --color-olive: #2F4F3E;
+  --color-olive-light: #3E6B55;
+  --color-olive-dark: #1F372C;
+
+  /* Legacy Gold Compatibility (Mapped to Olive) */
+  --color-gold: var(--color-olive);
+  --color-gold-light: var(--color-olive-light);
+  --color-gold-dark: var(--color-olive-dark);
+  --color-copper: var(--color-olive-dark);
+
   --color-rich-black: #1A1A1A;
-  /* Premium dark background */
 
   /* Functional Colors */
   --color-white: #FFFFFF;
-  --color-border: #E0DDD5;
-  --color-border-light: #ECEAE3;
-  --color-success: #5A7D5A;
-  --color-error: #A85A5A;
-  --color-warning: #B89A5A;
+  --color-border: #D8D2C6;
+  --color-border-light: #E3DED4;
+  --color-success: #3E6B55;
+  --color-error: #9C4F4F;
+  --color-warning: #7A6A3A;
 
   /* Overlays & Shadows */
-  --color-overlay: rgba(26, 26, 26, 0.6);
-  --shadow-sm: 0 1px 3px rgba(26, 26, 26, 0.08);
-  --shadow-md: 0 4px 12px rgba(26, 26, 26, 0.08);
-  --shadow-lg: 0 12px 32px rgba(26, 26, 26, 0.12);
-  --shadow-glow: 0 0 20px rgba(184, 149, 106, 0.3);
-  /* Gold glow */
+  --color-overlay: rgba(38, 38, 38, 0.55);
+  --shadow-sm: 0 1px 3px rgba(38, 38, 38, 0.08);
+  --shadow-md: 0 4px 12px rgba(38, 38, 38, 0.08);
+  --shadow-lg: 0 12px 32px rgba(38, 38, 38, 0.12);
+
+  /* Olive Glow */
+  --shadow-glow: 0 0 18px rgba(47, 79, 62, 0.25);
+
+  /* ==================== SEMANTIC BADGES ==================== */
+  /* Neutral (Parchment/Charcoal) */
+  --badge-neutral-bg: rgba(38, 38, 38, 0.05);
+  --badge-neutral-text: var(--color-charcoal);
+
+  /* Olive (Brand) */
+  --badge-brand-bg: rgba(47, 79, 62, 0.1);
+  --badge-brand-text: var(--color-olive);
+
+  /* Status: Active/Soon (Olive Light) */
+  --badge-status-bg: rgba(62, 107, 85, 0.1);
+  --badge-status-text: var(--color-olive-light);
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.7);
+  /* Hardcoded to white glass for now */
   --glass-border: 1px solid rgba(255, 255, 255, 0.5);
   --glass-blur: blur(12px);
 

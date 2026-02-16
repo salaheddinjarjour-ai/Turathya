@@ -4,8 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Zauction</title>
+    <title>Admin Dashboard - TURATHYA</title>
 
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
@@ -22,48 +38,83 @@
 <body>
     <div class="admin-layout">
         <!-- Sidebar Navigation -->
-        <aside class="admin-sidebar">
-            <a href="../index.html" class="admin-logo">Zauction Admin</a>
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <a href="../index.html" class="admin-logo">
+                    <img src="../assets/images/zauction-logo-new.png" alt="TURATHYA Admin"
+                        style="height: 40px; width: auto;">
+                </a>
+                <button class="mobile-sidebar-close" onclick="toggleAdminSidebar()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
 
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-view="dashboard">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> <span data-i18n="admin.dashboard">Dashboard</span>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+                    </svg> <span data-i18n="admin.dashboard">Dashboard</span>
                 </a>
                 <a href="#" class="nav-item" data-view="auctions">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="m14.47 13.77-1.41 1.41L5 7.12 6.41 5.7l8.06 8.07zm-3.84-9.94L9.2 5.25l1.42 1.42 1.41-1.42-1.4-1.42zm9.2 9.2-1.42 1.42 1.42 1.41 1.41-1.41-1.41-1.42zm-3.54 3.53 2.12 2.13 1.41-1.41-2.12-2.13-1.41 1.41zM10 3L3 10l7 7 7-7-7-7zm0 12.59L5.41 11 10 6.41 14.59 11 10 15.59z"/></svg> <span data-i18n="admin.auctions">Auctions</span>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="m14.47 13.77-1.41 1.41L5 7.12 6.41 5.7l8.06 8.07zm-3.84-9.94L9.2 5.25l1.42 1.42 1.41-1.42-1.4-1.42zm9.2 9.2-1.42 1.42 1.42 1.41 1.41-1.41-1.41-1.42zm-3.54 3.53 2.12 2.13 1.41-1.41-2.12-2.13-1.41 1.41zM10 3L3 10l7 7 7-7-7-7zm0 12.59L5.41 11 10 6.41 14.59 11 10 15.59z" />
+                    </svg> <span data-i18n="admin.auctions">Auctions</span>
                 </a>
                 <a href="#" class="nav-item" data-view="lots">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg> <span data-i18n="admin.lots">Lots</span>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                    </svg> <span data-i18n="admin.lots">Lots</span>
                 </a>
                 <a href="#" class="nav-item" data-view="users">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <span data-i18n="admin.users">Users</span>
-                </a>                    
-                    <!-- Language Toggle -->
-                    <div class="lang-toggle-container">
-                        <a href="#" class="lang-toggle" data-lang="en" aria-label="Switch to English">EN</a>
-                        <a href="#" class="lang-toggle" data-lang="ar" aria-label="التبديل إلى العربية">العربية</a>
-                    </div>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                    </svg> <span data-i18n="admin.users">Users</span>
+                </a>
+                <!-- Language Toggle -->
+                <div class="lang-toggle-container">
+                    <a href="#" class="lang-toggle" data-lang="en" aria-label="Switch to English">EN</a>
+                    <a href="#" class="lang-toggle" data-lang="ar" aria-label="التبديل إلى العربية">العربية</a>
+                </div>
             </nav>
 
             <div class="sidebar-footer">
                 <a href="../index.html" class="nav-item">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> <span data-i18n="admin.backToSite">Back to Site</span>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg> <span data-i18n="admin.backToSite">Back to Site</span>
                 </a>
                 <button onclick="logout()" class="nav-item"
                     style="width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> <span data-i18n="nav.logout">Logout</span>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+                    </svg> <span data-i18n="nav.logout">Logout</span>
                 </button>
             </div>
         </aside>
 
         <!-- Main Content Area -->
         <main class="admin-main">
+            <div class="mobile-header-bar">
+                <button class="mobile-sidebar-toggle" onclick="toggleAdminSidebar()">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                    </svg>
+                </button>
+                <span class="mobile-header-title">Admin</span>
+            </div>
 
             <!-- DASHBOARD VIEW -->
             <div id="view-dashboard" class="admin-view active">
                 <header class="page-header">
                     <h1 class="page-title" data-i18n="admin.dashboard">Dashboard</h1>
-                    <span class="text-gold" id="welcome-msg">Welcome back, Admin</span>
+                    <span class="text-accent" id="welcome-msg">Welcome back, Admin</span>
                 </header>
 
                 <div class="dashboard-grid">
@@ -81,7 +132,7 @@
                     </div>
                     <div class="stat-card">
                         <span class="stat-label" data-i18n="admin.pendingApprovals">Pending Approvals</span>
-                        <div class="stat-value text-gold" id="stat-pending-users">0</div>
+                        <div class="stat-value text-accent" id="stat-pending-users">0</div>
                     </div>
                 </div>
 
@@ -92,11 +143,16 @@
                         <div class="action-text" data-i18n="admin.createNewAuction">Create New Auction</div>
                     </div>
                     <div class="action-card" onclick="switchView('users');">
-                        <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                        <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg></div>
                         <div class="action-text" data-i18n="admin.reviewPendingUsers">Review Pending Users</div>
                     </div>
                     <div class="action-card" onclick="switchView('lots');">
-                        <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg></div>
+                        <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                            </svg></div>
                         <div class="action-text" data-i18n="admin.addNewLot">Add New Lot</div>
                     </div>
                 </div>
@@ -135,7 +191,8 @@
                             <div class="form-group">
                                 <label class="form-label" data-i18n="admin.auctionImage">Auction Image</label>
                                 <input type="file" class="form-input" name="auctionImage" accept="image/*">
-                                <small class="text-muted" data-i18n="admin.auctionImageHelp">Upload an image for the auction card (optional)</small>
+                                <small class="text-muted" data-i18n="admin.auctionImageHelp">Upload an image for the
+                                    auction card (optional)</small>
                             </div>
                         </div>
 
@@ -152,11 +209,14 @@
 
                         <div class="form-group">
                             <label class="form-label" data-i18n="auction.buyersPremium">Buyer's Premium (%)</label>
-                            <input type="number" class="form-input" name="buyersPremium" value="5" min="0" max="100" step="0.01" required>
-                            <small class="text-muted" data-i18n="admin.buyersPremiumHelp">Percentage added to winning bids (e.g., 5 for 5%)</small>
+                            <input type="number" class="form-input" name="buyersPremium" value="5" min="0" max="100"
+                                step="0.01" required>
+                            <small class="text-muted" data-i18n="admin.buyersPremiumHelp">Percentage added to winning
+                                bids (e.g., 5 for 5%)</small>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" data-i18n="admin.createAuction">Create Auction</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="admin.createAuction">Create
+                            Auction</button>
                     </form>
                 </div>
 
@@ -190,106 +250,171 @@
                 <div class="admin-section">
                     <h2 class="mb-6" data-i18n="admin.createNewLot">Create New Lot</h2>
                     <form id="lot-form" class="admin-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="forms.auction">Auction</label>
-                                <select class="form-select" name="auctionId" id="auction-select" required>
-                                    <!-- Populated by JavaScript -->
-                                </select>
+                        <div class="form-grid-layout">
+                            <!-- Left Column: Primary Info -->
+                            <div class="form-column">
+                                <fieldset class="admin-fieldset">
+                                    <legend>General Information</legend>
+
+                                    <div class="form-group">
+                                        <label class="form-label" data-i18n="forms.auction">Auction</label>
+                                        <select class="form-select" name="auctionId" id="auction-select" required>
+                                            <!-- Populated by JavaScript -->
+                                        </select>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group" style="flex: 1;">
+                                            <label class="form-label" data-i18n="admin.lotNumber">Lot Number</label>
+                                            <input type="number" class="form-input" name="lotNumber" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 2;">
+                                            <label class="form-label" data-i18n="auction.category">Category</label>
+                                            <input type="text" class="form-input" name="category" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" data-i18n="forms.title">Title</label>
+                                        <input type="text" class="form-input" name="title" required>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="admin-fieldset">
+                                    <legend>Details</legend>
+
+                                    <div class="form-group">
+                                        <label class="form-label" data-i18n="auction.description">Description</label>
+                                        <textarea class="form-textarea" name="description" rows="4" required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" data-i18n="auction.condition">Condition Report</label>
+                                        <textarea class="form-textarea" name="condition" rows="3" required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" data-i18n="admin.provenanceOptional">Provenance
+                                            (Optional)</label>
+                                        <input type="text" class="form-input" name="provenance">
+                                    </div>
+                                </fieldset>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="admin.lotNumber">Lot Number</label>
-                                <input type="number" class="form-input" name="lotNumber" required>
+
+                            <!-- Right Column: Financials & Media -->
+                            <div class="form-column">
+                                <fieldset class="admin-fieldset">
+                                    <legend>Financials</legend>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.estimateMinDollar">Est. Low
+                                                ($)</label>
+                                            <input type="number" class="form-input" name="estimateMin" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.estimateMaxDollar">Est. High
+                                                ($)</label>
+                                            <input type="number" class="form-input" name="estimateMax" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.startingBidDollar">Start Bid
+                                                ($)</label>
+                                            <input type="number" class="form-input" name="startingBid" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.reserveDollar">Reserve
+                                                ($)</label>
+                                            <input type="number" class="form-input" name="reserve" value="0">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" data-i18n="admin.bidIncrementDollar">Bid Increment
+                                            ($)</label>
+                                        <input type="number" class="form-input" name="bidIncrement" value="100"
+                                            required>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="admin-fieldset">
+                                    <legend>Media Gallery</legend>
+
+                                    <div class="form-group">
+                                        <p style="font-size: 0.85rem; color: var(--theme-text-muted); margin-bottom: 0.75rem;"
+                                            data-i18n="admin.lotMediaHelp">
+                                            Upload images and videos. Drag to reorder.
+                                        </p>
+
+                                        <div class="media-upload-zone" id="lot-media-upload-zone">
+                                            <input type="file" id="lot-media-input" multiple accept="image/*,video/*"
+                                                style="display: none"
+                                                onchange="lotMediaManager.handleFilesSelect(event)">
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                onclick="document.getElementById('lot-media-input').click()">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                                </svg>
+                                                <span data-i18n="admin.addMedia">Add Media</span>
+                                            </button>
+                                            <div class="media-error" id="lot-media-error" style="display: none;"></div>
+                                        </div>
+
+                                        <div id="lot-media-preview-grid" class="media-preview-grid"
+                                            style="display: none;">
+                                            <!-- Media items will be added here by JavaScript -->
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="forms.title">Title</label>
-                                <input type="text" class="form-input" name="title" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="auction.category">Category</label>
-                                <input type="text" class="form-input" name="category" required>
-                            </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-lg" data-i18n="admin.createLot">Create
+                                Lot</button>
                         </div>
+                    </form>
 
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="auction.description">Description</label>
-                            <textarea class="form-textarea" name="description" required></textarea>
-                        </div>
+                    <!-- Media Upload Section -->
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="admin.lotMedia">Lot Media (Images & Videos)</label>
+                        <p style="font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 1rem;"
+                            data-i18n="admin.lotMediaHelp">
+                            Upload images and videos for this lot. The first item will be the cover image.
+                        </p>
 
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="auction.condition">Condition</label>
-                            <textarea class="form-textarea" name="condition" required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="admin.provenanceOptional">Provenance (Optional)</label>
-                            <input type="text" class="form-input" name="provenance">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="admin.estimateMinDollar">Estimate Min ($)</label>
-                                <input type="number" class="form-input" name="estimateMin" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="admin.estimateMaxDollar">Estimate Max ($)</label>
-                                <input type="number" class="form-input" name="estimateMax" required>
+                        <div class="media-upload-zone" id="lot-media-upload-zone">
+                            <input type="file" id="lot-media-input" multiple accept="image/*,video/*"
+                                style="display: none" onchange="lotMediaManager.handleFilesSelect(event)">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('lot-media-input').click()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span data-i18n="admin.addImagesVideos">Add Images/Videos</span>
+                            </button>
+                            <div class="media-error" id="lot-media-error"
+                                style="display: none; color: var(--color-error); margin-top: 0.5rem; font-size: 0.875rem;">
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="admin.startingBidDollar">Starting Bid ($)</label>
-                                <input type="number" class="form-input" name="startingBid" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="admin.reserveDollar">Reserve ($)</label>
-                                <input type="number" class="form-input" name="reserve" value="0">
-                            </div>
+                        <!-- Media Preview Grid -->
+                        <div id="lot-media-preview-grid" class="media-preview-grid"
+                            style="display: none; margin-top: 1rem;">
+                            <!-- Media items will be added here by JavaScript -->
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="admin.bidIncrementDollar">Bid Increment ($)</label>
-                            <input type="number" class="form-input" name="bidIncrement" value="100" required>
-                        </div>
-
-                        <!-- Media Upload Section -->
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="admin.lotMedia">Lot Media (Images & Videos)</label>
-                            <p style="font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 1rem;" data-i18n="admin.lotMediaHelp">
-                                Upload images and videos for this lot. The first item will be the cover image.
-                            </p>
-                            
-                            <div class="media-upload-zone" id="lot-media-upload-zone">
-                                <input type="file" 
-                                       id="lot-media-input" 
-                                       multiple 
-                                       accept="image/*,video/*"
-                                       style="display: none"
-                                       onchange="lotMediaManager.handleFilesSelect(event)">
-                                <button type="button" 
-                                        class="btn btn-secondary" 
-                                        onclick="document.getElementById('lot-media-input').click()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                    <span data-i18n="admin.addImagesVideos">Add Images/Videos</span>
-                                </button>
-                                <div class="media-error" id="lot-media-error" style="display: none; color: var(--color-error); margin-top: 0.5rem; font-size: 0.875rem;"></div>
-                            </div>
-
-                            <!-- Media Preview Grid -->
-                            <div id="lot-media-preview-grid" class="media-preview-grid" style="display: none; margin-top: 1rem;">
-                                <!-- Media items will be added here by JavaScript -->
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" data-i18n="admin.createLot">Create Lot</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="admin.createLot">Create Lot</button>
                     </form>
                 </div>
 
@@ -382,7 +507,7 @@
                     </div>
                     <div>
                         <label class="text-sm text-muted" data-i18n="admin.currentBidAmount">Current Bid Amount</label>
-                        <p class="font-semibold text-gold" id="bidder-bid-amount">-</p>
+                        <p class="font-semibold text-accent" id="bidder-bid-amount">-</p>
                     </div>
                     <div>
                         <label class="text-sm text-muted" data-i18n="auction.lot">Lot</label>
@@ -390,13 +515,19 @@
                     </div>
                 </div>
                 <div style="margin-top: 1.25rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                         <h3 style="margin: 0; font-size: 1rem;" data-i18n="admin.allBidders">All Bidders</h3>
-                        <button id="remove-top-bidder-btn" class="btn btn-ghost btn-sm" type="button" style="display: none;" data-i18n="admin.removeTopBidder">Remove Top Bidder</button>
+                        <button id="remove-top-bidder-btn" class="btn btn-ghost btn-sm" type="button"
+                            style="display: none;" data-i18n="admin.removeTopBidder">Remove Top Bidder</button>
                     </div>
-                    <div id="bidder-audit-note" style="display: none; margin-bottom: 0.5rem; padding: 0.5rem 0.625rem; background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: var(--radius-sm); font-size: 0.85rem;"></div>
-                    <div id="all-bidders-list" style="max-height: 240px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
-                        <div style="padding: 0.75rem; color: var(--color-text-light);" data-i18n="admin.noBiddersYet">No bidders yet</div>
+                    <div id="bidder-audit-note"
+                        style="display: none; margin-bottom: 0.5rem; padding: 0.5rem 0.625rem; background: rgba(47, 79, 62, 0.12); border: 1px solid rgba(47, 79, 62, 0.35); border-radius: var(--radius-sm); font-size: 0.85rem;">
+                    </div>
+                    <div id="all-bidders-list"
+                        style="max-height: 240px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
+                        <div style="padding: 0.75rem; color: var(--color-text-light);" data-i18n="admin.noBiddersYet">No
+                            bidders yet</div>
                     </div>
                 </div>
             </div>
@@ -405,7 +536,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="../js/utils.js"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
@@ -423,11 +554,8 @@
             window.location.href = 'account.html';
         }
 
-        // Update welcome message
-        if (currentUser) {
-            const welcomePrefix = (typeof i18n !== 'undefined' && i18n?.t) ? i18n.t('admin.welcomeBack') : 'Welcome back';
-            document.getElementById('welcome-msg').textContent = `${welcomePrefix}, ${currentUser.full_name || currentUser.email}`;
-        }
+        // Update welcome message - Moved to DOMContentLoaded after i18n init
+        // to ensure translations are loaded before usage.
 
         // Logout function
         function logout() {
@@ -483,10 +611,20 @@
 
         // --- INITIALIZATION ---
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             // Initialize i18n
             const i18n = new I18n();
-            i18n.init();
+            await i18n.init();
+
+            // Update welcome message (after translations are loaded)
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                const welcomePrefix = i18n.t('admin.welcomeBack');
+                const welcomeEl = document.getElementById('welcome-msg');
+                if (welcomeEl) {
+                    welcomeEl.textContent = `${welcomePrefix}, ${currentUser.full_name || currentUser.email}`;
+                }
+            }
 
             // These are now handled by admin.js
             // loadDashboardStats();

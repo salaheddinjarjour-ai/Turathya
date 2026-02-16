@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - UTILITY FUNCTIONS
+// TURATHYA - UTILITY FUNCTIONS
 // Date formatting, currency, URL helpers
 // ============================================
 
@@ -219,8 +219,8 @@ function scrollToElement(element, offset = 0) {
 
 function updateHeaderAuthState() {
     // Get current user from token
-    const token = localStorage.getItem('zauction_token');
-    const userStr = localStorage.getItem('zauction_user');
+    const token = localStorage.getItem('turathya_token');
+    const userStr = localStorage.getItem('turathya_user');
     
     // Hide approval banner by default
     const approvalBanner = document.getElementById('approval-banner');
@@ -257,8 +257,8 @@ function updateHeaderAuthState() {
     } catch (e) {
         console.error('Error parsing user data:', e);
         // Clear invalid data
-        localStorage.removeItem('zauction_token');
-        localStorage.removeItem('zauction_user');
+        localStorage.removeItem('turathya_token');
+        localStorage.removeItem('turathya_user');
         document.querySelectorAll('.auth-link').forEach(el => el.style.display = '');
         document.querySelectorAll('.user-link').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.admin-link').forEach(el => el.style.display = 'none');
@@ -267,8 +267,8 @@ function updateHeaderAuthState() {
 
 function logout() {
     // Clear authentication data
-    localStorage.removeItem('zauction_token');
-    localStorage.removeItem('zauction_user');
+    localStorage.removeItem('turathya_token');
+    localStorage.removeItem('turathya_user');
     
     // Update header
     updateHeaderAuthState();

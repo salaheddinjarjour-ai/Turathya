@@ -54,8 +54,8 @@
 
 .form-select:focus {
     outline: none;
-    border-color: var(--color-gold);
-    box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.1);
+    border-color: var(--color-olive);
+    box-shadow: 0 0 0 3px rgba(47, 79, 62, 0.1);
 }
 
 /* Text muted */

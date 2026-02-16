@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - COUNTDOWN TIMER
+// TURATHYA - COUNTDOWN TIMER
 // Real-time countdown for auctions and lots
 // ============================================
 

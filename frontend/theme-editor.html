@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURATHYA - Live Theme Editor</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <style>
+        body {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .editor-sidebar {
+            background-color: var(--theme-surface);
+            border-right: 1px solid var(--theme-border);
+            padding: var(--space-6);
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+
+        .preview-area {
+            background-color: var(--theme-bg);
+            padding: var(--space-8);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .control-group {
+            margin-bottom: var(--space-6);
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 0;
+            background: none;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: 1px solid var(--theme-border);
+            border-radius: var(--radius-sm);
+        }
+
+        .token-name {
+            font-family: monospace;
+            font-size: var(--text-xs);
+            color: var(--theme-text-muted);
+        }
+
+        .preview-card {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .preset-btn {
+            margin-bottom: var(--space-2);
+            width: 100%;
+            text-align: left;
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Editor Sidebar -->
+    <aside class="editor-sidebar">
+        <h2 class="mb-6">Theme Editor</h2>
+
+        <div class="mb-8">
+            <h4 class="mb-4">Actions</h4>
+            <button class="btn btn-primary btn-sm mb-2 w-full" id="save-theme">Save Theme</button>
+            <button class="btn btn-secondary btn-sm mb-2 w-full" id="reset-theme">Reset to Default</button>
+            <button class="btn btn-ghost btn-sm w-full" id="export-theme">Export JSON</button>
+        </div>
+
+        <div class="mb-8">
+            <h4 class="mb-4">Presets</h4>
+            <button class="btn btn-secondary btn-sm preset-btn" onclick="applyPreset('default')">Deep Olive
+                (Default)</button>
+            <button class="btn btn-secondary btn-sm preset-btn" onclick="applyPreset('dark')">Midnight Luxury</button>
+            <button class="btn btn-secondary btn-sm preset-btn" onclick="applyPreset('blue')">Sapphire Elegant</button>
+        </div>
+
+        <div id="token-controls">
+            <!-- Controls injected by JS -->
+        </div>
+    </aside>
+
+    <!-- Live Preview Area -->
+    <main class="preview-area">
+        <header class="header mb-8 card">
+            <div class="container header-content">
+                <a href="#" class="logo">TURATHYA</a>
+                <nav class="nav">
+                    <a href="#" class="nav-link active">Home</a>
+                    <a href="#" class="nav-link">Auctions</a>
+                    <a href="#" class="nav-link">Sell</a>
+                    <a href="#" class="nav-link">About</a>
+                </nav>
+                <div class="flex items-center gap-md">
+                    <button class="watchlist-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button class="btn btn-primary btn-sm">Sign In</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="preview-card card p-8">
+            <h1>Typography & Colors</h1>
+            <p class="text-xl mb-4">This is a subtitle utilizing the text-base font size.</p>
+            <p class="text-muted mb-6">Muted text for secondary information.</p>
+
+            <div class="flex gap-md mb-8">
+                <button class="btn btn-primary">Primary Button</button>
+                <button class="btn btn-accent">Accent Button</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-ghost">Ghost</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Input Field</label>
+                <input type="text" class="form-input" placeholder="Focus me to see accent color">
+            </div>
+
+            <h3 class="mt-8 mb-4">Component Preview</h3>
+            <div class="grid grid-cols-2 gap-md">
+                <div class="card">
+                    <div class="card-image" style="height: 150px;"></div>
+                    <div class="card-content">
+                        <div class="label mb-2">Category</div>
+                        <h4 class="card-title">Auction Item</h4>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="price">$1,200</span>
+                            <span class="badge badge-accent">Active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-featured">
+                    <div class="card-content">
+                        <h4 class="card-title">Featured Card</h4>
+                        <p>This card has the accent border color.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script>
+        const tokens = [
+            { key: '--theme-bg', label: 'Background', type: 'color' },
+            { key: '--theme-surface', label: 'Surface (Card/White)', type: 'color' },
+            { key: '--theme-surface-2', label: 'Surface 2 (Footer/Alt)', type: 'color' },
+            { key: '--theme-text', label: 'Primary Text', type: 'color' },
+            { key: '--theme-text-muted', label: 'Muted Text', type: 'color' },
+            { key: '--theme-accent', label: 'Accent (Olive)', type: 'color' },
+            { key: '--theme-accent-2', label: 'Accent 2 (Hover)', type: 'color' },
+            { key: '--theme-border', label: 'Border', type: 'color' },
+            { key: '--theme-success', label: 'Success', type: 'color' },
+            { key: '--theme-error', label: 'Error', type: 'color' },
+        ];
+
+        const presets = {
+            default: ThemeManager.defaultTheme,
+            dark: {
+                '--theme-bg': '#121212',
+                '--theme-surface': '#1E1E1E',
+                '--theme-surface-2': '#252525',
+                '--theme-text': '#E0E0E0',
+                '--theme-text-muted': '#A0A0A0',
+                '--theme-accent': '#3E6B55',
+                '--theme-accent-2': '#2F4F3E',
+                '--theme-border': '#333333',
+                '--theme-success': '#81C784',
+                '--theme-error': '#E57373',
+                '--theme-warning': '#FFB74D'
+            },
+            blue: {
+                '--theme-bg': '#F0F4F8',
+                '--theme-surface': '#FFFFFF',
+                '--theme-surface-2': '#D9E2EC',
+                '--theme-text': '#102A43',
+                '--theme-text-muted': '#486581',
+                '--theme-accent': '#334E68',
+                '--theme-accent-2': '#627D98',
+                '--theme-border': '#BCCCDC',
+                '--theme-success': '#3EBD93',
+                '--theme-error': '#E12D39',
+                '--theme-warning': '#FADB5F'
+            }
+        };
+
+        const controlsContainer = document.getElementById('token-controls');
+
+        // Render Controls
+        function renderControls() {
+            const currentTheme = ThemeManager.getCurrentTheme();
+            controlsContainer.innerHTML = '';
+
+            tokens.forEach(token => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'control-group';
+
+                const val = currentTheme[token.key];
+
+                wrapper.innerHTML = `
+                    <label class="form-label">${token.label}</label>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="${token.key}" value="${val}">
+                        <span class="token-name">${token.key}</span>
+                        <span style="font-family: monospace; margin-left: auto;">${val}</span>
+                    </div>
+                `;
+                controlsContainer.appendChild(wrapper);
+
+                // Add listener
+                const input = wrapper.querySelector('input');
+                input.addEventListener('input', (e) => {
+                    document.documentElement.style.setProperty(token.key, e.target.value);
+                    wrapper.querySelector('span:last-child').textContent = e.target.value;
+                });
+            });
+        }
+
+        // Actions
+        document.getElementById('save-theme').addEventListener('click', () => {
+            const theme = {};
+            tokens.forEach(t => {
+                theme[t.key] = getComputedStyle(document.documentElement).getPropertyValue(t.key).trim();
+            });
+            ThemeManager.saveTheme(theme);
+            alert('Theme saved! It will now persist across pages.');
+        });
+
+        document.getElementById('reset-theme').addEventListener('click', () => {
+            ThemeManager.resetTheme();
+            renderControls();
+        });
+
+        document.getElementById('export-theme').addEventListener('click', () => {
+            const theme = {};
+            tokens.forEach(t => {
+                theme[t.key] = getComputedStyle(document.documentElement).getPropertyValue(t.key).trim();
+            });
+            const blob = new Blob([JSON.stringify(theme, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'turathya-theme.json';
+            a.click();
+        });
+
+        window.applyPreset = (name) => {
+            ThemeManager.applyTheme(presets[name]);
+            renderControls();
+        };
+
+        // Init
+        ThemeManager.init();
+        renderControls();
+
+    </script>
+</body>
+
+</html>

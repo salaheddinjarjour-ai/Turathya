@@ -1,5 +1,5 @@
 /* ============================================
-   ZAUCTION - ACCOUNT PAGE STYLES
+   TURATHYA - ACCOUNT PAGE STYLES
    Auth forms, tabs, profile
    ============================================ */
 
@@ -49,8 +49,8 @@
 }
 
 .tab-btn.active {
-    color: var(--color-gold);
-    border-bottom-color: var(--color-gold);
+    color: var(--color-olive);
+    border-bottom-color: var(--color-olive);
 }
 
 .tab-content {

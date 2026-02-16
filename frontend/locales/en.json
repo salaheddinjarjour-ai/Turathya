@@ -347,10 +347,10 @@
         "userDeleted": "User deleted",
         "failedDeleteUser": "Failed to delete user",
         "failedLoadUsers": "Failed to load users",
-        "failedLoadWatchlist": "Failed to load watchlist"
-        ,"invalidMediaType": "{file} is not a valid image or video file"
-        ,"mediaTooLarge": "{file} is too large. Max size: {max}"
-        ,"failedProcessVideo": "Failed to process video: {file}"
+        "failedLoadWatchlist": "Failed to load watchlist",
+        "invalidMediaType": "{file} is not a valid image or video file",
+        "mediaTooLarge": "{file} is too large. Max size: {max}",
+        "failedProcessVideo": "Failed to process video: {file}"
     },
     "footer": {
         "aboutUs": "About Us",
@@ -366,12 +366,20 @@
         "newsletter": "Newsletter",
         "newsletterText": "Subscribe to our newsletter for exclusive updates",
         "subscribe": "Subscribe",
-        "copyright": "© 2026 Zauction. All rights reserved.",
+        "copyright": "© 2026 TURATHYA. All rights reserved.",
         "buyersGuide": "Buyer's Guide",
         "sellersGuide": "Seller's Guide",
         "biddingProcess": "Bidding Process",
         "shippingInfo": "Shipping Information",
-        "paymentMethods": "Payment Methods"
+        "paymentMethods": "Payment Methods",
+        "services": "Services",
+        "legal": "Legal",
+        "ourTeam": "Our Team",
+        "conditionReports": "Condition Reports",
+        "feesPayments": "Fees & Payments",
+        "shippingPickup": "Shipping & Pickup",
+        "authentication": "Authentication",
+        "cookiePolicy": "Cookie Policy"
     },
     "errors": {
         "404": "Page Not Found",
@@ -471,5 +479,610 @@
         "current": "Current",
         "ends": "Ends",
         "toggleBidsWidget": "Toggle bids widget"
+    },
+    "info": {
+        "about": {
+            "title": "About Turathya",
+            "subtitle": "Trusted platform for timed auctions of antiques and rare items",
+            "mission": {
+                "title": "Our Mission",
+                "p1": "Turathya connects discerning collectors with exceptional pieces through carefully curated timed auctions. We specialize in antiques, fine art, rare books, ceramics, and collectibles of historical and aesthetic significance.",
+                "p2": "Our platform combines the ease of online bidding with the rigor and expertise of traditional auction houses. Every item offered is evaluated by specialists and presented with detailed condition reports and provenance documentation."
+            },
+            "approach": {
+                "title": "Our Approach",
+                "p1": "We believe quality trumps quantity. Rather than flooding bidders with endless listings, we focus on thoughtful curation. Each auction consists of items selected for their authenticity, condition, and cultural value.",
+                "p2": "Timed auctions allow participants from around the world to bid at their convenience, while maintaining the competitive dynamics and transparency of live sales. Bidding periods are clearly defined, increments are standardized, and all activity is recorded."
+            },
+            "trust": {
+                "title": "Trust and Transparency",
+                "p1": "Every piece is accompanied by comprehensive documentation including high-resolution images, detailed descriptions, condition assessments, and available provenance. We disclose all known restorations, repairs, and flaws.",
+                "p2": "Buyer's premium and fee structures are clearly outlined. Payment terms, shipping arrangements, and return policies are established before bidding begins. We operate with the same standards of accountability expected from established auction houses."
+            },
+            "expertise": {
+                "title": "Expertise",
+                "p1": "Our team includes specialists in European decorative arts, Asian ceramics, rare books and manuscripts, fine art, and antique jewelry. Items are evaluated for authenticity, condition, and market value before being accepted into our auctions.",
+                "p2": "We work with independent experts, restorers, and appraisers when specialized knowledge is required. Third-party authentication and appraisals are obtained for high-value items or uncertain attributions."
+            },
+            "collectors": {
+                "title": "For Collectors",
+                "text": "Whether you are building a collection, looking for a specific piece, or exploring a new area of interest, Turathya provides access to vetted items with clear documentation. Our platform is designed for serious collectors who value expertise, transparency, and integrity."
+            }
+        },
+        "team": {
+            "title": "Our Team",
+            "subtitle": "Specialists in Fine and Decorative Arts",
+            "expertise": {
+                "title": "Experience and Expertise",
+                "p1": "Turathya is supported by a team of specialists with backgrounds in art history, museum curation, conservation, and auction house practices. Our cataloguers and valuers bring decades of combined experience in their respective fields.",
+                "p2": "Each department is led by individuals with advanced training and professional credentials. We maintain relationships with independent experts, restorers, and academic institutions to ensure accuracy of attribution and valuation."
+            },
+            "departments": {
+                "title": "Departments",
+                "euroDeco": {
+                    "title": "European Decorative Arts",
+                    "text": "Our experts in European furniture, silver, porcelain, and glass have extensive knowledge of period styles, maker's marks, and regional characteristics. They assess condition, authenticity, and provenance for items ranging from the Renaissance to the early 20th century."
+                },
+                "fineArt": {
+                    "title": "Fine Art",
+                    "text": "The Fine Art department handles paintings, works on paper, and sculpture. Specialists conduct research on attribution, examine technique and materials, and consult auction records and scholarly literature to determine estimates and authenticity."
+                },
+                "asianArt": {
+                    "title": "Asian Art & Ceramics",
+                    "text": "Our Asian Art specialists focus on Chinese, Japanese, and Southeast Asian ceramics, works of art, and decorative objects. They evaluate period, kiln provenance, condition, and cultural significance."
+                },
+                "books": {
+                    "title": "Rare Books & Manuscripts",
+                    "text": "The Books & Manuscripts department evaluates printed books, maps, documents, and ephemera. Specialists examine binding, paper, printing techniques, and provenance to determine rarity and value."
+                },
+                "jewelry": {
+                    "title": "Jewelry & Watches",
+                    "text": "Our jewelry specialists assess gemstones, precious metals, historical settings, and maker's marks. They work with independent gemologists and horologists when detailed technical evaluation is needed."
+                }
+            },
+            "research": {
+                "title": "Continuous Research",
+                "p1": "Our team maintains active research practices, consulting auction archives, museum collections, and scholarly publications. We attend professional conferences, visit exhibitions, and engage with the broader community of specialists and collectors.",
+                "p2": "This commitment to continuous learning ensures that our cataloging remains accurate and our market valuations reflect current scholarship and collecting trends."
+            }
+        },
+        "contact": {
+            "title": "Contact Us",
+            "subtitle": "We welcome inquiries from collectors and consignors",
+            "general": {
+                "title": "General Inquiries",
+                "text": "For inquiries about current or upcoming auctions, bidding procedures, or general information about our services, please contact us at:",
+                "emailLabel": "Email:",
+                "response": "We respond to all inquiries within two business days."
+            },
+            "departments": {
+                "title": "Specialized Departments",
+                "intro": "For questions about specific categories or to discuss potential consignments, you can contact our specialized departments directly:",
+                "euroDeco": {
+                    "title": "European Decorative Arts:"
+                },
+                "fineArt": {
+                    "title": "Fine Art:"
+                },
+                "asianArt": {
+                    "title": "Asian Art:"
+                },
+                "books": {
+                    "title": "Rare Books:"
+                },
+                "jewelry": {
+                    "title": "Jewelry & Watches:"
+                },
+                "support": "email support directly"
+            },
+            "support": {
+                "title": "Bidding & Account Support",
+                "text": "For assistance with bidding, account access, payment questions, or shipping arrangements:",
+                "emailLabel": "Email:"
+            },
+            "consignment": {
+                "title": "Consignment Inquiries",
+                "text1": "If you are interested in consigning items for auction, please submit photos and any available documentation (provenance, past appraisals, receipts) to the appropriate specialist department.",
+                "text2": "Our specialists will review your submission and respond with a preliminary assessment. If your items are suitable for auction, we will discuss terms, timing, and reserve requirements."
+            },
+            "location": {
+                "title": "Office Location",
+                "text": "Turathya operates primarily online. Viewing of select lots can be arranged by appointment. Please contact us to schedule a visit."
+            },
+            "responseTimes": {
+                "title": "Response Times",
+                "text": "We aim to respond to all inquiries within two business days. During active auction periods, response times for bidding support may be faster. Complex consignment evaluations may require additional time for research and consultation."
+            }
+        },
+        "howBiddingWorks": {
+            "title": "How Bidding Works",
+            "subtitle": "Understanding Timed Auctions",
+            "format": {
+                "title": "Timed Auction Format",
+                "p1": "Turathya uses a timed auction format. Each lot has a specific closing time. Bidders can place bids at any time before the lot closes. The highest bid at closing wins the lot.",
+                "p2": "Unlike live auctions where bidding happens in real-time with an auctioneer, timed auctions allow participants to bid at their convenience over days or weeks. This format accommodates bidders in different time zones and schedules."
+            },
+            "registration": {
+                "title": "Registration",
+                "p1": "To place bids, you must create an account and agree to our Terms of Service. Registration requires a valid email address. You will receive confirmation of your bids and notifications if you are outbid.",
+                "p2": "First-time bidders may be required to provide additional verification before bidding on high-value lots."
+            },
+            "placingBids": {
+                "title": "Placing a Bid",
+                "p1": "Each lot displays the current bid, number of bids placed, and time remaining. To bid, enter an amount equal to or greater than the indicated minimum bid increment.",
+                "p2": "Your bid is a binding commitment to purchase the lot at that price if you are the winning bidder. Once placed, bids cannot be withdrawn.",
+                "p3": "You can increase your bid at any time before the lot closes. If another bidder outbids you, you will receive a notification and can place a higher bid."
+            },
+            "increments": {
+                "title": "Bid Increments",
+                "intro": "Bids must advance in standard increments based on the current bid level:",
+                "range1": "$0 - $99: $5 increment",
+                "range2": "$100 - $499: $25 increment",
+                "range3": "$500 - $999: $50 increment",
+                "range4": "$1,000 - $4,999: $100 increment",
+                "range5": "$5,000 - $9,999: $250 increment",
+                "range6": "$10,000+: $500 increment",
+                "outro": "These increments ensure orderly bidding and prevent insignificant raises."
+            },
+            "reserves": {
+                "title": "Reserve Prices",
+                "p1": "Some lots have a reserve price - a confidential minimum price below which the lot will not be sold. If bidding does not reach the reserve price, the lot will not be sold.",
+                "p2": "Lots with reserves are indicated in the listing. The reserve amount is not disclosed, but is always at or below the low estimate."
+            },
+            "winning": {
+                "title": "Winning a Lot",
+                "p1": "If you are the highest bidder when a lot closes, you will receive a notification confirming your win. You are obligated to complete the purchase for your winning bid amount plus buyer's premium and any applicable taxes.",
+                "p2": "Payment instructions will be provided in the notification email. Payment must be received within the specified timeframe (typically 7 days) to avoid penalties or account restrictions."
+            },
+            "premium": {
+                "title": "Buyer's Premium",
+                "p1": "A buyer's premium is added to the hammer price (your winning bid). The premium percentage is stated in the terms of each auction. This fee covers administrative costs and is standard practice in the auction industry.",
+                "p2": "The total amount you owe is: Hammer Price + Buyer's Premium + Shipping (if applicable)."
+            },
+            "etiquette": {
+                "title": "Bidding Etiquette",
+                "p1": "Bid only on items you intend to purchase. Do not bid to inflate prices or disrupt auctions. Violations of bidding etiquette may result in account suspension.",
+                "p2": "If you have questions about a lot, contact us before bidding. We are happy to provide additional information or arrange viewings when possible."
+            }
+        },
+        "terms": {
+            "title": "Terms of Service",
+            "subtitle": "Conditions of Sale and Use",
+            "agreement": {
+                "title": "1. Agreement to Terms",
+                "p1": "By registering for an account, placing bids, or using Turathya's services, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use our services.",
+                "p2": "We reserve the right to modify these terms at any time. Changes will be posted on this page with an updated effective date. Continued use of our services constitutes acceptance of the modified terms."
+            },
+            "bidding": {
+                "title": "2. Bidding & Buying",
+                "p1": "All bids are binding commitments to purchase. By placing a bid, you agree to pay the hammer price plus buyer's premium, applicable taxes, and shipping costs if you are the winner.",
+                "p2": "Bids cannot be withdrawn once placed. We reserve the right to reject bids, cancel sales, or refuse service to any bidder at our discretion.",
+                "p3": "Reserve prices may apply to specific lots. If bidding does not reach the reserve price, the lot will not be sold."
+            },
+            "payment": {
+                "title": "3. Payment",
+                "p1": "Payment is due within 7 days of auction close. Accepted payment methods include bank transfer, credit cards (3% processing fee), and certified checks.",
+                "p2": "Items will not be released until payment is received in full and cleared. Late payments incur a fee of 1.5% per month on the outstanding balance.",
+                "p3": "Failure to pay may result in account suspension, legal action, and reporting to credit agencies."
+            },
+            "premium": {
+                "title": "4. Buyer's Premium",
+                "p1": "A buyer's premium is added to the hammer price of each lot. The premium percentage is stated in each auction's terms and typically ranges from 20% to 25%."
+            },
+            "condition": {
+                "title": "5. Condition & Authenticity",
+                "p1": "All lots are sold 'as is', with all faults. Buyers are responsible for inspecting lots and forming their own opinions on condition and authenticity.",
+                "p2": "Condition reports are provided as a courtesy and are not exhaustive. We do not guarantee that condition reports include all defects or issues.",
+                "p3": "We do not guarantee attribution, age, authenticity, or provenance unless explicitly stated in writing. Catalog descriptions represent our opinion based on inspection and research at the time of cataloging."
+            },
+            "returns": {
+                "title": "6. Returns & Refunds",
+                "p1": "All sales are final. Returns are only accepted in cases of material forgery - where an item is proven to be a counterfeit or materially different from the catalog description.",
+                "p2": "Return requests must be made in writing within 30 days of delivery and supported by a recognized expert opinion. Items must be returned in the same condition as sold.",
+                "p3": "If a return is approved, the buyer will receive a refund of the hammer price only. Buyer's premium, shipping costs, and expert fees are non-refundable."
+            },
+            "shipping": {
+                "title": "7. Shipping & Risk of Loss",
+                "p1": "Buyers are responsible for arranging and paying for shipping, packing, and insurance. Risk of loss passes to the buyer upon payment clearance.",
+                "p2": "We are not liable for damage or loss occurring during transit or after items leave our facility."
+            },
+            "liability": {
+                "title": "8. Limitation of Liability",
+                "p1": "Our liability is limited to the hammer price paid for the lot. We are not liable for consequential, incidental, or punitive damages.",
+                "p2": "We make no warranties, express or implied, regarding merchantability or fitness for a particular purpose for any lot."
+            },
+            "intellectual": {
+                "title": "9. Intellectual Property",
+                "p1": "All content on this site, including text, images, logos, and catalog descriptions, is the property of Turathya and protected by copyright law.",
+                "p2": "You may not reproduce, distribute, or use our content without written permission."
+            }
+        },
+        "privacy": {
+            "title": "Privacy Policy",
+            "subtitle": "How we collect, use, and protect your information",
+            "collection": {
+                "title": "1. Information We Collect",
+                "intro": "We collect information necessary to provide auction services and maintain your account:",
+                "list": {
+                    "account": "Account Information: Name, email address, password, registration date.",
+                    "bidding": "Bidding Activity: Bids placed, lots won, watchlist items, transaction history.",
+                    "payment": "Payment Information: Payment method details (processed securely by third-party payment processors).",
+                    "communication": "Communications: Emails and messages exchanged with our team.",
+                    "technical": "Technical Data: IP address, browser type, device info, usage patterns."
+                }
+            },
+            "usage": {
+                "title": "2. How We Use Your Information",
+                "intro": "We use your information to:",
+                "list": {
+                    "processing": "Process bids and facilitate transactions",
+                    "account": "Maintain your account and provide customer support",
+                    "notifications": "Send notifications about bidding activity, auction results, and account status",
+                    "security": "Prevent fraud and ensure platform security",
+                    "improvement": "Improve our services and user experience",
+                    "compliance": "Comply with legal obligations and enforce our Terms of Service"
+                }
+            },
+            "storage": {
+                "title": "3. Data Storage",
+                "p1": "Your account information, bidding history, and preferences are stored locally in your browser using localStorage. This allows the platform to function without a backend server.",
+                "p2": "Data stored in localStorage remains on your device and is not transferred to our servers unless you explicitly submit information (e.g., contact forms, support requests).",
+                "p3": "Clearing browser data or localStorage will delete your account information and bidding history from your device."
+            },
+            "cookies": {
+                "title": "4. Cookies & Tracking",
+                "p1": "We use cookies and similar technologies to enhance your experience and analyze site usage. See our <a href='cookies.html' class='text-accent'>Cookie Policy</a> for details.",
+                "p2": "You can control cookie settings through your browser preferences. Disabling cookies may limit certain features of the platform."
+            },
+            "sharing": {
+                "title": "5. Information Sharing",
+                "p1": "We do not sell or rent your personal information to third parties. We may share information only in the following circumstances:",
+                "list": {
+                    "providers": "Service Providers: Payment processors, shipping companies, technical service providers who assist in operating our platform.",
+                    "legal": "Legal Requirements: When required by law, court order, or government regulation.",
+                    "fraud": "Fraud Prevention: With law enforcement or fraud prevention agencies when necessary to protect our platform and users.",
+                    "business": "Business Transfers: In the event of a merger, acquisition, or sale of assets, your information may be transferred to the acquiring entity."
+                }
+            },
+            "security": {
+                "title": "6. Data Security",
+                "p1": "We implement reasonable security measures to protect your information from unauthorized access, alteration, or disclosure. However, no method of transmission or storage is completely secure.",
+                "p2": "You are responsible for maintaining the confidentiality of your account password. Do not share your password with others."
+            }
+        },
+        "buyersGuide": {
+            "title": "Buyer's Guide",
+            "subtitle": "What you should know before bidding",
+            "beforeBidding": {
+                "title": "Before Bidding",
+                "p1": "Review the lot description, condition report, and photos carefully. Read the auction terms, including the buyer's premium percentage and payment deadline.",
+                "p2": "If you have questions about a lot, contact the appropriate specialist department before bidding. We can provide additional photos, measurements, or clarification on condition issues.",
+                "p3": "Consider arranging a viewing if the item is of significant value or if condition details are critical to your decision."
+            },
+            "estimates": {
+                "title": "Understanding Estimates",
+                "p1": "Each lot includes a pre-sale estimate range (e.g., $2,000 - $3,000). Estimates are based on recent auction results for comparable items, condition, rarity, and market trends.",
+                "p2": "Estimates are not guarantees. Final prices may fall below, within, or exceed the estimate range depending on bidder interest and competition.",
+                "p3": "Starting bids are typically set below the low estimate to encourage participation."
+            },
+            "condition": {
+                "title": "Condition & Authenticity",
+                "p1": "All lots are sold as is. Condition reports describe known defects, restorations, and wear. However, condition reports are not exhaustive. Buyers are responsible for inspecting lots and forming their own opinions.",
+                "p2": "We make every effort to describe and authenticate items accurately, but we do not guarantee attribution, age, or provenance unless explicitly stated. Independent expert opinions are recommended for high-value purchases.",
+                "p3": "Returns are only accepted in cases of material misrepresentation as outlined in our Terms of Service."
+            },
+            "premium": {
+                "title": "Buyer's Premium",
+                "p1": "A buyer's premium is added to your winning bid. The premium percentage (typically 20-25%) is stated in the terms of each auction. This fee is standard in the auction industry and covers operational costs.",
+                "p2": "The total purchase price is: Hammer Price (Winning Bid) + Buyer's Premium + Shipping + Taxes (if applicable)."
+            },
+            "payment": {
+                "title": "Payment",
+                "p1": "Payment is due within 7 days of auction close. Accepted methods include bank transfer, credit card, and certified check. Payment details are provided in the winning notification email.",
+                "p2": "Items will not be released until payment is received in full. Late payments may result in fees or account restrictions."
+            },
+            "shipping": {
+                "title": "Shipping & Pickup",
+                "p1": "Buyers are responsible for arranging and paying for shipping or pickup. We can recommend professional art shippers and packers, but buyers are responsible for coordinating and paying these services directly.",
+                "p2": "Items must be collected or shipping arranged within 14 days of payment. Storage fees may apply for items remaining after this period.",
+                "p3": "International buyers are responsible for customs duties, taxes, and import regulations in their country."
+            },
+            "limits": {
+                "title": "Bidding Limits",
+                "p1": "New bidders or those bidding on high-value items may be required to provide additional verification or a deposit prior to bidding. This protects both buyers and sellers from fraudulent activity.",
+                "p2": "Bidding limits may apply to accounts with outstanding balances or past payment issues."
+            },
+            "questions": {
+                "title": "Questions & Support",
+                "text": "If you have questions about bidding, payment, or shipping, contact our support team at"
+            }
+        },
+        "conditionReports": {
+            "title": "Condition Reports",
+            "subtitle": "How we assess and disclose condition",
+            "purpose": {
+                "title": "Purpose of Condition Reports",
+                "p1": "Condition reports provide detailed descriptions of the physical condition of an item, including wear, damage, restorations, and alterations. These reports help bidders make informed decisions and set appropriate expectations.",
+                "p2": "All lots include a condition statement in the catalog description. More detailed reports are available upon request for items of significant value or complexity."
+            },
+            "inspection": {
+                "title": "What We Inspect",
+                "text": "Our specialists examine every item under proper lighting and, when necessary, using magnification. We assess:",
+                "list": {
+                    "general": "General condition and structural integrity",
+                    "surface": "Surface condition (scratches, stains, fading, discoloration)",
+                    "repair": "Evidence of repair, restoration, or alteration",
+                    "completeness": "Completeness (missing parts, replaced elements)",
+                    "function": "Functionality (for mechanical objects)",
+                    "wear": "Signs of age-appropriate wear vs. damage"
+                }
+            },
+            "disclosure": {
+                "title": "Disclosure Standards",
+                "p1": "We disclose all condition issues that materially affect value or usability. This includes cracks, chips, losses, repairs, repainting, replaced parts, and structural weakness.",
+                "p2": "Minor wear consistent with age and use may not be detailed individually but acknowledged in general terms such as 'minor surface wear' or 'age-appropriate patination'.",
+                "p3": "We do not guarantee that condition reports are exhaustive. Buyers are encouraged to inspect items in person or request additional photos of specific areas of concern."
+            },
+            "requesting": {
+                "title": "Requesting Additional Information",
+                "text": "If you need more detailed condition information, contact the specialist department handling the auction. We can provide:",
+                "list": {
+                    "photos": "Additional photos (detail shots, reverse, base, interior)",
+                    "measurements": "Measurements and dimensions",
+                    "clarification": "Clarification on specific condition issues",
+                    "history": "Information on previous conservation or restoration"
+                },
+                "deadline": "Requests should be submitted well in advance of the auction close to allow time for inspection and response."
+            },
+            "viewing": {
+                "title": "Viewing Appointments",
+                "p1": "For high-value items or items where condition is critical, we recommend arranging a viewing. In-person inspection allows you to assess condition, scale, color, and quality more accurately than photos allow.",
+                "p2": "Contact us to schedule a viewing appointment. We will accommodate your schedule whenever possible."
+            },
+            "limitations": {
+                "title": "Limitations",
+                "p1": "Condition reports reflect our experts' opinion based on visual inspection. We do not conduct scientific testing, X-ray analysis, or destructive testing unless stated otherwise.",
+                "p2": "Hidden defects, internal damage, or issues not visible to the naked eye may not be detected or reported. Buyers bid at their own risk and are responsible for their own due diligence."
+            },
+            "asIs": {
+                "title": "Sold As Is",
+                "p1": "All items are sold as is, where is, with all faults. Condition reports are provided as a service and do not constitute a warranty or guarantee.",
+                "p2": "Returns are only accepted in cases of material misrepresentation as defined in our Terms of Service. Normal wear, undisclosed minor flaws, or difference of opinion regarding condition do not constitute grounds for return."
+            }
+        },
+        "shipping": {
+            "title": "Shipping & Pickup",
+            "subtitle": "Delivery options and buyer responsibilities",
+            "buyerResponsibility": {
+                "title": "Buyer Responsibility",
+                "p1": "Buyers are responsible for arranging and paying for all shipping, packing, and insurance. We do not provide in-house shipping services but can recommend professional art shippers and packing specialists.",
+                "p2": "Items must be collected or shipping arranged within 14 days of payment clearance. Storage fees may apply for items left beyond this period."
+            },
+            "shippers": {
+                "title": "Recommended Shippers",
+                "p1": "We maintain a list of professional art shippers, packers, and freight forwarders who are experienced in handling antiques and fine art. Contact us for recommendations based on your location and the nature of your purchase.",
+                "p2": "Buyers are responsible for obtaining quotes, coordinating pickup, and paying shippers directly. We are not responsible for shipper performance, delays, or damage during transit."
+            },
+            "packing": {
+                "title": "Packing Standards",
+                "p1": "Professional packing is strongly recommended for fragile, valuable, or large items. Proper packing materials and techniques reduce the risk of damage during transit.",
+                "p2": "If you choose to pack items yourself, you assume all risk of damage. We can provide basic packing materials (boxes, bubble wrap, paper) for a fee, but we do not pack items."
+            },
+            "pickup": {
+                "title": "Local Pickup",
+                "p1": "Local buyers may arrange to collect items in person. Pickup must be scheduled in advance by contacting our support team. We cannot accommodate walk-in pickups.",
+                "p2": "Pickup hours are typically Monday through Friday, 10:00 AM to 4:00 PM. Appointments must be confirmed at least 48 hours in advance.",
+                "p3": "Buyers are responsible for bringing appropriate vehicles and assistance for loading. We do not provide loading services for large or heavy items."
+            },
+            "international": {
+                "title": "International Shipping",
+                "p1": "International buyers are responsible for all customs duties, taxes, import fees, and compliance with their country's import regulations.",
+                "p2": "We can provide export documentation (commercial invoices, certificates of origin) as needed. Buyers must arrange for customs clearance and payment of duties in their country.",
+                "p3": "Certain items may be subject to export restrictions or require permits. Buyers are responsible for verifying that items can be legally imported into their country before bidding."
+            },
+            "insurance": {
+                "title": "Insurance",
+                "p1": "Buyers are responsible for insuring items during transit. Most professional shippers offer insurance as part of their service. Verify coverage limits and exclusions before shipping.",
+                "p2": "Risk of loss transfers to the buyer upon payment clearance. We are not responsible for damage or loss occurring after items leave our facility."
+            },
+            "storage": {
+                "title": "Storage Fees",
+                "p1": "Items must be collected or shipping arranged within 14 days of payment. After this period, storage fees of $10 per day (or 1% of the purchase price per week, whichever is greater) will apply.",
+                "p2": "Extended storage may be arranged by prior agreement. Contact us if you require additional time to arrange shipping."
+            },
+            "claims": {
+                "title": "Damage Claims",
+                "p1": "Inspect items carefully before accepting delivery. Note any damage on the shipping receipt and photograph the packaging and item immediately.",
+                "p2": "Damage claims must be filed with the shipper within the timeframe specified in their terms of service (typically 24-48 hours). We cannot assist with claims for damage occurring during transit."
+            },
+            "questions": {
+                "title": "Questions",
+                "text": "For questions about shipping, pickup arrangements, or recommended shippers, contact our support team at"
+            }
+        },
+        "cookies": {
+            "title": "Cookie Policy",
+            "subtitle": "How we use cookies and similar technologies",
+            "whatAreCookies": {
+                "title": "What Are Cookies?",
+                "p1": "Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences, track your activity, and provide a better user experience.",
+                "p2": "TURATHYA uses cookies and similar technologies, including localStorage, to enhance functionality and analyze site usage."
+            },
+            "types": {
+                "title": "Types of Cookies We Use",
+                "essential": {
+                    "title": "Essential Cookies",
+                    "text": "These cookies are necessary for the platform to function. They enable core features such as account login, bidding, and session management. Essential cookies cannot be disabled without affecting the platform's functionality."
+                },
+                "functional": {
+                    "title": "Functional Cookies",
+                    "text": "These cookies remember your preferences and settings, such as language selection, display options, and watchlist items. They improve your experience by personalizing the platform to your preferences."
+                },
+                "analytics": {
+                    "title": "Analytics Cookies",
+                    "text": "These cookies collect information about how you use the platform, including pages visited, time spent, and interactions. This data helps us understand user behavior and improve our services. Analytics cookies do not identify you personally."
+                },
+                "performance": {
+                    "title": "Performance Cookies",
+                    "text": "These cookies help us monitor platform performance, identify technical issues, and optimize loading times. They collect data on page load speeds, errors, and browser compatibility."
+                }
+            },
+            "localStorage": {
+                "title": "localStorage",
+                "p1": "In addition to cookies, TURATHYA uses localStorage—a browser feature that stores data locally on your device. localStorage is used to maintain your account information, bidding history, watchlist, and preferences.",
+                "p2": "Data stored in localStorage remains on your device and is not transmitted to our servers. Clearing your browser data or localStorage will delete your account information and bidding history from your device."
+            },
+            "thirdParty": {
+                "title": "Third-Party Cookies",
+                "p1": "We may use third-party services (e.g., payment processors, analytics providers) that set their own cookies. These third parties have their own privacy policies and cookie practices.",
+                "p2": "We do not control third-party cookies and are not responsible for their use. Please review the privacy policies of third-party services for more information."
+            },
+            "managing": {
+                "title": "Managing Cookies",
+                "p1": "You can control and manage cookies through your browser settings. Most browsers allow you to:",
+                "list": {
+                    "item1": "View and delete cookies",
+                    "item2": "Block cookies from specific websites",
+                    "item3": "Block all cookies",
+                    "item4": "Delete cookies when you close your browser"
+                },
+                "p2": "Please note that disabling cookies may limit certain features of the platform. Essential cookies are required for core functionality and cannot be disabled without affecting your ability to use the platform."
+            },
+            "browser": {
+                "title": "Browser-Specific Instructions",
+                "p1": "To manage cookies in your browser:",
+                "list": {
+                    "chrome": "<strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data",
+                    "firefox": "<strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data",
+                    "safari": "<strong>Safari:</strong> Preferences → Privacy → Manage Website Data",
+                    "edge": "<strong>Edge:</strong> Settings → Cookies and site permissions → Manage and delete cookies"
+                }
+            },
+            "dnt": {
+                "title": "Do Not Track",
+                "p1": "Some browsers offer a \"Do Not Track\" (DNT) signal that requests websites not to track your activity. Currently, there is no industry standard for how to respond to DNT signals.",
+                "p2": "TURATHYA does not respond to DNT signals at this time. You can manage cookies and tracking through your browser settings as described above."
+            },
+            "updates": {
+                "title": "Updates to This Policy",
+                "p1": "We may update this Cookie Policy from time to time to reflect changes in our practices or legal requirements. Updates will be posted on this page with a revised effective date."
+            },
+            "contact": {
+                "title": "Contact Us",
+                "text": "For questions about our use of cookies or this Cookie Policy, contact us at"
+            },
+            "lastUpdated": "Last updated: January 2026"
+        },
+        "fees": {
+            "title": "Fees & Payments",
+            "subtitle": "Understanding costs and payment methods",
+            "premium": {
+                "title": "Buyer's Premium",
+                "p1": "A buyer's premium is added to the hammer price (your winning bid) of each lot. This fee covers administrative and operational costs and is standard practice in the auction industry.",
+                "p2": "The buyer's premium rate is stated in each auction's terms and conditions. Typical rates range from 20% to 25% of the hammer price.",
+                "p3": "Example: If you win a lot with a hammer price of $1,000 and the buyer's premium is 25%, your subtotal before shipping and taxes is $1,250."
+            },
+            "tax": {
+                "title": "Sales Tax",
+                "p1": "Sales tax may apply depending on the buyer's location and the nature of the item. Tax rates and applicability vary by jurisdiction.",
+                "p2": "Buyers are responsible for understanding their local tax obligations. We will collect and remit sales tax where required by law."
+            },
+            "methods": {
+                "title": "Payment Methods",
+                "p1": "We accept the following payment methods:",
+                "list": {
+                    "bank": "<strong>Bank Transfer / Wire Transfer:</strong> Preferred method for large purchases. No processing fees.",
+                    "card": "<strong>Credit Card:</strong> Visa, Mastercard, American Express accepted. A processing fee of 3% applies to credit card payments.",
+                    "check": "<strong>Certified Check / Bank Draft:</strong> Must clear before items are released. Allow 5-7 business days for clearance."
+                },
+                "p2": "Personal checks are not accepted for first-time buyers or purchases over $5,000."
+            },
+            "deadline": {
+                "title": "Payment Deadline",
+                "p1": "Payment is due within 7 days of the auction closing. Lots will not be released until payment is received in full and has cleared.",
+                "p2": "Late payments may incur a fee of 1.5% per month on the outstanding balance. Accounts with overdue balances may be restricted from bidding in future auctions."
+            },
+            "currency": {
+                "title": "Currency",
+                "p1": "All prices are listed in US Dollars (USD). Payments in other currencies will be converted at the prevailing exchange rate on the date of payment, plus any applicable bank fees."
+            },
+            "invoicing": {
+                "title": "Invoicing",
+                "p1": "Winning bidders receive an invoice via email within 24 hours of the auction closing. The invoice includes:",
+                "list": {
+                    "item1": "Hammer price (winning bid)",
+                    "item2": "Buyer's premium",
+                    "item3": "Applicable taxes",
+                    "item4": "Payment instructions"
+                },
+                "p2": "Shipping costs are billed separately once arrangements are finalized."
+            },
+            "refunds": {
+                "title": "Refunds and Returns",
+                "p1": "All sales are final. Returns are accepted only in cases of material misrepresentation as defined in our Terms of Service.",
+                "p2": "If a return is approved, refunds are processed within 14 days of receiving the returned item in its original condition. Buyer's premium and shipping costs are non-refundable."
+            },
+            "questions": {
+                "title": "Questions",
+                "text": "For questions about invoices, payment methods, or fees, contact our support team at"
+            }
+        },
+        "auth": {
+            "title": "Authentication",
+            "subtitle": "Verification and expert review",
+            "approach": {
+                "title": "Our Approach to Authentication",
+                "p1": "Authentication is the process of determining whether an object is genuine, correctly attributed, and from the period or maker claimed. We take authentication seriously and employ multiple methods to verify items before offering them for sale.",
+                "p2": "Our specialists have extensive training and experience in their fields. They examine items for signs of authenticity including materials, construction techniques, style, wear patterns, and provenance."
+            },
+            "methods": {
+                "title": "Examination Methods",
+                "p1": "Our authentication process includes:",
+                "list": {
+                    "visual": "<strong>Visual Examination:</strong> Assessment of style, technique, materials, and construction under appropriate lighting and magnification.",
+                    "provenance": "<strong>Provenance Research:</strong> Review of ownership history, exhibition records, auction archives, and published references.",
+                    "comparative": "<strong>Comparative Analysis:</strong> Comparison with documented examples in museum collections, scholarly publications, and auction records.",
+                    "technical": "<strong>Technical Analysis:</strong> When appropriate, scientific testing such as thermoluminescence dating, x-ray fluorescence, or pigment analysis.",
+                    "expert": "<strong>Expert Consultation:</strong> Consultation with independent specialists, conservators, and academic authorities."
+                }
+            },
+            "experts": {
+                "title": "Independent Experts",
+                "p1": "For items of significant value or uncertain attribution, we consult independent experts and recognized authorities. Third-party authentication reports from established experts or laboratories are obtained when appropriate.",
+                "p2": "Costs for independent authentication are typically borne by the consignor. Buyers may request additional expert opinions at their own expense."
+            },
+            "descriptions": {
+                "title": "Catalogue Descriptions",
+                "p1": "Our catalogue descriptions reflect our best judgment based on available evidence. We use specific terminology to indicate levels of certainty:",
+                "list": {
+                    "by": "<strong>\"By [Artist/Maker]\":</strong> In our opinion, the work is by the named artist or maker.",
+                    "attributed": "<strong>\"Attributed to [Artist/Maker]\":</strong> Probably by the named artist or maker, but some uncertainty exists.",
+                    "circle": "<strong>\"Circle of [Artist/Maker]\":</strong> By an unidentified artist working closely with or under the influence of the named artist.",
+                    "manner": "<strong>\"Manner of [Artist/Maker]\":</strong> In the style of the named artist but of a later date.",
+                    "after": "<strong>\"After [Artist/Maker]\":</strong> A copy of a known work by the named artist."
+                },
+                "p2": "These terms follow established auction house conventions and indicate the degree of confidence in attribution."
+            },
+            "limitations": {
+                "title": "Limitations and Disclaimers",
+                "p1": "Authentication is not an exact science. Opinions may differ among experts, and new information may emerge that changes our understanding of an object.",
+                "p2": "We do not guarantee attribution, age, or authenticity unless explicitly stated in writing. Our catalogue descriptions represent our opinion based on examination and research at the time of cataloguing.",
+                "p3": "Buyers are encouraged to conduct their own research and seek independent expert opinions, particularly for high-value purchases."
+            },
+            "reattribution": {
+                "title": "Reattribution and New Information",
+                "p1": "If significant new information emerges after cataloguing that materially affects attribution or authenticity, we will notify registered bidders and may withdraw the lot from sale.",
+                "p2": "Buyers who discover new information after purchase may contact us. We will review the evidence and, if warranted, facilitate consultation with experts or consider a return under our Terms of Service."
+            },
+            "forgeries": {
+                "title": "Forgeries and Fakes",
+                "p1": "We reject items we believe to be forgeries, reproductions, or misrepresented. However, sophisticated forgeries may evade detection.",
+                "p2": "If an item is later proven to be a forgery or materially misrepresented, buyers may be entitled to a refund under the terms outlined in our Terms of Service. Claims must be supported by credible expert opinion and made within a reasonable timeframe."
+            },
+            "questions": {
+                "title": "Questions",
+                "text": "For questions about authentication, attribution, or provenance, contact the appropriate specialist department via our"
+            }
+        }
     }
 }

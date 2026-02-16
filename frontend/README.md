@@ -1,8 +1,8 @@
-# Zauction Frontend - Ready for Backend Integration
+# TURATHYA Frontend - Ready for Backend Integration
 
 ## 📋 Project Overview
 
-**Zauction** is a premium timed auction platform for antiques, fine art, and rare collectibles. This frontend is production-ready with full internationalization (English/Arabic) and RTL support.
+**TURATHYA** is a premium timed auction platform for antiques, fine art, and rare collectibles. This frontend is production-ready with full internationalization (English/Arabic) and RTL support.
 
 ## 🚀 Quick Start
 
@@ -15,7 +15,7 @@
 
 ```bash
 # Navigate to project directory
-cd d:\Websites\Zauction
+cd d:\Websites\TURATHYA
 
 # Start HTTP server
 python -m http.server 8000
@@ -29,7 +29,7 @@ http://localhost:8000
 ## 📁 Project Structure
 
 ```
-Zauction/
+TURATHYA/
 ├── index.html              # Homepage (root)
 ├── 404.html                # Error page (root)
 │

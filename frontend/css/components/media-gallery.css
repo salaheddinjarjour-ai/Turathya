@@ -173,17 +173,17 @@
 }
 
 .media-thumbnail:hover {
-    border-color: var(--color-gold-light);
+    border-color: var(--color-olive-light);
     transform: translateY(-1px);
 }
 
 .media-thumbnail.active {
-    border-color: var(--color-gold);
+    border-color: var(--color-olive);
     box-shadow: var(--shadow-glow);
 }
 
 .media-thumbnail:focus {
-    outline: 2px solid var(--color-gold);
+    outline: 2px solid var(--color-olive);
     outline-offset: 2px;
 }
 

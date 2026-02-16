@@ -5,10 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description"
-    content="Zauction - Curated timed auctions for antiques and rare objects. Premium European-style auction house featuring fine art, furniture, ceramics, and collectibles.">
-  <title>Zauction - Premium Timed Auctions for Antiques & Rare Objects</title>
+    content="TURATHYA - Curated timed auctions for antiques and rare objects. Premium European-style auction house featuring fine art, furniture, ceramics, and collectibles.">
+  <title>TURATHYA - Premium Timed Auctions for Antiques & Rare Objects</title>
 
   <!-- Stylesheets -->
+  <script>
+    (function () {
+      const lang = localStorage.getItem('lang') || 'ar';
+      const isAr = lang === 'ar';
+      document.documentElement.lang = lang;
+      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+      document.documentElement.classList.add('i18n-pending');
+      if (isAr) document.documentElement.classList.add('rtl');
+    })();
+  </script>
+  <style>
+    html.i18n-pending body {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/typography.css">
@@ -16,8 +32,6 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/components/lang-toggle.css">
   <link rel="stylesheet" href="css/pages/landing.css">
-  <link rel="stylesheet" href="css/rtl.css">
-  <!-- AOS Animation Library -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
@@ -72,7 +86,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
         <!-- Populated by JavaScript -->
       </div>
     </div>
@@ -86,7 +100,7 @@
         <p class="text-graphite" data-i18n="auction.endingSoonDesc">Last chance to bid on these exceptional items</p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg" id="ending-soon">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg" id="ending-soon">
         <!-- Populated by JavaScript -->
       </div>
     </div>
@@ -95,7 +109,7 @@
   <!-- Trust Section -->
   <section class="section trust-section">
     <div class="container">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-xl">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-xl">
         <div class="trust-item" data-aos="fade-up" data-aos-delay="0">
           <div class="trust-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -142,44 +156,45 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
-          <h4>About</h4>
+          <h4 data-i18n="nav.about">About</h4>
           <ul class="footer-links">
-            <li><a href="pages/info/about.html">About Zauction</a></li>
-            <li><a href="pages/info/team.html">Our Team</a></li>
-            <li><a href="pages/info/contact.html">Contact</a></li>
+            <li><a href="pages/info/about.html" data-i18n="footer.aboutUs">About TURATHYA</a></li>
+            <li><a href="pages/info/team.html" data-i18n="footer.ourTeam">Our Team</a></li>
+            <li><a href="pages/info/contact.html" data-i18n="footer.contactUs">Contact</a></li>
           </ul>
         </div>
 
         <div class="footer-section">
-          <h4>Bidding</h4>
+          <h4 data-i18n="footer.biddingProcess">Bidding</h4>
           <ul class="footer-links">
-            <li><a href="pages/info/how-bidding-works.html">How Bidding Works</a></li>
-            <li><a href="pages/info/buyers-guide.html">Buyer's Guide</a></li>
-            <li><a href="pages/info/condition-reports.html">Condition Reports</a></li>
+            <li><a href="pages/info/how-bidding-works.html" data-i18n="footer.howItWorks">How Bidding Works</a></li>
+            <li><a href="pages/info/buyers-guide.html" data-i18n="footer.buyersGuide">Buyer's Guide</a></li>
+            <li><a href="pages/info/condition-reports.html" data-i18n="footer.conditionReports">Condition Reports</a>
+            </li>
           </ul>
         </div>
 
         <div class="footer-section">
-          <h4>Services</h4>
+          <h4 data-i18n="footer.services">Services</h4>
           <ul class="footer-links">
-            <li><a href="pages/info/fees-payments.html">Fees & Payments</a></li>
-            <li><a href="pages/info/shipping-pickup.html">Shipping & Pickup</a></li>
-            <li><a href="pages/info/authentication.html">Authentication</a></li>
+            <li><a href="pages/info/fees-payments.html" data-i18n="footer.feesPayments">Fees & Payments</a></li>
+            <li><a href="pages/info/shipping-pickup.html" data-i18n="footer.shippingPickup">Shipping & Pickup</a></li>
+            <li><a href="pages/info/authentication.html" data-i18n="footer.authentication">Authentication</a></li>
           </ul>
         </div>
 
         <div class="footer-section">
-          <h4>Legal</h4>
+          <h4 data-i18n="footer.legal">Legal</h4>
           <ul class="footer-links">
-            <li><a href="pages/info/terms.html">Terms of Service</a></li>
-            <li><a href="pages/info/privacy.html">Privacy Policy</a></li>
-            <li><a href="pages/info/cookies.html">Cookie Policy</a></li>
+            <li><a href="pages/info/terms.html" data-i18n="footer.termsOfService">Terms of Service</a></li>
+            <li><a href="pages/info/privacy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a></li>
+            <li><a href="pages/info/cookies.html" data-i18n="footer.cookiePolicy">Cookie Policy</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 Zauction. All rights reserved.</p>
+        <p data-i18n="footer.copyright">&copy; 2026 TURATHYA. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -188,6 +203,7 @@
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>
   <script src="js/i18n.js"></script>
+  <script src="js/theme.js"></script>
   <script src="js/data.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/countdown.js"></script>
@@ -219,9 +235,9 @@
 
           const badge = hasNotStarted
             ? (startsSoon
-                ? '<span class="badge badge-info">Starts Soon</span>'
-                : '<span class="badge badge-info">Didn\'t Start</span>')
-            : (isEndingSoon(auction.end_date) ? '<span class="badge badge-gold" data-i18n="auction.endingSoon">Ending Soon</span>' : '');
+              ? '<span class="badge badge-info">Starts Soon</span>'
+              : '<span class="badge badge-info">Didn\'t Start</span>')
+            : (isEndingSoon(auction.end_date) ? '<span class="badge badge-accent" data-i18n="auction.endingSoon">Ending Soon</span>' : '');
 
           return `
           <a href="pages/auction.html?id=${auction.id}" class="card">
@@ -238,12 +254,12 @@
           </a>
         `;
         }).join('');
-        
+
         // Translate the newly added dynamic content
         if (window.i18n) window.i18n.translatePage();
       } catch (error) {
         console.error('Failed to load featured auctions:', error);
-        document.getElementById('featured-auctions').innerHTML = 
+        document.getElementById('featured-auctions').innerHTML =
           '<p class="text-center text-muted" style="grid-column: 1 / -1;" data-i18n="errors.loadAuctions">Failed to load auctions</p>';
         if (window.i18n) window.i18n.translatePage();
       }
@@ -252,35 +268,35 @@
     // Load ending soon auctions (ending within 48 hours)
     async function loadEndingSoon() {
       const container = document.getElementById('ending-soon');
-      
+
       try {
         const { auctions } = await auctionsAPI.getAll({ status: 'active' });
-        
+
         // Filter auctions ending within next 48 hours
         const now = new Date();
         const fortyEightHoursFromNow = new Date(now.getTime() + 48 * 60 * 60 * 1000);
-        
+
         const endingSoon = auctions.filter(auction => {
           const endDate = new Date(auction.end_date);
           return endDate > now && endDate <= fortyEightHoursFromNow;
         });
-        
+
         // Sort by end date (soonest first)
         endingSoon.sort((a, b) => new Date(a.end_date) - new Date(b.end_date));
-        
+
         // Take top 4
         const topEndingSoon = endingSoon.slice(0, 4);
-        
+
         if (topEndingSoon.length === 0) {
           container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;" data-i18n="auction.noEndingSoon">No auctions ending soon</p>';
           if (window.i18n) window.i18n.translatePage();
           return;
         }
-        
+
         container.innerHTML = topEndingSoon.map(auction => {
           const imageUrl = auction.image_data || auction.image_url || 'assets/images/placeholder.png';
           const lotCount = auction.lot_count || 0;
-          
+
           return `
             <a href="pages/auction.html?id=${auction.id}" class="card">
               <img src="${imageUrl}" alt="${auction.title}" class="card-image">
@@ -289,14 +305,14 @@
                 <h4 class="card-title">${auction.title}</h4>
                 <p class="text-sm text-graphite mb-4">${lotCount} ${lotCount === 1 ? 'lot' : 'lots'}</p>
                 <div class="flex-between-center">
-                  <span class="badge badge-gold" data-i18n="auction.endingSoon">Ending Soon</span>
+                  <span class="badge badge-accent" data-i18n="auction.endingSoon">Ending Soon</span>
                   <span class="text-xs font-medium" data-countdown="${auction.end_date}"></span>
                 </div>
               </div>
             </a>
           `;
         }).join('');
-        
+
         if (window.i18n) window.i18n.translatePage();
         initCountdowns();
       } catch (error) {
@@ -312,9 +328,9 @@
 
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value.trim();
-      
+
       clearTimeout(searchTimeout);
-      
+
       if (query.length < 2) {
         suggestionsContainer.style.display = 'none';
         return;
@@ -324,7 +340,7 @@
         try {
           const response = await fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(query)}`);
           const data = await response.json();
-          
+
           displaySearchSuggestions(data.auctions || [], data.lots || []);
         } catch (error) {
           console.error('Search error:', error);
@@ -358,12 +374,12 @@
           <div class="search-suggestions-section">
             <div class="search-suggestions-title">Auctions</div>
             ${auctions.map(auction => {
-              const now = new Date();
-              const endDate = auction.end_date ? new Date(auction.end_date) : null;
-              const startDate = auction.start_date ? new Date(auction.start_date) : null;
-              const isLiveNow = !!endDate && endDate > now && (!startDate || startDate <= now);
+          const now = new Date();
+          const endDate = auction.end_date ? new Date(auction.end_date) : null;
+          const startDate = auction.start_date ? new Date(auction.start_date) : null;
+          const isLiveNow = !!endDate && endDate > now && (!startDate || startDate <= now);
 
-              return `
+          return `
               <a href="pages/auction.html?id=${auction.id}" class="suggestion-card suggestion-card-auction">
                 <img src="${auction.image_data || 'assets/images/placeholder.png'}" 
                      alt="${auction.title}" 
@@ -377,7 +393,7 @@
                 </div>
               </a>
             `;
-            }).join('')}
+        }).join('')}
           </div>
         `;
       }
@@ -399,9 +415,9 @@
                     ${lot.category ? `<span>• ${lot.category}</span>` : ''}
                   </div>
                   <div class="suggestion-card-price">
-                    ${lot.current_bid && lot.current_bid > 0 
-                      ? formatCurrency(lot.current_bid) 
-                      : formatCurrency(lot.starting_bid)}
+                    ${lot.current_bid && lot.current_bid > 0
+            ? formatCurrency(lot.current_bid)
+            : formatCurrency(lot.starting_bid)}
                   </div>
                 </div>
               </a>

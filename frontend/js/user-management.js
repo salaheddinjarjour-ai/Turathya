@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - USER MANAGEMENT (ADMIN)
+// TURATHYA - USER MANAGEMENT (ADMIN)
 // Approve, reject, suspend users
 // ============================================
 

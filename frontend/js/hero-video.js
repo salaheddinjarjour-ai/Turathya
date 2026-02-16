@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - HERO VIDEO REPLAY ON SCROLL
+// TURATHYA - HERO VIDEO REPLAY ON SCROLL
 // IntersectionObserver-based video control
 // ============================================
 

@@ -1,11 +1,11 @@
 /**
- * Zauction I18n System
+ * TURATHYA I18n System
  * Handles language switching, RTL/LTR, and translations
  */
 
 class I18n {
     constructor() {
-        this.currentLang = localStorage.getItem('lang') || 'en';
+        this.currentLang = localStorage.getItem('lang') || 'ar';
         this.translations = {};
         this.translationCache = {};
         this.fallbackLang = 'en';
@@ -20,6 +20,7 @@ class I18n {
 
         // Load header partial first
         await this.loadHeader();
+        await this.loadFooter();
 
         // Then load translations
         await this.loadTranslations(this.currentLang);
@@ -33,6 +34,9 @@ class I18n {
 
         this.isInitialized = true;
 
+        // Remove pending class to reveal content
+        document.documentElement.classList.remove('i18n-pending');
+
         window.dispatchEvent(new CustomEvent('i18nReady', {
             detail: { lang: this.currentLang }
         }));
@@ -43,51 +47,156 @@ class I18n {
         if (!headerContainer) return;
 
         try {
-            // Determine if we're in a subdirectory
-            const isInSubdir = window.location.pathname.includes('/pages/') || 
-                              window.location.pathname.includes('\\pages\\');
-            const basePath = isInSubdir ? '../' : '';
-            
-            const response = await fetch(`${basePath}partials/header.html`);
+            // Determine root path based on current location
+            const path = window.location.pathname;
+            let basePath = '';
+
+            if (path.includes('/pages/info/') || path.includes('\\pages\\info\\')) {
+                basePath = '../../';
+            } else if (path.includes('/pages/') || path.includes('\\pages\\')) {
+                basePath = '../';
+            }
+
+            const response = await fetch(`${basePath}partials/header.html?v=${new Date().getTime()}`);
             if (!response.ok) throw new Error('Header not found');
 
             const html = await response.text();
             headerContainer.innerHTML = html;
 
             // Update navigation links based on current directory
-            this.updateNavigationPaths(isInSubdir);
+            const isInSubdir = basePath !== '';
+            this.updateNavigationPaths(isInSubdir, basePath);
 
             // Set active nav link based on current page
             this.setActiveNavLink();
-            
+
             // Update header auth state (show/hide login/logout buttons)
             if (typeof updateHeaderAuthState === 'function') {
                 updateHeaderAuthState();
+            }
+
+            // Mobile Menu Toggle Logic
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+
+            if (mobileToggle && mainNav) {
+                mobileToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mainNav.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (mainNav.classList.contains('active') &&
+                        !mainNav.contains(e.target) &&
+                        !mobileToggle.contains(e.target)) {
+                        mainNav.classList.remove('active');
+                    }
+                });
+
+                // Close menu when clicking a link
+                mainNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mainNav.classList.remove('active');
+                    });
+                });
             }
         } catch (error) {
             console.error('Failed to load header:', error);
         }
     }
 
-    updateNavigationPaths(isInSubdir) {
-        const basePath = isInSubdir ? '../pages/' : 'pages/';
-        const rootPath = isInSubdir ? '../' : '';
+    updateNavigationPaths(isInSubdir, basePath = '') {
+        // If basePath is provided (e.g. '../../'), use it for root links.
+        // If not, calculate default behavior.
+        if (basePath === '' && isInSubdir) basePath = '../';
+
+        const rootPath = basePath;
+        const pagesPath = basePath + 'pages/';
 
         // Update links
         const links = {
             'logo-link': `${rootPath}index.html`,
-            'auctions-link': `${basePath}auctions.html`,
-            'collection-link': `${basePath}collection.html`,
-            'account-link': `${basePath}account.html`,
-            'admin-link': `${basePath}admin.html`,
-            'login-link': `${basePath}login.html`,
-            'register-link': `${basePath}register.html`
+            'auctions-link': `${pagesPath}auctions.html`,
+            'collection-link': `${pagesPath}collection.html`,
+            'account-link': `${pagesPath}account.html`,
+            'admin-link': `${pagesPath}admin.html`,
+            'login-link': `${pagesPath}login.html`,
+            'register-link': `${pagesPath}register.html`
         };
 
         Object.entries(links).forEach(([id, href]) => {
             const link = document.getElementById(id);
             if (link) link.setAttribute('href', href);
         });
+
+        // Update Logo Image Path
+        const logoImg = document.querySelector('.logo img');
+        if (logoImg) {
+            const path = window.location.pathname;
+            // Check if we are on the landing page (root index.html or just /)
+            // and NOT in a subdirectory
+            const isLandingData = document.body.dataset.page === 'landing'; // Best practice if we add data-page
+            // Fallback to path check if data attribute missing
+            const isLandingPath = !isInSubdir && (path.endsWith('index.html') || path.endsWith('/') || path.endsWith('TURATHYA/'));
+
+            if (isLandingPath) {
+                logoImg.src = `${rootPath}assets/images/Beigelogo.png`;
+                // Optional: Add a class to help with styling if dimensions differ
+                logoImg.classList.add('landing-logo');
+            } else {
+                logoImg.src = `${rootPath}assets/images/zauction-logo-new.png`;
+                logoImg.classList.remove('landing-logo');
+            }
+        }
+    }
+
+
+    async loadFooter() {
+        const footerContainer = document.getElementById('site-footer');
+        if (!footerContainer) return;
+
+        try {
+            // Determine root path based on current location
+            // Simple heuristic: count depth from root
+            // We assume frontend/ is root. 
+            // paths: /index.html (depth 0), /pages/auctions.html (depth 1), /pages/info/about.html (depth 2)
+
+            const path = window.location.pathname;
+            // Determine depth by checking for /pages/ and /info/
+            let rootPath = './';
+            if (path.includes('/pages/info/') || path.includes('\\pages\\info\\')) {
+                rootPath = '../../';
+            } else if (path.includes('/pages/') || path.includes('\\pages\\')) {
+                rootPath = '../';
+            }
+
+            const response = await fetch(`${rootPath}partials/footer.html?v=${new Date().getTime()}`);
+            if (!response.ok) throw new Error('Footer not found');
+
+            const html = await response.text();
+            footerContainer.innerHTML = html;
+
+            // Update footer links to be relative to current page
+            // The partial has links like "pages/info/about.html" (relative to root)
+            // We need to prepend rootPath to them?
+            // If rootPath is './', links are "pages/info/..." (Correct for index.html)
+            // If rootPath is '../', links become "../pages/info/..."
+            // From pages/auctions.html: "../pages/info/about.html" -> goes up to root, then down to pages/info. Correct.
+            // If rootPath is '../../', links become "../../pages/info/..."
+            // From pages/info/about.html: "../../pages/info/about.html" -> goes up to root, then down. Correct.
+
+            const links = footerContainer.querySelectorAll('a');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+                    link.setAttribute('href', rootPath + href);
+                }
+            });
+
+        } catch (error) {
+            console.error('Failed to load footer:', error);
+        }
     }
 
     setActiveNavLink() {
@@ -109,12 +218,17 @@ class I18n {
                 return;
             }
 
-            // Determine if we're in a subdirectory
-            const isInSubdir = window.location.pathname.includes('/pages/') || 
-                              window.location.pathname.includes('\\pages\\');
-            const basePath = isInSubdir ? '../' : '';
-            
-            const response = await fetch(`${basePath}locales/${lang}.json`);
+            // Determine root path based on current location
+            const path = window.location.pathname;
+            let basePath = '';
+
+            if (path.includes('/pages/info/') || path.includes('\\pages\\info\\')) {
+                basePath = '../../';
+            } else if (path.includes('/pages/') || path.includes('\\pages\\')) {
+                basePath = '../';
+            }
+
+            const response = await fetch(`${basePath}locales/${lang}.json?v=${new Date().getTime()}`);
             if (!response.ok) {
                 throw new Error(`Failed to load ${lang} translations`);
             }
@@ -325,10 +439,11 @@ class I18n {
 }
 
 // Initialize i18n when DOM is ready
-const i18n = new I18n();
+// Initialize i18n when DOM is ready
+window.i18n = new I18n();
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => i18n.init());
+    document.addEventListener('DOMContentLoaded', () => window.i18n.init());
 } else {
-    i18n.init();
+    window.i18n.init();
 }

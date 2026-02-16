@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Learn how timed auctions work at Zauction.">
-    <title>How Bidding Works - Zauction</title>
+    <meta name="description" content="تعرف على كيفية عمل المزادات الموقوتة في تراثيا.">
+    <title>كيف تعمل المزايدة - تراثيا</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/typography.css">
     <link rel="stylesheet" href="../../css/layout.css">
     <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/components/lang-toggle.css">
 </head>
 
 <body>
@@ -19,134 +20,102 @@
 
     <main class="section">
         <div class="container container-md">
-            <h1 class="mb-4">How Bidding Works</h1>
-            <p class="text-graphite text-lg mb-12">Understanding timed auctions</p>
+            <h1 class="mb-4" data-i18n="info.howBiddingWorks.title">How Bidding Works</h1>
+            <p class="text-graphite text-lg mb-12" data-i18n="info.howBiddingWorks.subtitle">Understanding Timed
+                Auctions</p>
 
             <section class="mb-12">
-                <h2 class="mb-4">Timed Auction Format</h2>
-                <p class="mb-4">Zauction uses a timed auction format. Each lot has a specified closing time. Bidders may
-                    place bids at any point before the lot closes. The highest bid at closing wins the lot.</p>
-                <p class="mb-4">Unlike live auctions where bidding happens in real time with an auctioneer, timed
-                    auctions allow participants to bid at their convenience over a period of days or weeks. This format
-                    accommodates bidders in different time zones and schedules.</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.format.title">Timed Auction Format</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.format.p1">Turathya uses a timed auction format. Each
+                    lot has a specific closing time. Bidders can place bids at any time before the lot closes. The
+                    highest bid at closing wins the lot.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.format.p2">Unlike live auctions where bidding happens in
+                    real-time with an auctioneer, timed auctions allow participants to bid at their convenience over
+                    days or weeks. This format accommodates bidders in different time zones and schedules.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Registration</h2>
-                <p class="mb-4">To place bids, you must create an account and agree to our Terms of Service.
-                    Registration requires a valid email address. You will receive confirmation of your bids and
-                    notifications if you are outbid.</p>
-                <p class="mb-4">First-time bidders may be asked to provide additional verification before placing bids
-                    on high-value lots.</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.registration.title">Registration</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.registration.p1">To place bids, you must create an
+                    account and agree to our Terms of Service. Registration requires a valid email address. You will
+                    receive confirmation of your bids and notifications if you are outbid.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.registration.p2">First-time bidders may be required to
+                    provide additional verification before bidding on high-value lots.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Placing a Bid</h2>
-                <p class="mb-4">Each lot displays the current bid, the number of bids placed, and the time remaining. To
-                    bid, enter an amount equal to or greater than the minimum bid increment shown.</p>
-                <p class="mb-4">Your bid is a binding commitment to purchase the lot at that price if you are the
-                    winning bidder. Once submitted, bids cannot be retracted.</p>
-                <p class="mb-4">You may increase your bid at any time before the lot closes. If another bidder outbids
-                    you, you will receive a notification and may place a higher bid.</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.placingBids.title">Placing a Bid</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.placingBids.p1">Each lot displays the current bid,
+                    number of bids placed, and time remaining. To bid, enter an amount equal to or greater than the
+                    indicated minimum bid increment.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.placingBids.p2">Your bid is a binding commitment to
+                    purchase the lot at that price if you are the winning bidder. Once placed, bids cannot be withdrawn.
+                </p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.placingBids.p3">You can increase your bid at any time
+                    before the lot closes. If another bidder outbids you, you will receive a notification and can place
+                    a higher bid.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Bid Increments</h2>
-                <p class="mb-4">Bids must advance by standard increments based on the current bid level:</p>
-                <ul class="mb-4" style="margin-left: var(--space-6); margin-bottom: var(--space-4);">
-                    <li style="margin-bottom: var(--space-2);">$0 - $99: $5 increment</li>
-                    <li style="margin-bottom: var(--space-2);">$100 - $499: $25 increment</li>
-                    <li style="margin-bottom: var(--space-2);">$500 - $999: $50 increment</li>
-                    <li style="margin-bottom: var(--space-2);">$1,000 - $4,999: $100 increment</li>
-                    <li style="margin-bottom: var(--space-2);">$5,000 - $9,999: $250 increment</li>
-                    <li style="margin-bottom: var(--space-2);">$10,000+: $500 increment</li>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.increments.title">Bid Increments</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.increments.intro">Bids must advance in standard
+                    increments based on the current bid level:</p>
+                <ul class="list-disc leading-relaxed mb-4 list-inside">
+                    <li data-i18n="info.howBiddingWorks.increments.range1">$0 - $99: $5 increment</li>
+                    <li data-i18n="info.howBiddingWorks.increments.range2">$100 - $499: $25 increment</li>
+                    <li data-i18n="info.howBiddingWorks.increments.range3">$500 - $999: $50 increment</li>
+                    <li data-i18n="info.howBiddingWorks.increments.range4">$1,000 - $4,999: $100 increment</li>
+                    <li data-i18n="info.howBiddingWorks.increments.range5">$5,000 - $9,999: $250 increment</li>
+                    <li data-i18n="info.howBiddingWorks.increments.range6">$10,000+: $500 increment</li>
                 </ul>
-                <p>These increments ensure orderly bidding and prevent frivolous increases.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.increments.outro">These increments ensure orderly
+                    bidding and prevent insignificant raises.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Reserve Prices</h2>
-                <p class="mb-4">Some lots have a reserve price—a confidential minimum price below which the lot will not
-                    be sold. If bidding does not reach the reserve, the lot will not be sold.</p>
-                <p class="mb-4">Lots with reserves are indicated in the listing. The reserve amount is not disclosed,
-                    but it is always at or below the low estimate.</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.reserves.title">Reserve Prices</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.reserves.p1">Some lots have a reserve price - a
+                    confidential minimum price below which the lot will not be sold. If bidding does not reach the
+                    reserve price, the lot will not be sold.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.reserves.p2">Lots with reserves are indicated in the
+                    listing. The reserve amount is not disclosed, but is always at or below the low estimate.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Winning a Lot</h2>
-                <p class="mb-4">If you are the highest bidder when the lot closes, you will receive a notification
-                    confirming your win. You are obligated to complete the purchase at your winning bid amount plus the
-                    buyer's premium and any applicable taxes.</p>
-                <p class="mb-4">Payment instructions will be provided in the notification email. Payment must be
-                    received within the specified timeframe (typically 7 days) to avoid penalties or account
-                    restrictions.</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.winning.title">Winning a Lot</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.winning.p1">If you are the highest bidder when a lot
+                    closes, you will receive a notification confirming your win. You are obligated to complete the
+                    purchase for your winning bid amount plus buyer's premium and any applicable taxes.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.winning.p2">Payment instructions will be provided in the
+                    notification email. Payment must be received within the specified timeframe (typically 7 days) to
+                    avoid penalties or account restrictions.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Buyer's Premium</h2>
-                <p class="mb-4">A buyer's premium is added to the hammer price (your winning bid). The premium
-                    percentage is stated in each auction's terms. This fee covers administrative costs and is standard
-                    practice in the auction industry.</p>
-                <p class="mb-4">Your total amount due is: Hammer Price + Buyer's Premium + Shipping (if applicable).</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.premium.title">Buyer's Premium</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.premium.p1">A buyer's premium is added to the hammer
+                    price (your winning bid). The premium percentage is stated in the terms of each auction. This fee
+                    covers administrative costs and is standard practice in the auction industry.</p>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.premium.p2">The total amount you owe is: Hammer Price +
+                    Buyer's Premium + Shipping (if applicable).</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Bidding Etiquette</h2>
-                <p class="mb-4">Bid only on lots you intend to purchase. Do not bid to inflate prices or disrupt
-                    auctions. Violations of bidding etiquette may result in account suspension.</p>
-                <p>If you have questions about a lot, contact us before bidding. We are happy to provide additional
-                    information or arrange viewings when possible.</p>
+                <h2 class="mb-4" data-i18n="info.howBiddingWorks.etiquette.title">Bidding Etiquette</h2>
+                <p class="mb-4" data-i18n="info.howBiddingWorks.etiquette.p1">Bid only on items you intend to purchase.
+                    Do not bid to inflate prices or disrupt auctions. Violations of bidding etiquette may result in
+                    account suspension.</p>
+                <p data-i18n="info.howBiddingWorks.etiquette.p2">If you have questions about a lot, contact us before
+                    bidding. We are happy to provide additional information or arrange viewings when possible.</p>
             </section>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>About</h4>
-                    <ul class="footer-links">
-                        <li><a href="about.html">About Zauction</a></li>
-                        <li><a href="team.html">Our Team</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Bidding</h4>
-                    <ul class="footer-links">
-                        <li><a href="how-bidding-works.html">How Bidding Works</a></li>
-                        <li><a href="buyers-guide.html">Buyer's Guide</a></li>
-                        <li><a href="condition-reports.html">Condition Reports</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Services</h4>
-                    <ul class="footer-links">
-                        <li><a href="fees-payments.html">Fees & Payments</a></li>
-                        <li><a href="shipping-pickup.html">Shipping & Pickup</a></li>
-                        <li><a href="authentication.html">Authentication</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="cookies.html">Cookie Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Zauction. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="site-footer"></div>
 
     <script defer src="../../js/i18n.js"></script>
     <script src="../../js/data.js"></script>
-    <script defer src="../../js/i18n.js"></script>
     <script src="../../js/utils.js"></script>
-    <script defer src="../../js/i18n.js"></script>
     <script src="../../js/auth.js"></script>
 </body>
 

@@ -1,5 +1,5 @@
 /* ============================================
-   ZAUCTION - LANDING PAGE STYLES
+   TURATHYA - LANDING PAGE STYLES
    Hero, featured sections, trust elements
    ============================================ */
 
@@ -19,8 +19,8 @@
 }
 
 #landing-page .header .logo {
-    color: var(--color-white);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* Image logo doesn't need text styles */
+    display: flex;
 }
 
 #landing-page .header .nav-link {
@@ -253,7 +253,7 @@
 .suggestion-card-price {
     font-size: var(--text-base);
     font-weight: var(--weight-semibold);
-    color: var(--color-gold);
+    color: var(--color-olive);
 }
 
 .suggestion-card-auction {
@@ -409,8 +409,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-gold);
-    background-color: rgba(184, 149, 106, 0.1);
+    color: var(--color-olive);
+    background-color: rgba(47, 79, 62, 0.1);
     border-radius: 50%;
 }
 

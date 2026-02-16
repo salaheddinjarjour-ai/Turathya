@@ -5,8 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="View all lots in this auction">
-    <title id="page-title">Auction - Zauction</title>
+    <title id="page-title">Auction - TURATHYA</title>
 
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
@@ -44,14 +60,8 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Zauction. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-    
+    <div id="site-footer"></div>
+
     <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/utils.js"></script>
@@ -65,23 +75,23 @@
         // Track auction view for featured section
         function trackAuctionView(auctionId) {
             const recentAuctions = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
-            
+
             // Remove if already exists (to update position)
             const filtered = recentAuctions.filter(id => id !== auctionId);
-            
+
             // Add to beginning
             filtered.unshift(auctionId);
-            
+
             // Keep only last 5
             const updated = filtered.slice(0, 5);
-            
+
             localStorage.setItem('recentAuctions', JSON.stringify(updated));
         }
 
         async function loadAuction() {
             try {
                 const { auction } = await auctionsAPI.getById(auctionId);
-                
+
                 if (!auction) {
                     window.location.href = 'auctions.html';
                     return;
@@ -90,28 +100,28 @@
                 // Track this auction view
                 trackAuctionView(auctionId);
 
-                document.getElementById('page-title').textContent = auction.title + ' - Zauction';
+                document.getElementById('page-title').textContent = auction.title + ' - TURATHYA';
 
                 const header = document.getElementById('auction-header');
-                header.innerHTML = 
+                header.innerHTML =
                     '<h1>' + auction.title + '</h1>' +
                     '<p class="auction-meta">' +
-                        '<span class="label">' + (auction.category || 'Auction') + '</span>' +
-                        '<span>•</span>' +
-                        '<span>' + (auction.location || 'TBA') + '</span>' +
-                        '<span>•</span>' +
-                        '<span>' + (auction.lot_count || 0) + ' lots</span>' +
+                    '<span class="label">' + (auction.category || 'Auction') + '</span>' +
+                    '<span>•</span>' +
+                    '<span>' + (auction.location || 'TBA') + '</span>' +
+                    '<span>•</span>' +
+                    '<span>' + (auction.lot_count || 0) + ' lots</span>' +
                     '</p>' +
                     '<p class="auction-description">' + (auction.description || '') + '</p>' +
                     '<div class="auction-dates">' +
-                        '<div>' +
-                            '<span class="text-sm text-muted">Starts:</span>' +
-                            '<span class="text-sm font-medium">' + formatDateTime(auction.start_date) + '</span>' +
-                        '</div>' +
-                        '<div>' +
-                            '<span class="text-sm text-muted">Ends:</span>' +
-                            '<span class="text-sm font-medium">' + formatDateTime(auction.end_date) + '</span>' +
-                        '</div>' +
+                    '<div>' +
+                    '<span class="text-sm text-muted">Starts:</span>' +
+                    '<span class="text-sm font-medium">' + formatDateTime(auction.start_date) + '</span>' +
+                    '</div>' +
+                    '<div>' +
+                    '<span class="text-sm text-muted">Ends:</span>' +
+                    '<span class="text-sm font-medium">' + formatDateTime(auction.end_date) + '</span>' +
+                    '</div>' +
                     '</div>';
 
                 await loadLots();
@@ -137,7 +147,7 @@
                 document.getElementById('lot-count').textContent = lots.length + ' lot' + (lots.length !== 1 ? 's' : '');
 
                 const container = document.getElementById('lots-grid');
-                
+
                 if (lots.length === 0) {
                     container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No lots in this auction yet</p>';
                     return;
@@ -146,20 +156,20 @@
                 container.innerHTML = lots.map(lot => {
                     const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.png';
                     const currentBid = lot.current_bid && lot.current_bid > 0;
-                    
+
                     return '<a href="lot.html?id=' + lot.id + '" class="card">' +
                         '<img src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
                         '<div class="card-content">' +
-                            '<div class="label mb-2">Lot ' + lot.lot_number + '</div>' +
-                            '<h4 class="card-title" style="font-size: var(--text-lg);">' + lot.title + '</h4>' +
-                            '<p class="price mt-4">' + (currentBid ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid)) + '</p>' +
-                            '<p class="estimate">' + (currentBid ? 'Current Bid' : 'Starting Bid') + '</p>' +
+                        '<div class="label mb-2">Lot ' + lot.lot_number + '</div>' +
+                        '<h4 class="card-title" style="font-size: var(--text-lg);">' + lot.title + '</h4>' +
+                        '<p class="price mt-4">' + (currentBid ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid)) + '</p>' +
+                        '<p class="estimate">' + (currentBid ? 'Current Bid' : 'Starting Bid') + '</p>' +
                         '</div>' +
                         '<div class="card-footer">' +
-                            '<span class="text-xs" data-countdown="' + lot.end_date + '" data-compact></span>' +
-                            (isEndingSoon(lot.end_date) ? '<span class="badge badge-gold">Ending Soon</span>' : '') +
+                        '<span class="text-xs" data-countdown="' + lot.end_date + '" data-compact></span>' +
+                        (isEndingSoon(lot.end_date) ? '<span class="badge badge-accent">Ending Soon</span>' : '') +
                         '</div>' +
-                    '</a>';
+                        '</a>';
                 }).join('');
 
                 initCountdowns();

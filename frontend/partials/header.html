@@ -2,15 +2,31 @@
 <header class="header">
     <div class="container">
         <div class="header-content">
-            <a href="index.html" class="logo" id="logo-link">Zauction</a>
+            <a href="index.html" class="logo" id="logo-link">
+                <img src="assets/images/zauction-logo-new.png" alt="TURATHYA" style="height: 48px; width: auto;">
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
             <nav class="nav" id="main-nav">
                 <a href="auctions.html" class="nav-link" id="auctions-link" data-i18n="nav.auctions">Auctions</a>
-                <a href="collection.html" class="nav-link" id="collection-link" data-i18n="nav.collection">Collection</a>
+                <a href="collection.html" class="nav-link" id="collection-link"
+                    data-i18n="nav.collection">Collection</a>
                 <a href="account.html" class="nav-link user-link" id="account-link" style="display: none;"
                     data-i18n="nav.account">Account</a>
-                <a href="admin.html" class="nav-link admin-link" id="admin-link" style="display: none;" data-i18n="nav.admin">Admin</a>
+                <a href="admin.html" class="nav-link admin-link" id="admin-link" style="display: none;"
+                    data-i18n="nav.admin">Admin</a>
                 <a href="login.html" class="nav-link auth-link" id="login-link" data-i18n="nav.login">Login</a>
-                <a href="register.html" class="nav-link auth-link" id="register-link" data-i18n="nav.register">Register</a>
+                <a href="register.html" class="nav-link auth-link" id="register-link"
+                    data-i18n="nav.register">Register</a>
                 <button onclick="logout()" class="btn btn-ghost btn-sm user-link" style="display: none;"
                     data-i18n="nav.logout">Logout</button>
 
@@ -25,8 +41,10 @@
 </header>
 
 <!-- Approval Pending Banner -->
-<div id="approval-banner" style="display: none; background: rgba(184, 149, 106, 0.16); color: var(--color-gold-dark); border-top: 1px solid rgba(184, 149, 106, 0.35); border-bottom: 1px solid rgba(184, 149, 106, 0.35); padding: 12px 0; text-align: center; font-size: 14px; font-weight: 500;">
+<div id="approval-banner"
+    style="display: none; background: rgba(47, 79, 62, 0.16); color: var(--color-olive-dark); border-top: 1px solid rgba(47, 79, 62, 0.35); border-bottom: 1px solid rgba(47, 79, 62, 0.35); padding: 12px 0; text-align: center; font-size: 14px; font-weight: 500;">
     <div class="container">
-        <span data-i18n="account.pendingApproval">⚠️ Your account is pending admin approval. You can browse the site but cannot place bids until approved.</span>
+        <span data-i18n="account.pendingApproval">⚠️ Your account is pending admin approval. You can browse the site but
+            cannot place bids until approved.</span>
     </div>
 </div>

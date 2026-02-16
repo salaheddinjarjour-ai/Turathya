@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - AUTHENTICATION
+// TURATHYA - AUTHENTICATION
 // User login, registration, session management
 // Note: Core auth functions (getCurrentUser, isLoggedIn, isAdmin) 
 // are now defined in api.js using token-based authentication

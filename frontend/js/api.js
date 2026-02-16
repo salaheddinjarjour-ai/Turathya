@@ -3,19 +3,19 @@ const API_BASE_URL = 'http://localhost:3000/api';
 
 // Get token from localStorage
 function getToken() {
-    return localStorage.getItem('zauction_token');
+    return localStorage.getItem('turathya_token');
 }
 
 // Get current user from localStorage
 function getCurrentUser() {
-    const userStr = localStorage.getItem('zauction_user');
+    const userStr = localStorage.getItem('turathya_user');
     return userStr ? JSON.parse(userStr) : null;
 }
 
 // Set user and token
 function setAuth(token, user) {
-    localStorage.setItem('zauction_token', token);
-    localStorage.setItem('zauction_user', JSON.stringify(user));
+    localStorage.setItem('turathya_token', token);
+    localStorage.setItem('turathya_user', JSON.stringify(user));
     
     // Update header to reflect logged-in state
     if (typeof updateHeaderAuthState === 'function') {
@@ -25,8 +25,8 @@ function setAuth(token, user) {
 
 // Clear auth
 function clearAuth() {
-    localStorage.removeItem('zauction_token');
-    localStorage.removeItem('zauction_user');
+    localStorage.removeItem('turathya_token');
+    localStorage.removeItem('turathya_user');
     
     // Update header to reflect logged-out state
     if (typeof updateHeaderAuthState === 'function') {

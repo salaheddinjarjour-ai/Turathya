@@ -1,7 +1,7 @@
-# Zauction Internationalization (i18n) Guide
+# TURATHYA Internationalization (i18n) Guide
 
 ## Overview
-The Zauction website now supports English and Arabic with full RTL (Right-to-Left) support for Arabic. The system uses a lightweight, custom i18n module that loads translations dynamically and applies them using data attributes.
+The TURATHYA website now supports English and Arabic with full RTL (Right-to-Left) support for Arabic. The system uses a lightweight, custom i18n module that loads translations dynamically and applies them using data attributes.
 
 ## Quick Start
 

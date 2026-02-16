@@ -4,8 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Zauction</title>
+    <title>Register - TURATHYA</title>
 
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
@@ -25,36 +41,7 @@
             width: 100%;
             max-width: 450px;
         }
-
-        .google-register-fallback {
-            width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.625rem;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            background: #fff;
-            color: #3c4043;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 0.625rem 0.875rem;
-            cursor: pointer;
-        }
-
-        .google-register-fallback:hover {
-            background: #f8f9fa;
-        }
-
-        .google-register-logo {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-        }
     </style>
-    <link rel="stylesheet" href="../css/rtl.css">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
 </head>
 
@@ -84,13 +71,15 @@
                                 <input type="text" class="form-input" id="country-code" placeholder="+963" required>
                                 <input type="tel" class="form-input" id="phone-local" placeholder="944123456" required>
                             </div>
-                            <p class="text-xs text-muted mt-2">Enter country code (with +) and local number separately.</p>
+                            <p class="text-xs text-muted mt-2">Enter country code (with +) and local number separately.
+                            </p>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Password</label>
                             <input type="password" class="form-input" id="password" required minlength="8">
-                            <p class="text-xs text-muted mt-2">Minimum 8 chars with uppercase, lowercase, number, and special character.</p>
+                            <p class="text-xs text-muted mt-2">Minimum 8 chars with uppercase, lowercase, number, and
+                                special character.</p>
                         </div>
 
                         <div class="form-group">
@@ -100,7 +89,8 @@
 
                         <div class="form-group" id="otp-group" style="display: none;">
                             <label class="form-label">Verification Code</label>
-                            <input type="text" class="form-input" id="otp-code" maxlength="6" placeholder="Enter 6-digit OTP">
+                            <input type="text" class="form-input" id="otp-code" maxlength="6"
+                                placeholder="Enter 6-digit OTP">
                             <p class="text-xs text-muted mt-2">Enter the 6-digit code you received.</p>
                         </div>
 
@@ -110,21 +100,34 @@
                             data-i18n="auth.registerTitle">Create Account</button>
                     </form>
 
-                    <div style="margin: 1rem 0; text-align: center; color: var(--color-text-light);">or</div>
-                    <button type="button" id="google-register-fallback" class="google-register-fallback" aria-label="Continue With Google">
-                        <svg class="google-register-logo" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill="#EA4335" d="M12 10.2v3.9h5.4c-.2 1.2-.9 2.3-1.9 3.1l3 2.3c1.8-1.6 2.8-4 2.8-6.8 0-.6-.1-1.2-.2-1.8H12z" />
-                            <path fill="#34A853" d="M6.9 14.3l-.7.5-2.4 1.9C5.4 20 8.5 22 12 22c2.7 0 5-1 6.7-2.6l-3-2.3c-.8.6-2 1-3.7 1-2.8 0-5.1-1.9-5.9-4.5z" />
-                            <path fill="#4A90E2" d="M3.8 7.3C3.3 8.3 3 9.4 3 10.5s.3 2.2.8 3.2c0 0 3.1-2.4 3.1-2.4-.2-.4-.3-.8-.3-1.3s.1-.9.3-1.3L3.8 7.3z" />
-                            <path fill="#FBBC05" d="M12 5.8c1.5 0 2.8.5 3.9 1.5l2.9-2.9C17 2.7 14.7 2 12 2 8.5 2 5.4 4 3.8 7.3l3.1 2.4c.8-2.6 3.1-4.5 5.9-4.5z" />
+                    <div style="margin: 1.5rem 0; text-align: center; position: relative;">
+                        <span
+                            style="background: var(--theme-surface); padding: 0 10px; color: var(--theme-text-muted); position: relative; z-index: 1;">or</span>
+                        <div
+                            style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--theme-border); z-index: 0;">
+                        </div>
+                    </div>
+
+                    <button type="button" id="google-register-fallback" class="btn btn-social"
+                        aria-label="Continue With Google">
+                        <svg class="btn-social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="#EA4335"
+                                d="M12 10.2v3.9h5.4c-.2 1.2-.9 2.3-1.9 3.1l3 2.3c1.8-1.6 2.8-4 2.8-6.8 0-.6-.1-1.2-.2-1.8H12z" />
+                            <path fill="#34A853"
+                                d="M6.9 14.3l-.7.5-2.4 1.9C5.4 20 8.5 22 12 22c2.7 0 5-1 6.7-2.6l-3-2.3c-.8.6-2 1-3.7 1-2.8 0-5.1-1.9-5.9-4.5z" />
+                            <path fill="#4A90E2"
+                                d="M3.8 7.3C3.3 8.3 3 9.4 3 10.5s.3 2.2.8 3.2c0 0 3.1-2.4 3.1-2.4-.2-.4-.3-.8-.3-1.3s.1-.9.3-1.3L3.8 7.3z" />
+                            <path fill="#FBBC05"
+                                d="M12 5.8c1.5 0 2.8.5 3.9 1.5l2.9-2.9C17 2.7 14.7 2 12 2 8.5 2 5.4 4 3.8 7.3l3.1 2.4c.8-2.6 3.1-4.5 5.9-4.5z" />
                         </svg>
-                        Continue With Google
+                        <span data-i18n="auth.registerGoogle">Continue With Google</span>
                     </button>
                     <div id="google-register-btn" style="display: none; justify-content: center;"></div>
-                    <div id="google-register-error" class="form-error" style="display: none; margin-top: 0.75rem;"></div>
+                    <div id="google-register-error" class="form-error" style="display: none; margin-top: 0.75rem;">
+                    </div>
 
                     <p class="text-center text-sm text-muted mt-6">
-                        Already have an account? <a href="login.html" class="text-gold">Login here</a>
+                        Already have an account? <a href="login.html" class="text-accent">Login here</a>
                     </p>
                 </div>
             </div>

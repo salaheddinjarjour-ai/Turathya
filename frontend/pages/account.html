@@ -4,9 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account - Zauction</title>
+    <title>My Account - TURATHYA</title>
 
-    <link rel="stylesheet" href="../css/variables.css">
+        <script>
+        (function() {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>html.i18n-pending body { opacity: 0; pointer-events: none; }</style>
+<link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
     <link rel="stylesheet" href="../css/layout.css">
@@ -40,13 +51,17 @@
             <!-- Bids Tab -->
             <div class="tab-content" id="bids-tab">
                 <h2 class="mb-6" data-i18n="account.biddingHistory">Bidding History</h2>
-                
+
                 <!-- Filter buttons -->
                 <div class="mb-6" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <button class="btn btn-sm btn-secondary active" data-filter="all" data-i18n="account.allBids">All Bids</button>
-                    <button class="btn btn-sm btn-secondary" data-filter="active" data-i18n="account.active">Active</button>
-                    <button class="btn btn-sm btn-secondary" data-filter="winning" data-i18n="account.winning">Winning</button>
-                    <button class="btn btn-sm btn-secondary" data-filter="outbid" data-i18n="account.outbid">Outbid</button>
+                    <button class="btn btn-sm btn-secondary active" data-filter="all" data-i18n="account.allBids">All
+                        Bids</button>
+                    <button class="btn btn-sm btn-secondary" data-filter="active"
+                        data-i18n="account.active">Active</button>
+                    <button class="btn btn-sm btn-secondary" data-filter="winning"
+                        data-i18n="account.winning">Winning</button>
+                    <button class="btn btn-sm btn-secondary" data-filter="outbid"
+                        data-i18n="account.outbid">Outbid</button>
                     <button class="btn btn-sm btn-secondary" data-filter="won" data-i18n="account.won">Won</button>
                     <button class="btn btn-sm btn-secondary" data-filter="lost" data-i18n="account.lost">Lost</button>
                 </div>
@@ -91,13 +106,7 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p data-i18n="footer.copyright">&copy; 2026 Zauction. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="site-footer"></div>
     <script src="../js/i18n.js"></script>
 
     <script src="../js/utils.js"></script>
@@ -131,7 +140,7 @@
         // Load watchlist
         async function loadWatchlist() {
             if (!user) return;
-            
+
             try {
                 const { watchlist } = await watchlistAPI.getAll();
                 const container = document.getElementById('watchlist-grid');
@@ -160,7 +169,7 @@
                 }).join('');
 
                 initCountdowns();
-                
+
                 // Reload cache after loading watchlist
                 if (window.loadWatchlistCache) {
                     await window.loadWatchlistCache();
@@ -178,7 +187,7 @@
         // Load bidding history
         async function loadBids() {
             if (!user) return;
-            
+
             try {
                 const { bids } = await bidsAPI.getMyBids();
                 allBids = bids || [];
@@ -229,10 +238,10 @@
                 const status = getBidStatus(bid);
                 const statusBadge = getStatusBadge(status);
                 const liveCurrentBid = Number(bid.current_bid || bid.starting_bid || 0);
-                
+
                 return `
                     <tr>
-                        <td><a href="lot.html?id=${bid.lot_id}" class="text-gold">${bid.lot_title || i18n.t('account.unknownLot')}</a></td>
+                        <td><a href="lot.html?id=${bid.lot_id}" class="text-accent">${bid.lot_title || i18n.t('account.unknownLot')}</a></td>
                         <td><a href="auction.html?id=${bid.auction_id}" class="text-sm text-muted">${bid.auction_title || 'Auction'}</a></td>
                         <td>${formatCurrency(bid.amount)}</td>
                         <td>${formatCurrency(liveCurrentBid)}</td>
@@ -249,24 +258,24 @@
             const isHighestBid = bid.highest_bidder_id
                 ? String(bid.highest_bidder_id) === String(user.id)
                 : Number(bid.amount || 0) >= Number(bid.current_bid || bid.starting_bid || 0);
-            
+
             // If auction is still active
             if (!lotEnded) {
                 return isHighestBid ? 'Winning' : 'Outbid';
             }
-            
+
             // If auction has ended
             if (lotEnded) {
                 return isHighestBid ? 'Won' : 'Lost';
             }
-            
+
             return 'Active';
         }
 
         // Get status badge HTML
         function getStatusBadge(status) {
             const statusLower = status.toLowerCase();
-            switch(statusLower) {
+            switch (statusLower) {
                 case 'winning':
                     return '<span class="badge badge-success">' + i18n.t('account.winning') + '</span>';
                 case 'won':
@@ -299,7 +308,7 @@
                     document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
                     // Add active class to clicked button
                     btn.classList.add('active');
-                    
+
                     // Update current filter and re-render
                     currentFilter = btn.getAttribute('data-filter');
                     renderBids(allBids);
@@ -307,19 +316,19 @@
             });
 
             const currentUser = getCurrentUser();
-            
+
             if (!currentUser) {
                 window.location.href = 'login.html';
                 return;
             }
-            
+
             if (currentUser.role === 'admin') {
                 window.location.href = 'admin.html';
                 return;
             }
 
             user = currentUser;
-            
+
             loadWatchlist();
             loadBids();
             loadProfile();

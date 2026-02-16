@@ -39,7 +39,7 @@
 }
 
 .media-type-selector label:hover {
-    border-color: var(--color-gold);
+    border-color: var(--color-olive);
 }
 
 .media-type-selector input[type="radio"] {
@@ -47,13 +47,13 @@
 }
 
 .media-type-selector input[type="radio"]:checked+span {
-    color: var(--color-gold);
+    color: var(--color-olive);
     font-weight: 600;
 }
 
 .media-type-selector label:has(input:checked) {
-    border-color: var(--color-gold);
-    background: rgba(212, 175, 55, 0.05);
+    border-color: var(--color-olive);
+    background: rgba(47, 79, 62, 0.05);
 }
 
 /* Upload Controls */
@@ -78,8 +78,8 @@
 }
 
 .upload-btn:hover {
-    border-color: var(--color-gold);
-    background: rgba(212, 175, 55, 0.05);
+    border-color: var(--color-olive);
+    background: rgba(47, 79, 62, 0.05);
 }
 
 .upload-btn svg {
@@ -160,7 +160,7 @@
 }
 
 .media-card:hover {
-    border-color: var(--color-gold);
+    border-color: var(--color-olive);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -170,9 +170,9 @@
 }
 
 .media-card.drag-over {
-    border-color: var(--color-gold);
+    border-color: var(--color-olive);
     border-style: dashed;
-    background: rgba(212, 175, 55, 0.05);
+    background: rgba(47, 79, 62, 0.05);
 }
 
 .media-card-preview {
@@ -224,7 +224,7 @@
 
 .media-card-actions button:hover {
     background: var(--color-off-white);
-    border-color: var(--color-gold);
+    border-color: var(--color-olive);
 }
 
 .media-card-actions button.btn-danger:hover {
@@ -257,7 +257,7 @@
 
 .upload-progress-fill {
     height: 100%;
-    background: var(--color-gold);
+    background: var(--color-olive);
     transition: width 0.3s ease;
 }
 
@@ -378,8 +378,8 @@
 }
 
 .media-preview-item.first-item {
-    border-color: var(--color-gold);
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    border-color: var(--color-olive);
+    box-shadow: 0 2px 8px rgba(47, 79, 62, 0.3);
 }
 
 .media-preview-item.first-item::after {
@@ -387,7 +387,7 @@
     position: absolute;
     top: 0.25rem;
     left: 0.25rem;
-    background: var(--color-gold);
+    background: var(--color-olive);
     color: white;
     font-size: 0.625rem;
     font-weight: 600;

@@ -1,5 +1,5 @@
 // ============================================
-// ZAUCTION - WATCHLIST / FAVORITES
+// TURATHYA - WATCHLIST / FAVORITES
 // Add/remove items from watchlist
 // ============================================
 

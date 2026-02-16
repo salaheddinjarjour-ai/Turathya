@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Shipping and pickup information for Zauction purchases.">
-    <title>Shipping & Pickup - Zauction</title>
+    <meta name="description" content="معلومات الشحن والاستلام لمشتريات تراثيا.">
+    <title>الشحن والاستلام - تراثيا</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/typography.css">
     <link rel="stylesheet" href="../../css/layout.css">
     <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/components/lang-toggle.css">
 </head>
 
 <body>
@@ -19,136 +20,110 @@
 
     <main class="section">
         <div class="container container-md">
-            <h1 class="mb-4">Shipping & Pickup</h1>
-            <p class="text-graphite text-lg mb-12">Delivery options and buyer responsibilities</p>
+            <h1 class="mb-4" data-i18n="info.shipping.title">الشحن والاستلام</h1>
+            <p class="text-graphite text-lg mb-12" data-i18n="info.shipping.subtitle">خيارات التسليم ومسؤوليات المشتري
+            </p>
 
             <section class="mb-12">
-                <h2 class="mb-4">Buyer Responsibility</h2>
-                <p class="mb-4">Buyers are responsible for arranging and paying for all shipping, packing, and
-                    insurance. We do not provide in-house shipping services but can recommend professional art shippers
-                    and packing specialists.</p>
-                <p class="mb-4">Items must be collected or shipping arranged within 14 days of payment clearance.
-                    Storage fees may apply for items left beyond this period.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.buyerResponsibility.title">مسؤولية المشتري</h2>
+                <p class="mb-4" data-i18n="info.shipping.buyerResponsibility.p1">يتحمل المشترون مسؤولية ترتيب ودفع جميع
+                    تكاليف الشحن والتعبئة والتأمين. نحن لا نقدم خدمات
+                    شحن داخلية ولكن يمكننا أن نوصي بشركات شحن فنية محترفة ومتخصصين في التعبئة.</p>
+                <p class="mb-4" data-i18n="info.shipping.buyerResponsibility.p2">يجب استلام العناصر أو ترتيب الشحن خلال
+                    14 يوماً من تصفية الدفع. قد يتم تطبيق رسوم تخزين
+                    للعناصر المتبقية بعد هذه الفترة.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Recommended Shippers</h2>
-                <p class="mb-4">We maintain a list of professional art shippers, packers, and freight forwarders who are
-                    experienced in handling antiques and fine art. Contact us for recommendations based on your location
-                    and the nature of your purchase.</p>
-                <p class="mb-4">Buyers are responsible for obtaining quotes, coordinating pickup, and paying shippers
-                    directly. We are not responsible for shipper performance, delays, or damage during transit.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.shippers.title">شركات الشحن الموصى بها</h2>
+                <p class="mb-4" data-i18n="info.shipping.shippers.p1">نحتفظ بقائمة من شركات الشحن الفنية المحترفة وعمال
+                    التعبئة ووكلاء الشحن ذوي الخبرة في
+                    التعامل مع التحف والفنون الجميلة. اتصل بنا للحصول على توصيات بناءً على موقعك وطبيعة مشترياتك.</p>
+                <p class="mb-4" data-i18n="info.shipping.shippers.p2">يتحمل المشترون مسؤولية الحصول على عروض الأسعار
+                    وتنسيق الاستلام والدفع للشاحنين مباشرة.
+                    نحن لسنا مسؤولين عن أداء الشاحن أو التأخير أو التلف أثناء النقل.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Packing Standards</h2>
-                <p class="mb-4">Professional packing is strongly recommended for fragile, valuable, or large items.
-                    Proper packing materials and techniques reduce the risk of damage during transit.</p>
-                <p class="mb-4">If you choose to pack items yourself, you assume all risk of damage. We can provide
-                    basic packing materials (boxes, bubble wrap, paper) for a fee, but we do not pack items.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.packing.title">معايير التعبئة</h2>
+                <p class="mb-4" data-i18n="info.shipping.packing.p1">ينصح بشدة بالتعبئة المهنية للعناصر الهشة أو القيمة
+                    أو الكبيرة. تقلل مواد وتقنيات التعبئة
+                    المناسبة من خطر التلف أثناء النقل.</p>
+                <p class="mb-4" data-i18n="info.shipping.packing.p2">إذا اخترت تعبئة العناصر بنفسك، فإنك تتحمل جميع
+                    مخاطر التلف. يمكننا توفير مواد التعبئة
+                    الأساسية (صناديق، غلاف فقاعي، ورق) مقابل رسوم، لكننا لا نقوم بتعبئة العناصر.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Local Pickup</h2>
-                <p class="mb-4">Local buyers may arrange to collect items in person. Pickup must be scheduled in advance
-                    by contacting our support team. We cannot accommodate walk-in pickups.</p>
-                <p class="mb-4">Pickup hours are typically Monday through Friday, 10:00 AM to 4:00 PM. Appointments must
-                    be confirmed at least 48 hours in advance.</p>
-                <p class="mb-4">Buyers are responsible for bringing appropriate vehicles and assistance for loading. We
-                    do not provide loading services for large or heavy items.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.pickup.title">الاستلام المحلي</h2>
+                <p class="mb-4" data-i18n="info.shipping.pickup.p1">يمكن للمشترين المحليين ترتيب استلام العناصر شخصياً.
+                    يجب جدولة الاستلام مسبقاً عن طريق
+                    الاتصال بفريق الدعم لدينا. لا يمكننا استيعاب عمليات الاستلام بدون موعد.</p>
+                <p class="mb-4" data-i18n="info.shipping.pickup.p2">ساعات الاستلام عادة من الاثنين إلى الجمعة، من 10:00
+                    صباحاً إلى 4:00 مساءً. يجب تأكيد
+                    المواعيد قبل 48 ساعة على الأقل.</p>
+                <p class="mb-4" data-i18n="info.shipping.pickup.p3">يتحمل المشترون مسؤولية إحضار المركبات المناسبة
+                    والمساعدة للتحميل. نحن لا نقدم خدمات
+                    التحميل للعناصر الكبيرة أو الثقيلة.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">International Shipping</h2>
-                <p class="mb-4">International buyers are responsible for all customs duties, taxes, import fees, and
-                    compliance with their country's import regulations.</p>
-                <p class="mb-4">We can provide export documentation (commercial invoices, certificates of origin) as
-                    needed. Buyers must arrange for customs clearance and payment of duties in their country.</p>
-                <p class="mb-4">Certain items may be subject to export restrictions or require permits. Buyers are
-                    responsible for verifying that items can be legally imported into their country before bidding.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.international.title">الشحن الدولي</h2>
+                <p class="mb-4" data-i18n="info.shipping.international.p1">يتحمل المشترون الدوليون مسؤولية جميع الرسوم
+                    الجمركية والضرائب ورسوم الاستيراد والامتثال
+                    للوائح الاستيراد في بلدهم.</p>
+                <p class="mb-4" data-i18n="info.shipping.international.p2">يمكننا توفير وثائق التصدير (الفواتير
+                    التجارية، شهادات المنشأ) حسب الحاجة. يجب على
+                    المشترين ترتيب التخليص الجمركي ودفع الرسوم في بلدهم.</p>
+                <p class="mb-4" data-i18n="info.shipping.international.p3">قد تخضع بعض العناصر لقيود التصدير أو تتطلب
+                    تصاريح. يتحمل المشترون مسؤولية التحقق من
+                    إمكانية استيراد العناصر بشكل قانوني إلى بلدهم قبل المزايدة.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Insurance</h2>
-                <p class="mb-4">Buyers are responsible for insuring items during transit. Most professional shippers
-                    offer insurance as part of their service. Verify coverage limits and exclusions before shipping.</p>
-                <p class="mb-4">Risk of loss transfers to the buyer upon payment clearance. We are not responsible for
-                    damage or loss occurring after items leave our facility.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.insurance.title">التأمين</h2>
+                <p class="mb-4" data-i18n="info.shipping.insurance.p1">يتحمل المشترون مسؤولية التأمين على العناصر أثناء
+                    النقل. تقدم معظم شركات الشحن المهنية
+                    التأمين كجزء من خدماتها. تحقق من حدود التغطية والاستثناءات قبل الشحن.</p>
+                <p class="mb-4" data-i18n="info.shipping.insurance.p2">ينتقل خطر الخسارة إلى المشتري عند تصفية الدفع.
+                    نحن لسنا مسؤولين عن التلف أو الخسارة التي
+                    تحدث بعد مغادرة العناصر منشأتنا.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Storage Fees</h2>
-                <p class="mb-4">Items must be collected or shipping arranged within 14 days of payment. After this
-                    period, storage fees of $10 per day (or 1% of the purchase price per week, whichever is greater)
-                    will apply.</p>
-                <p class="mb-4">Extended storage may be arranged by prior agreement. Contact us if you require
-                    additional time to arrange shipping.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.storage.title">رسوم التخزين</h2>
+                <p class="mb-4" data-i18n="info.shipping.storage.p1">يجب استلام العناصر أو ترتيب الشحن خلال 14 يوماً من
+                    الدفع. بعد هذه الفترة، سيتم تطبيق
+                    رسوم تخزين قدرها 10 دولارات يومياً (أو 1٪ من سعر الشراء أسبوعياً، أيهما أكبر).</p>
+                <p class="mb-4" data-i18n="info.shipping.storage.p2">يمكن ترتيب التخزين الممتد باتفاق مسبق. اتصل بنا إذا
+                    كنت بحاجة إلى وقت إضافي لترتيب
+                    الشحن.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Damage Claims</h2>
-                <p class="mb-4">Inspect items carefully before accepting delivery. Note any damage on the shipping
-                    receipt and photograph the packaging and item immediately.</p>
-                <p class="mb-4">Damage claims must be filed with the shipper within the timeframe specified in their
-                    terms of service (typically 24-48 hours). We cannot assist with claims for damage occurring during
-                    transit.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.claims.title">مطالبات التلف</h2>
+                <p class="mb-4" data-i18n="info.shipping.claims.p1">افحص العناصر بعناية قبل قبول التسليم. لاحظ أي تلف في
+                    إيصال الشحن وقم بتصوير العبوة
+                    والقطعة على الفور.</p>
+                <p class="mb-4" data-i18n="info.shipping.claims.p2">يجب تقديم مطالبات التلف إلى الشاحن خلال الإطار
+                    الزمني المحدد في شروط الخدمة الخاصة بهم
+                    (عادةً 24-48 ساعة). لا يمكننا المساعدة في المطالبات عن التلف الذي يحدث أثناء النقل.</p>
             </section>
 
             <section class="mb-12">
-                <h2 class="mb-4">Questions</h2>
-                <p>For questions about shipping, pickup arrangements, or recommended shippers, contact our support team
-                    at <a href="mailto:support@zauction.com" class="text-gold">support@zauction.com</a>.</p>
+                <h2 class="mb-4" data-i18n="info.shipping.questions.title">الأسئلة</h2>
+                <p><span data-i18n="info.shipping.questions.text">للأسئلة حول الشحن أو ترتيبات الاستلام أو شركات الشحن
+                        الموصى بها، اتصل بفريق الدعم لدينا على</span> <a href="mailto:support@turathya.com"
+                        class="text-accent">support@turathya.com</a>.</p>
             </section>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>About</h4>
-                    <ul class="footer-links">
-                        <li><a href="about.html">About Zauction</a></li>
-                        <li><a href="team.html">Our Team</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Bidding</h4>
-                    <ul class="footer-links">
-                        <li><a href="how-bidding-works.html">How Bidding Works</a></li>
-                        <li><a href="buyers-guide.html">Buyer's Guide</a></li>
-                        <li><a href="condition-reports.html">Condition Reports</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Services</h4>
-                    <ul class="footer-links">
-                        <li><a href="fees-payments.html">Fees & Payments</a></li>
-                        <li><a href="shipping-pickup.html">Shipping & Pickup</a></li>
-                        <li><a href="authentication.html">Authentication</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="cookies.html">Cookie Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Zauction. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="site-footer"></div>
 
     <script defer src="../../js/i18n.js"></script>
     <script src="../../js/data.js"></script>
-    <script defer src="../../js/i18n.js"></script>
     <script src="../../js/utils.js"></script>
-    <script defer src="../../js/i18n.js"></script>
     <script src="../../js/auth.js"></script>
 </body>
 
