@@ -14,7 +14,7 @@ services:
     runtime: node
     rootDir: zauction-backend
     buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npx prisma migrate deploy && node dist/server.js
+    startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
         value: production
