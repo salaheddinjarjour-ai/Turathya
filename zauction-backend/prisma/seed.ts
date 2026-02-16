@@ -10,10 +10,10 @@ async function main() {
   // Create admin user
   const adminPassword = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@zauction.com' },
+    where: { email: 'admin@turathya.com' },
     update: {},
     create: {
-      email: 'admin@zauction.com',
+      email: 'admin@turathya.com',
       passwordHash: adminPassword,
       fullName: 'Admin User',
       role: 'admin',
@@ -26,10 +26,10 @@ async function main() {
   // Create regular test user
   const userPassword = await bcrypt.hash('user123', 12);
   const user = await prisma.user.upsert({
-    where: { email: 'user@zauction.com' },
+    where: { email: 'user@turathya.com' },
     update: {},
     create: {
-      email: 'user@zauction.com',
+      email: 'user@turathya.com',
       passwordHash: userPassword,
       fullName: 'Test User',
       role: 'user',
@@ -163,8 +163,8 @@ async function main() {
   }
 
   console.log('\n📝 Login credentials:');
-  console.log('Admin: admin@zauction.com / admin123');
-  console.log('User:  user@zauction.com / user123');
+  console.log('Admin: admin@turathya.com / admin123');
+  console.log('User:  user@turathya.com / user123');
 }
 
 main()
