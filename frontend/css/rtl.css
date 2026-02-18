@@ -261,8 +261,17 @@ body.rtl .pr-4 {
 
 /* Page & Section Headers — keep centered in RTL */
 body.rtl .page-header,
+body.rtl .page-header h1,
+body.rtl .page-header h2,
+body.rtl .page-header p,
+body.rtl .page-header label,
 body.rtl .section-header,
+body.rtl .section-header h1,
+body.rtl .section-header h2,
+body.rtl .section-header p,
 body.rtl .auction-header,
+body.rtl .auction-header h1,
+body.rtl .auction-header p,
 body.rtl .auction-description {
     text-align: center;
 }
