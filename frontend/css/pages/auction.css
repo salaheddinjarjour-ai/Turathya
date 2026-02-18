@@ -11,6 +11,12 @@
     border-bottom: var(--border-thin) solid var(--color-border);
 }
 
+/* Keep header centered in RTL mode (override body.rtl text-align:right) */
+body.rtl .auction-header,
+body.rtl .auction-description {
+    text-align: center;
+}
+
 .auction-header h1 {
     margin-bottom: var(--space-4);
 }
