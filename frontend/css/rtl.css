@@ -260,9 +260,12 @@ body.rtl .pr-4 {
 /* Component Specific RTL Fixes */
 
 /* Navigation */
+body.rtl .header-content {
+    flex-direction: row-reverse;
+}
+
 body.rtl .nav {
     flex-direction: row-reverse;
-    /* Or just let normal flow handle it if flex-direction is row */
 }
 
 body.rtl .nav-link.active::after {
