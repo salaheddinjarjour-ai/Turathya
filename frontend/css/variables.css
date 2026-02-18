@@ -269,3 +269,63 @@
     --section-padding-lg: var(--space-32);
   }
 }
+
+/* ==================== PERFORMANCE & SMOOTH SCROLLING ==================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* GPU-accelerated transitions for interactive elements */
+a,
+button,
+.btn,
+.card,
+.auction-card,
+.lot-card,
+.nav-link {
+  transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+  will-change: auto;
+}
+
+/* Promote cards to their own compositing layer on hover */
+.card:hover,
+.auction-card:hover,
+.lot-card:hover {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Smooth image rendering */
+img {
+  image-rendering: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Content-visibility for off-screen sections (massive paint savings) */
+.section,
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
