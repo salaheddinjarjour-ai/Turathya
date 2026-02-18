@@ -8,6 +8,11 @@
     margin-bottom: var(--space-12);
 }
 
+/* Keep centered in RTL mode */
+body.rtl .page-header {
+    text-align: center;
+}
+
 .page-header h1 {
     margin-bottom: var(--space-3);
 }
