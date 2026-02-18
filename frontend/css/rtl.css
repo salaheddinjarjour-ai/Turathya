@@ -259,6 +259,14 @@ body.rtl .pr-4 {
 
 /* Component Specific RTL Fixes */
 
+/* Page & Section Headers — keep centered in RTL */
+body.rtl .page-header,
+body.rtl .section-header,
+body.rtl .auction-header,
+body.rtl .auction-description {
+    text-align: center;
+}
+
 /* Navigation — explicitly set flex-direction: row so that the native
    direction: rtl handles correct RTL flow. This must NOT be row-reverse,
    which would double-reverse the order and break the nav link sequence. */
