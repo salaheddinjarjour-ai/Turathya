@@ -259,16 +259,9 @@ body.rtl .pr-4 {
 
 /* Component Specific RTL Fixes */
 
-/* Navigation */
-body.rtl .header-content {
-    flex-direction: row-reverse;
-}
-
-body.rtl .nav {
-    /* Let natural RTL direction handle link order — no row-reverse here
-       because .header-content already reverses the logo/nav positions */
-    direction: rtl;
-}
+/* Navigation — no flex-direction overrides needed here.
+   The body direction: rtl already handles the correct RTL flow
+   for both the header-content and nav items. */
 
 body.rtl .nav-link.active::after {
     left: auto;
