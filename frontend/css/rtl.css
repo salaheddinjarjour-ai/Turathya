@@ -265,7 +265,9 @@ body.rtl .header-content {
 }
 
 body.rtl .nav {
-    flex-direction: row-reverse;
+    /* Let natural RTL direction handle link order — no row-reverse here
+       because .header-content already reverses the logo/nav positions */
+    direction: rtl;
 }
 
 body.rtl .nav-link.active::after {
