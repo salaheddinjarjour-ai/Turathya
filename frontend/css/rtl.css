@@ -259,9 +259,13 @@ body.rtl .pr-4 {
 
 /* Component Specific RTL Fixes */
 
-/* Navigation — no flex-direction overrides needed here.
-   The body direction: rtl already handles the correct RTL flow
-   for both the header-content and nav items. */
+/* Navigation — explicitly set flex-direction: row so that the native
+   direction: rtl handles correct RTL flow. This must NOT be row-reverse,
+   which would double-reverse the order and break the nav link sequence. */
+body.rtl .header-content,
+body.rtl .nav {
+    flex-direction: row;
+}
 
 body.rtl .nav-link.active::after {
     left: auto;
@@ -699,4 +703,6 @@ body.rtl .trust-item,
 body.rtl .trust-item h3,
 body.rtl .trust-item p {
     text-align: center;
-}/* deploy trigger */
+}
+
+/* deploy trigger */
