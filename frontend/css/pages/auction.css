@@ -30,6 +30,10 @@
     color: #EBE0D7;
 }
 
+.auction-date-label {
+    color: #EBE0D7;
+}
+
 /* Keep header centered in RTL mode (override body.rtl text-align:right) */
 body.rtl .auction-header,
 body.rtl .auction-description {
