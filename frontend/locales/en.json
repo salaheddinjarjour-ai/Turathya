@@ -180,6 +180,13 @@
         "registerError": "Registration failed",
         "logoutSuccess": "Logged out successfully"
     },
+    "cta": {
+        "eyebrow": "Start Bidding",
+        "title": "Join Our Auctions & Discover Rare Pieces",
+        "desc": "Browse current auctions, create an account, and start bidding on carefully curated items.",
+        "browseAuctions": "Browse Auctions",
+        "createAccount": "Create Account"
+    },
     "account": {
         "title": "My Account",
         "profile": "Profile",

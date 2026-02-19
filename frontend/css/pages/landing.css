@@ -450,3 +450,131 @@
         font-size: var(--text-sm);
     }
 }
+
+/* ==================== CTA BAND (PREMIUM BURGUNDY) ==================== */
+
+.cta-band {
+    background-color: #49110C;
+    /* Deep burgundy */
+    color: var(--color-ivory, #FAF8F3);
+    padding: 5rem 0;
+    text-align: center;
+    position: relative;
+    border-top: 1px solid rgba(250, 248, 243, 0.15);
+}
+
+.cta-band__inner {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+    /* Ensure padding on mobile */
+}
+
+/* Optional texture overlay */
+.cta-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.cta-band__eyebrow {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(250, 248, 243, 0.75);
+    margin-bottom: var(--space-4);
+}
+
+.cta-band__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
+    color: #FAF8F3;
+    margin-bottom: var(--space-6);
+}
+
+.cta-band__desc {
+    font-size: var(--text-lg);
+    line-height: 1.8;
+    color: rgba(250, 248, 243, 0.80);
+    margin-bottom: var(--space-10);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-band__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+}
+
+/* Primary Button (Ivory) */
+.btn-cta-band-primary {
+    display: inline-block;
+    padding: var(--space-3) var(--space-8);
+    background-color: #FAF8F3;
+    color: #49110C;
+    border: 1px solid rgba(250, 248, 243, 0.65);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.btn-cta-band-primary:hover {
+    background-color: #EDE8DD;
+    /* Slightly darker ivory */
+    border-color: #EDE8DD;
+    color: #49110C;
+}
+
+/* Secondary Button (Transparent) */
+.btn-cta-band-secondary {
+    display: inline-block;
+    padding: var(--space-3) var(--space-8);
+    background-color: transparent;
+    color: #FAF8F3;
+    border: 1px solid rgba(250, 248, 243, 0.55);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.btn-cta-band-secondary:hover {
+    background-color: rgba(250, 248, 243, 0.12);
+    color: #FFFFFF;
+}
+
+/* Mobile Responsive */
+@media (max-width: 639px) {
+    .cta-band {
+        padding: 3rem 0;
+    }
+
+    .cta-band__title {
+        font-size: var(--text-3xl);
+    }
+
+    .cta-band__actions {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .btn-cta-band-primary,
+    .btn-cta-band-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}
