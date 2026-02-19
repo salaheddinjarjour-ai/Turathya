@@ -180,6 +180,13 @@
         "registerError": "Registration failed",
         "logoutSuccess": "Logged out successfully"
     },
+    "cta": {
+        "eyebrow": "Discover the Opportunity",
+        "title": "Discover Rare Pieces Today",
+        "description": "Join our auctions and explore pieces carefully selected by our experts.",
+        "browseAuctions": "Browse Auctions",
+        "createAccount": "Create Account"
+    },
     "account": {
         "title": "My Account",
         "profile": "Profile",
