@@ -37,12 +37,17 @@
 <body>
     <div id="site-header"></div>
 
-    <main class="section">
-        <div class="container">
-            <!-- Auction Header -->
+    <!-- Auction Hero (full-width, viewport-height) -->
+    <section class="auction-hero" id="auction-hero">
+        <div class="auction-hero__content">
             <div class="auction-header" id="auction-header">
                 <!-- Populated by JavaScript -->
             </div>
+        </div>
+    </section>
+
+    <main class="section">
+        <div class="container">
 
             <!-- Sort Controls -->
             <div class="auction-toolbar">
@@ -69,6 +74,21 @@
     <script src="../js/auth.js"></script>
     <script src="../js/countdown.js"></script>
     <script src="../js/watchlist.js"></script>
+
+    <!-- Compute header height for hero sizing -->
+    <script>
+        function setHeaderHeight() {
+            const siteHeader = document.getElementById('site-header');
+            if (siteHeader) {
+                const h = siteHeader.offsetHeight || 0;
+                document.documentElement.style.setProperty('--header-h', h + 'px');
+            }
+        }
+        window.addEventListener('load', setHeaderHeight);
+        window.addEventListener('resize', setHeaderHeight);
+        // Run immediately in case header is already rendered
+        setTimeout(setHeaderHeight, 100);
+    </script>
     <script>
         const auctionId = getUrlParameter('id');
         let currentSort = 'lotNumber';
