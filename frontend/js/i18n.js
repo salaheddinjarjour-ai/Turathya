@@ -200,13 +200,18 @@ class I18n {
     }
 
     setActiveNavLink() {
-        const currentPath = window.location.pathname;
+        const currentPath = window.location.pathname.toLowerCase();
+        const currentFile = currentPath.split('/').pop() || 'index.html';
         const navLinks = document.querySelectorAll('.nav-link');
 
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            if (href && currentPath.endsWith(href)) {
+            if (!href) return;
+            const linkFile = href.split('/').pop().split('?')[0];
+            if (linkFile && currentFile === linkFile) {
                 link.classList.add('active');
+            } else {
+                link.classList.remove('active');
             }
         });
     }

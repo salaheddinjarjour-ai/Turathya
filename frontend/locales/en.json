@@ -75,7 +75,10 @@
         "noDescription": "No description available",
         "notSpecified": "Not specified",
         "contactForShipping": "Contact auction house for shipping details",
-        "premiumAdded": "will be added to the hammer price"
+        "premiumAdded": "will be added to the hammer price",
+        "starts": "Starts:",
+        "ends": "Ends:",
+        "startsSoon": "Starts Soon"
     },
     "time": {
         "days": "days",
@@ -257,6 +260,7 @@
         "approve": "Approve",
         "reject": "Reject",
         "suspend": "Suspend",
+        "reactivate": "Reactivate",
         "mainMedia": "Main Media",
         "secondaryMedia": "Secondary Media",
         "addMedia": "Add Media",

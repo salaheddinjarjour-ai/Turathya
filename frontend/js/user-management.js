@@ -75,15 +75,15 @@ async function deleteUserAccount(userId) {
 
 // ==================== UI FUNCTIONS ====================
 
-window.loadUsers = async function() {
+window.loadUsers = async function () {
     try {
         const filter = document.getElementById('user-status-filter')?.value || 'all';
-        
+
         const filters = {};
         if (filter !== 'all') {
             filters.status = filter;
         }
-        
+
         const { users } = await adminAPI.users.getAll(filters);
 
         const tbody = document.querySelector('#users-table tbody');
@@ -137,8 +137,8 @@ function getUserActions(user) {
         actions.push(`<button class="btn btn-ghost btn-sm" onclick="rejectUser('${user.id}').then(success => { if(success) loadUsers(); })" title="${t('admin.reject')}"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>`);
     } else if (user.status === 'approved') {
         actions.push(`<button class="btn btn-ghost btn-sm" onclick="suspendUser('${user.id}').then(success => { if(success) loadUsers(); })" title="${t('admin.suspend')}"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></button>`);
-    } else if (user.status === 'suspended') {
-        actions.push(`<button class="btn btn-ghost btn-sm" onclick="reactivateUser('${user.id}').then(success => { if(success) loadUsers(); })" title="${t('admin.approved')}"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg></button>`);
+    } else if (user.status === 'suspended' || user.status === 'rejected') {
+        actions.push(`<button class="btn btn-ghost btn-sm" onclick="reactivateUser('${user.id}').then(success => { if(success) loadUsers(); })" title="${t('admin.reactivate')}"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg></button>`);
     }
 
     actions.push(`<button class="btn btn-ghost btn-sm" onclick="deleteUserAccount('${user.id}').then(success => { if(success) loadUsers(); })" title="${t('buttons.delete')}"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>`);

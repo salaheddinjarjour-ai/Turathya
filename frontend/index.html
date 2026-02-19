@@ -260,22 +260,22 @@
           const startsSoon = hasNotStarted && (startDate.getTime() - now.getTime()) <= (48 * 60 * 60 * 1000);
 
           const statusText = hasNotStarted
-            ? `Starts ${formatDate(auction.start_date)}`
-            : `Ends ${formatDate(auction.end_date)}`;
+            ? `${i18n.t('auction.starts')} ${formatDate(auction.start_date)}`
+            : `${i18n.t('auction.ends')} ${formatDate(auction.end_date)}`;
 
           const badge = hasNotStarted
             ? (startsSoon
-              ? '<span class="badge badge-info">Starts Soon</span>'
-              : '<span class="badge badge-info">Didn\'t Start</span>')
-            : (isEndingSoon(auction.end_date) ? '<span class="badge badge-accent" data-i18n="auction.endingSoon">Ending Soon</span>' : '');
+              ? `<span class="badge badge-info">${i18n.t('auction.startsSoon')}</span>`
+              : `<span class="badge badge-info">${i18n.t('auction.upcoming')}</span>`)
+            : (isEndingSoon(auction.end_date) ? `<span class="badge badge-accent">${i18n.t('auction.endingSoon')}</span>` : '');
 
           return `
           <a href="pages/auction.html?id=${auction.id}" class="card">
             <img loading="lazy" src="${auction.image_data || auction.image_url || 'assets/images/placeholder.jpg'}" alt="${auction.title}" class="card-image">
             <div class="card-content">
-              <div class="label mb-2">${auction.category || 'Auction'}</div>
+              <div class="label mb-2">${auction.category || i18n.t('auction.category')}</div>
               <h3 class="card-title">${auction.title}</h3>
-              <p class="card-subtitle">${auction.lot_count || 0} <span data-i18n="auction.lots">lots</span> • ${auction.location || 'Location TBA'}</p>
+              <p class="card-subtitle">${auction.lot_count || 0} ${i18n.t('auction.lots')} • ${auction.location || ''}</p>
             </div>
             <div class="card-footer">
               <span class="text-sm text-muted">${statusText}</span>
@@ -331,9 +331,9 @@
             <a href="pages/auction.html?id=${auction.id}" class="card">
               <img loading="lazy" src="${imageUrl}" alt="${auction.title}" class="card-image">
               <div class="card-content">
-                <div class="label mb-2">${auction.category || 'Auction'}</div>
+                <div class="label mb-2">${auction.category || i18n.t('auction.category')}</div>
                 <h4 class="card-title">${auction.title}</h4>
-                <p class="text-sm text-graphite mb-4">${lotCount} ${lotCount === 1 ? 'lot' : 'lots'}</p>
+                <p class="text-sm text-graphite mb-4">${lotCount} ${i18n.t('auction.lots')}</p>
                 <div class="flex-between-center">
                   <span class="badge badge-accent" data-i18n="auction.endingSoon">Ending Soon</span>
                   <span class="text-xs font-medium" data-countdown="${auction.end_date}"></span>
@@ -391,7 +391,7 @@
 
     function displaySearchSuggestions(auctions, lots) {
       if (auctions.length === 0 && lots.length === 0) {
-        suggestionsContainer.innerHTML = '<div class="no-results" style="padding: var(--space-4); text-align: center; color: rgba(255, 255, 255, 0.7);">No results found</div>';
+        suggestionsContainer.innerHTML = `<div class="no-results" style="padding: var(--space-4); text-align: center; color: rgba(255, 255, 255, 0.7);">${i18n.t('empty.noResults')}</div>`;
         suggestionsContainer.style.display = 'block';
         return;
       }
@@ -402,7 +402,7 @@
       if (auctions.length > 0) {
         html += `
           <div class="search-suggestions-section">
-            <div class="search-suggestions-title">Auctions</div>
+            <div class="search-suggestions-title">${i18n.t('nav.auctions')}</div>
             ${auctions.map(auction => {
           const now = new Date();
           const endDate = auction.end_date ? new Date(auction.end_date) : null;
@@ -417,8 +417,8 @@
                 <div class="suggestion-card-content">
                   <div class="suggestion-card-title">${auction.title}</div>
                   <div class="suggestion-card-meta">
-                    <span>${auction.lot_count || 0} lots</span>
-                    ${isLiveNow ? '<span style="color: var(--color-success);">• Live Now</span>' : ''}
+                    <span>${auction.lot_count || 0} ${i18n.t('auction.lots')}</span>
+                    ${isLiveNow ? `<span style="color: var(--color-success);">• ${i18n.t('auction.live')}</span>` : ''}
                   </div>
                 </div>
               </a>
@@ -432,7 +432,7 @@
       if (lots.length > 0) {
         html += `
           <div class="search-suggestions-section">
-            <div class="search-suggestions-title">Lots</div>
+            <div class="search-suggestions-title">${i18n.t('auction.lots')}</div>
             ${lots.map(lot => `
               <a href="pages/lot.html?id=${lot.id}" class="suggestion-card">
                 <img loading="lazy" src="${lot.primary_image || 'assets/images/placeholder.jpg'}" 
@@ -441,7 +441,7 @@
                 <div class="suggestion-card-content">
                   <div class="suggestion-card-title">${lot.title}</div>
                   <div class="suggestion-card-meta">
-                    <span>Lot ${lot.lot_number}</span>
+                    <span>${i18n.t('auction.lot')} ${lot.lot_number}</span>
                     ${lot.category ? `<span>• ${lot.category}</span>` : ''}
                   </div>
                   <div class="suggestion-card-price">
@@ -469,7 +469,7 @@
 
     // Load data on page load
     document.addEventListener('DOMContentLoaded', () => {
-      FeaturedAuctions();
+      loadFeaturedAuctions();
       loadEndingSoon();
     });
   </script>

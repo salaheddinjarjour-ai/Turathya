@@ -136,11 +136,11 @@
                     '<p class="auction-description">' + (auction.description || '') + '</p>' +
                     '<div class="auction-dates">' +
                     '<div>' +
-                    '<span class="text-sm auction-date-label">:يبدأ</span>' +
+                    '<span class="text-sm auction-date-label">' + i18n.t('auction.starts') + '</span>' +
                     '<span class="text-sm font-medium">' + formatDateTime(auction.start_date) + '</span>' +
                     '</div>' +
                     '<div>' +
-                    '<span class="text-sm auction-date-label">:ينتهي</span>' +
+                    '<span class="text-sm auction-date-label">' + i18n.t('auction.ends') + '</span>' +
                     '<span class="text-sm font-medium">' + formatDateTime(auction.end_date) + '</span>' +
                     '</div>' +
                     '</div>';

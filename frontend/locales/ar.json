@@ -75,7 +75,10 @@
         "noDescription": "لا يوجد وصف متاح",
         "notSpecified": "غير محدد",
         "contactForShipping": "اتصل بدار المزاد للحصول على تفاصيل الشحن",
-        "premiumAdded": "ستضاف إلى سعر المطرقة"
+        "premiumAdded": "ستضاف إلى سعر المطرقة",
+        "starts": ":يبدأ",
+        "ends": ":ينتهي",
+        "startsSoon": "يبدأ قريباً"
     },
     "time": {
         "days": "أيام",
@@ -261,6 +264,7 @@
         "approve": "موافقة",
         "reject": "رفض",
         "suspend": "تعليق",
+        "reactivate": "إعادة تفعيل",
         "mainMedia": "الوسائط الرئيسية",
         "secondaryMedia": "الوسائط الثانوية",
         "addMedia": "إضافة وسائط",

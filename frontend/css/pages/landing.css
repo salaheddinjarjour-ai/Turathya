@@ -641,11 +641,15 @@
 /* Mobile Responsive */
 @media (max-width: 639px) {
     .cta-band {
-        padding: 4rem 0;
+        padding: 3rem 0;
     }
 
     .cta-band__title {
-        font-size: var(--text-3xl);
+        font-size: var(--text-2xl);
+    }
+
+    .cta-band__desc {
+        font-size: var(--text-base);
     }
 
     .cta-band__actions {
@@ -657,5 +661,13 @@
     .btn-cta-band-secondary {
         width: 100%;
         text-align: center;
+    }
+
+    .cta-ornament {
+        display: none;
+    }
+
+    .cta-band__inner {
+        padding: 0 var(--space-6);
     }
 }
