@@ -253,6 +253,12 @@ const adminAPI = {
             });
         },
 
+        async unsuspend(userId) {
+            return apiRequest(`/admin/users/${userId}/unsuspend`, {
+                method: 'PATCH'
+            });
+        },
+
         async delete(userId) {
             return apiRequest(`/admin/users/${userId}`, {
                 method: 'DELETE'

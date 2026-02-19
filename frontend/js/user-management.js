@@ -47,7 +47,7 @@ async function suspendUser(userId) {
 
 async function reactivateUser(userId) {
     try {
-        await adminAPI.users.approve(userId);
+        await adminAPI.users.unsuspend(userId);
         showSuccess(t('notifications.userReactivated'));
         return true;
     } catch (error) {

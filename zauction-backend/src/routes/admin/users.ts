@@ -56,14 +56,14 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
     }
 });
 
-// Approve user
+// Approve user (works for pending, suspended, and rejected users)
 router.patch('/:id/approve', async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
 
         const result = await pool.query(
             `UPDATE users SET status = 'approved', updated_at = NOW()
-       WHERE id = $1 AND status = 'pending'
+       WHERE id = $1 AND status IN ('pending', 'suspended', 'rejected')
        RETURNING id, email, full_name, status`,
             [id]
         );
@@ -82,7 +82,7 @@ router.patch('/:id/approve', async (req: AuthRequest, res: Response) => {
     }
 });
 
-// Reject user
+// Reject user (only for pending users)
 router.patch('/:id/reject', async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
@@ -131,6 +131,32 @@ router.patch('/:id/suspend', async (req: AuthRequest, res: Response) => {
     } catch (error) {
         console.error('Suspend user error:', error);
         res.status(500).json({ error: 'Failed to suspend user' });
+    }
+});
+
+// Unsuspend / reactivate user (works for suspended and rejected)
+router.patch('/:id/unsuspend', async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const result = await pool.query(
+            `UPDATE users SET status = 'approved', updated_at = NOW()
+       WHERE id = $1 AND status IN ('suspended', 'rejected')
+       RETURNING id, email, full_name, status`,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found or not suspended/rejected' });
+        }
+
+        res.json({
+            message: 'User reactivated successfully',
+            user: result.rows[0]
+        });
+    } catch (error) {
+        console.error('Unsuspend user error:', error);
+        res.status(500).json({ error: 'Failed to reactivate user' });
     }
 });
 
