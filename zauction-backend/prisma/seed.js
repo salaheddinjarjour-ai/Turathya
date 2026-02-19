@@ -36,12 +36,13 @@ async function main() {
     });
     console.log('✅ User:', user.email);
 
-    // ── Skip if auctions already exist ────────────────────────────────────────
-    const existing = await prisma.auction.count();
-    if (existing > 0) {
-        console.log('ℹ️  Auctions already exist — skipping demo data.');
-        return;
-    }
+    // ── Clear existing demo data and re-seed ─────────────────────────────────
+    console.log('🗑️  Clearing existing data for fresh seed...');
+    await prisma.bid.deleteMany({});
+    await prisma.watchlist.deleteMany({});
+    await prisma.lotMedia.deleteMany({});
+    await prisma.lot.deleteMany({});
+    await prisma.auction.deleteMany({});
 
     const now = new Date();
     const days = (n) => new Date(now.getTime() + n * 86400000);
