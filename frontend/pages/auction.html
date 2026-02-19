@@ -37,12 +37,26 @@
 <body>
     <div id="site-header"></div>
 
+    <!-- Auction Header Band -->
+    <div class="auction-header-band" id="auction-header-band">
+        <div class="auction-header-top">
+            <div class="container">
+                <div class="auction-header" id="auction-header">
+                    <!-- Populated by JavaScript: h1 + meta -->
+                </div>
+            </div>
+        </div>
+        <div class="auction-header-bottom">
+            <div class="container">
+                <div class="auction-header-details" id="auction-header-details">
+                    <!-- Populated by JavaScript: description + dates -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <main class="section">
         <div class="container">
-            <!-- Auction Header -->
-            <div class="auction-header" id="auction-header">
-                <!-- Populated by JavaScript -->
-            </div>
 
             <!-- Sort Controls -->
             <div class="auction-toolbar">
@@ -112,7 +126,10 @@
                     '<span>' + (auction.location || 'TBA') + '</span>' +
                     '<span>•</span>' +
                     '<span>' + (auction.lot_count || 0) + ' lots</span>' +
-                    '</p>' +
+                    '</p>';
+
+                const details = document.getElementById('auction-header-details');
+                details.innerHTML =
                     '<p class="auction-description">' + (auction.description || '') + '</p>' +
                     '<div class="auction-dates">' +
                     '<div>' +

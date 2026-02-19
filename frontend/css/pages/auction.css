@@ -3,16 +3,51 @@
    Auction header and lots grid
    ============================================ */
 
+/* Two-tone Header Band */
+.auction-header-band {
+    width: 100%;
+}
+
+.auction-header-top {
+    background-color: #ece2d9;
+    padding: var(--space-16) 0 var(--space-10) 0;
+}
+
+.auction-header-bottom {
+    background-color: #ad9e89;
+    padding: var(--space-8) 0;
+}
+
+.auction-header-bottom .auction-description,
+.auction-header-bottom .auction-dates,
+.auction-header-bottom .text-sm,
+.auction-header-bottom .text-muted {
+    color: #FFFFFF;
+}
+
+.auction-header-bottom .auction-description {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.auction-header-bottom .text-muted {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
 .auction-header {
     text-align: center;
     max-width: 900px;
-    margin: 0 auto var(--space-16) auto;
-    padding-bottom: var(--space-12);
-    border-bottom: var(--border-thin) solid var(--color-border);
+    margin: 0 auto;
+}
+
+.auction-header-details {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 /* Keep header centered in RTL mode (override body.rtl text-align:right) */
 body.rtl .auction-header,
+body.rtl .auction-header-details,
 body.rtl .auction-description {
     text-align: center;
 }
@@ -26,14 +61,13 @@ body.rtl .auction-description {
     align-items: center;
     justify-content: center;
     gap: var(--space-3);
-    margin-bottom: var(--space-6);
+    margin-bottom: 0;
     color: var(--color-graphite);
 }
 
 .auction-description {
     font-size: var(--text-lg);
     line-height: var(--leading-relaxed);
-    color: var(--color-graphite);
     margin-bottom: var(--space-8);
 }
 
