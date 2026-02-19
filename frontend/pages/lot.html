@@ -173,6 +173,20 @@
     <script src="../js/countdown.js"></script>
     <script src="../js/watchlist.js"></script>
     <script src="../js/bidding.js"></script>
+
+    <!-- Compute header height for sticky media -->
+    <script>
+        function setHeaderHeight() {
+            const siteHeader = document.getElementById('site-header');
+            if (siteHeader) {
+                const h = siteHeader.offsetHeight || 0;
+                document.documentElement.style.setProperty('--header-h', h + 'px');
+            }
+        }
+        window.addEventListener('load', setHeaderHeight);
+        window.addEventListener('resize', setHeaderHeight);
+        setTimeout(setHeaderHeight, 100);
+    </script>
     <script>
         const lotId = getUrlParameter('id');
 
@@ -258,7 +272,7 @@
                     '<h3>' + i18n.t('auction.shippingPickup') + '</h3>' +
                     '<p>' + (lot.shipping || i18n.t('auction.contactForShipping')) + '</p>' +
                     '</div>' +
-                    '<div class="info-section">' +
+                    '<div class="info-section" id="buyer-premium">' +
                     '<h3>' + i18n.t('auction.buyersPremium') + '</h3>' +
                     '<p>' + (lot.buyers_premium || 25) + '% ' + i18n.t('auction.premiumAdded') + '</p>' +
                     '</div>' +

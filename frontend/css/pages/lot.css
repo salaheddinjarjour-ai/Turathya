@@ -9,13 +9,17 @@
     gap: var(--space-16);
     max-width: 1400px;
     margin: 0 auto;
+    align-items: start;
+    /* Required for sticky child to work */
 }
 
-/* Image Gallery */
-.lot-images {
+/* Media Gallery — Sticky on desktop */
+#lot-media-gallery {
     position: sticky;
-    top: calc(var(--space-24) + 60px);
-    height: fit-content;
+    top: calc(var(--header-h, 80px) + 16px);
+    max-height: calc(100vh - var(--header-h, 80px) - 32px);
+    overflow-y: auto;
+    /* Scrollbar for tall galleries */
 }
 
 .main-image {
@@ -114,8 +118,10 @@
         gap: var(--space-8);
     }
 
-    .lot-images {
+    #lot-media-gallery {
         position: static;
+        max-height: none;
+        overflow: visible;
     }
 
     .lot-title {
