@@ -276,6 +276,20 @@ body.rtl .auction-description {
     text-align: center;
 }
 
+/* Utility .text-center must override body.rtl text-align:right */
+body.rtl .text-center {
+    text-align: center;
+}
+
+/* Auth pages — keep centered in RTL */
+body.rtl .auth-card,
+body.rtl .auth-card h1,
+body.rtl .auth-card p,
+body.rtl .demo-credentials,
+body.rtl .demo-credentials p {
+    text-align: center;
+}
+
 /* Navigation — explicitly set flex-direction: row so that the native
    direction: rtl handles correct RTL flow. This must NOT be row-reverse,
    which would double-reverse the order and break the nav link sequence. */
