@@ -1,0 +1,25 @@
+[build]
+  # Static site — no build step needed
+  publish = "frontend"
+
+# Custom 404 page
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+# Cache control for static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
