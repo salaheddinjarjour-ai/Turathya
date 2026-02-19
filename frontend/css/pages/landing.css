@@ -451,61 +451,75 @@
     }
 }
 
+
 /* ==================== CTA BAND (PREMIUM BURGUNDY) ==================== */
 
 .cta-band {
     background-color: #49110C;
     /* Deep burgundy */
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(255, 80, 80, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 40%);
     color: var(--color-ivory, #FAF8F3);
-    padding: 5rem 0;
+    padding: 6rem 0;
     text-align: center;
     position: relative;
     border-top: 1px solid rgba(250, 248, 243, 0.15);
+    overflow: hidden;
+}
+
+/* Premium Grain Texture Overlay */
+.cta-band::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
 }
 
 .cta-band__inner {
     max-width: 820px;
     margin: 0 auto;
     padding: 0 var(--space-4);
-    /* Ensure padding on mobile */
-}
-
-/* Optional texture overlay */
-.cta-band::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
-    pointer-events: none;
+    position: relative;
+    z-index: 1;
 }
 
 .cta-band__eyebrow {
     display: block;
     font-size: var(--text-xs);
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(250, 248, 243, 0.75);
+    letter-spacing: 0.12em;
+    color: rgba(250, 248, 243, 0.85);
     margin-bottom: var(--space-4);
+    opacity: 0;
+    animation: ctaFadeInUp 0.8s ease-out forwards;
 }
 
 .cta-band__title {
     font-family: var(--font-serif);
     font-size: var(--text-4xl);
     font-weight: var(--weight-semibold);
-    line-height: var(--leading-tight);
+    line-height: 1.2;
     color: #FAF8F3;
     margin-bottom: var(--space-6);
+    opacity: 0;
+    animation: ctaFadeInUp 0.8s ease-out 0.1s forwards;
 }
 
 .cta-band__desc {
     font-size: var(--text-lg);
     line-height: 1.8;
-    color: rgba(250, 248, 243, 0.80);
+    color: rgba(250, 248, 243, 0.9);
     margin-bottom: var(--space-10);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    opacity: 0;
+    animation: ctaFadeInUp 0.8s ease-out 0.2s forwards;
 }
 
 .cta-band__actions {
@@ -513,6 +527,8 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-4);
+    opacity: 0;
+    animation: ctaFadeInUp 0.8s ease-out 0.3s forwards;
 }
 
 /* Primary Button (Ivory) */
@@ -521,20 +537,21 @@
     padding: var(--space-3) var(--space-8);
     background-color: #FAF8F3;
     color: #49110C;
-    border: 1px solid rgba(250, 248, 243, 0.65);
+    border: 1px solid #FAF8F3;
     border-radius: var(--radius-sm);
     font-size: var(--text-base);
     font-weight: var(--weight-medium);
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 200ms ease, border-color 200ms ease;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn-cta-band-primary:hover {
-    background-color: #EDE8DD;
-    /* Slightly darker ivory */
-    border-color: #EDE8DD;
-    color: #49110C;
+    background-color: #FFFFFF;
+    color: #3a0d09;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }
 
 /* Secondary Button (Transparent) */
@@ -543,24 +560,39 @@
     padding: var(--space-3) var(--space-8);
     background-color: transparent;
     color: #FAF8F3;
-    border: 1px solid rgba(250, 248, 243, 0.55);
+    border: 1px solid rgba(250, 248, 243, 0.4);
     border-radius: var(--radius-sm);
     font-size: var(--text-base);
     font-weight: var(--weight-medium);
     text-decoration: none;
     cursor: pointer;
-    transition: all 200ms ease;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-cta-band-secondary:hover {
-    background-color: rgba(250, 248, 243, 0.12);
+    background-color: rgba(250, 248, 243, 0.1);
+    border-color: #FAF8F3;
     color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+/* Animation Keyframes */
+@keyframes ctaFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Mobile Responsive */
 @media (max-width: 639px) {
     .cta-band {
-        padding: 3rem 0;
+        padding: 4rem 0;
     }
 
     .cta-band__title {
