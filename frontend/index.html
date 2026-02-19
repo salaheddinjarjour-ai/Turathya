@@ -467,11 +467,25 @@
       }
     });
 
-    // Load data on page load
-    document.addEventListener('DOMContentLoaded', () => {
+    // Load data after i18n is ready (so i18n.t() works in card templates)
+    function initPageData() {
       loadFeaturedAuctions();
       loadEndingSoon();
-    });
+    }
+
+    if (window.i18n && window.i18n.isInitialized) {
+      initPageData();
+    } else {
+      window.addEventListener('i18nReady', initPageData, { once: true });
+      // Fallback: also try on DOMContentLoaded in case i18n fires before listener
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          if (!document.getElementById('featured-auctions').innerHTML.trim()) {
+            initPageData();
+          }
+        }, 500);
+      });
+    }
   </script>
   <script defer src="js/hero-video.js"></script>
   <!-- Initialize AOS -->
