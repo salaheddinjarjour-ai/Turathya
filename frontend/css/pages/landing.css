@@ -392,7 +392,7 @@
     max-width: var(--subtitle-max-width);
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 0;
+    margin-bottom: var(--space-subtitle-content);
 }
 
 /* ==================== TRUST SECTION ==================== */

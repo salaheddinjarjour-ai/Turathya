@@ -337,6 +337,12 @@
     }
 }
 
+/* Card grid spacing after section headers */
+.section-header + .grid,
+.section-header + .auctions-toolbar {
+    margin-top: var(--space-subtitle-content);
+}
+
 /* ==================== PAGE HEADER ==================== */
 
 .page-header {
@@ -354,7 +360,7 @@
     max-width: var(--subtitle-max-width);
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 0;
+    margin-bottom: var(--space-subtitle-content);
 }
 
 /* ==================== SECTION DIVIDER ==================== */
@@ -390,6 +396,24 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: var(--space-subtitle-content);
+}
+
+/* ==================== MOBILE SPACING REDUCTION ==================== */
+
+@media (max-width: 640px) {
+    .page-header {
+        padding-top: var(--space-section-md);
+        margin-bottom: var(--space-section-sm);
+    }
+
+    .section {
+        padding-top: var(--space-section-md);
+        padding-bottom: var(--space-section-md);
+    }
+
+    .section-spacing {
+        margin-bottom: var(--space-section-sm);
+    }
 }
 
 /* ==================== DISPLAY ==================== */
