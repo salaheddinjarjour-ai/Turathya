@@ -69,12 +69,43 @@ function formatEstimate(min, max, currency = 'USD') {
     return `${formatCurrency(min, currency)} – ${formatCurrency(max, currency)}`;
 }
 
-function calculateBuyersPremium(bidAmount, premiumPercent) {
-    return bidAmount * (premiumPercent / 100);
+// ==================== BILINGUAL HELPER ====================
+
+/**
+ * Returns the localized value for a bilingual field.
+ * Usage: localizedField(lot, 'title') → lot.title_ar or lot.title_en based on current lang
+ */
+function localizedField(obj, field) {
+    const lang = localStorage.getItem('lang') || 'ar';
+    return obj[field + '_' + lang] || obj[field + '_en'] || obj[field + '_ar'] || obj[field] || '';
 }
 
-function calculateTotal(bidAmount, premiumPercent) {
-    return bidAmount + calculateBuyersPremium(bidAmount, premiumPercent);
+// ==================== TIERED BID INCREMENT ====================
+
+/**
+ * Returns the bid increment based on tiered rules:
+ * 0–100 → +10, 100–500 → +20, 500–1000 → +50, 1000–10000 → +100, Above 10000 → +500
+ */
+function getBidIncrement(currentBid) {
+    const bid = parseFloat(currentBid) || 0;
+    if (bid < 100) return 10;
+    if (bid < 500) return 20;
+    if (bid < 1000) return 50;
+    if (bid < 10000) return 100;
+    return 500;
+}
+
+// ==================== AUCTION LINK HELPER ====================
+
+/**
+ * Returns the correct href for an auction card.
+ * If auction has exactly 1 lot, link directly to that lot page.
+ */
+function getAuctionHref(auction, basePath = '') {
+    if (parseInt(auction.lot_count) === 1 && auction.single_lot_id) {
+        return `${basePath}lot.html?id=${auction.single_lot_id}`;
+    }
+    return `${basePath}auction.html?id=${auction.id}`;
 }
 
 // ==================== URL HELPERS ====================

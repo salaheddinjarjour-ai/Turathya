@@ -60,20 +60,22 @@ async function showBidModal(lotId) {
         }
 
         const currentBid = lot.current_bid && lot.current_bid > 0 ? lot.current_bid : lot.starting_bid;
+        const currentBidValue = parseFloat(currentBid) || 0;
+        const increment = getBidIncrement(currentBidValue);
         const minBid = lot.current_bid && lot.current_bid > 0 
-            ? parseFloat(lot.current_bid) + parseFloat(lot.bid_increment || 100)
+            ? currentBidValue + increment
             : parseFloat(lot.starting_bid);
 
         const modal = document.getElementById('bid-modal');
         if (!modal) return;
 
         // Update modal content
-        document.getElementById('bid-lot-title').textContent = lot.title;
+        const lTitle = localizedField(lot, 'title');
+        document.getElementById('bid-lot-title').textContent = lTitle;
         document.getElementById('bid-current-bid').textContent = formatCurrency(currentBid);
         document.getElementById('bid-min-bid').textContent = formatCurrency(minBid);
 
         const bidInput = document.getElementById('bid-amount');
-        const increment = parseFloat(lot.bid_increment) || 100;
         bidInput.value = minBid;
         bidInput.min = minBid;
         bidInput.step = increment;
@@ -212,16 +214,9 @@ function showBidSuccess(lot, bidAmount) {
     const modal = document.getElementById('bid-success-modal');
     if (!modal) return;
 
-    document.getElementById('success-lot-title').textContent = lot.title;
+    const lTitle = localizedField(lot, 'title');
+    document.getElementById('success-lot-title').textContent = lTitle;
     document.getElementById('success-bid-amount').textContent = formatCurrency(bidAmount);
-
-    const buyersPremium = lot.buyers_premium || 25;
-    const premium = (bidAmount * buyersPremium) / 100;
-    const total = bidAmount + premium;
-
-    document.getElementById('success-premium-percent').textContent = buyersPremium;
-    document.getElementById('success-buyers-premium').textContent = formatCurrency(premium);
-    document.getElementById('success-total').textContent = formatCurrency(total);
 
     modal.classList.add('active');
 }
@@ -233,11 +228,11 @@ function hideBidSuccessModal() {
     }
 }
 
-// Increment bid by bid increment amount
+// Increment bid by tiered increment amount
 function incrementBid() {
     const bidInput = document.getElementById('bid-amount');
-    const increment = currentLotData ? parseFloat(currentLotData.bid_increment) || 100 : 100;
     const currentValue = parseFloat(bidInput.value) || 0;
+    const increment = getBidIncrement(currentValue);
     bidInput.value = currentValue + increment;
 }
 

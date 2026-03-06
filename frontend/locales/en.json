@@ -320,7 +320,19 @@
         "deleteLotConfirm": "Are you sure you want to delete lot #{lotNumber}: \"{title}\"?",
         "removeTopBidderConfirm": "Remove current top bidder from this lot? The next highest bidder will become top.",
         "auditRemovedTopBidder": "Audit: Removed top bidder {name} ({amount}) by {by} on {at}.",
-        "unknownBidder": "Unknown bidder"
+        "unknownBidder": "Unknown bidder",
+        "titleEn": "Title (English)",
+        "titleAr": "Title (Arabic)",
+        "descriptionEn": "Description (English)",
+        "descriptionAr": "Description (Arabic)",
+        "categoryEn": "Category (English)",
+        "categoryAr": "Category (Arabic)",
+        "locationEn": "Location (English)",
+        "locationAr": "Location (Arabic)",
+        "conditionEn": "Condition (English)",
+        "conditionAr": "Condition (Arabic)",
+        "provenanceEn": "Provenance EN (Optional)",
+        "provenanceAr": "Provenance AR (Optional)"
     },
     "notifications": {
         "failedLoadDashboardStats": "Failed to load dashboard statistics",
@@ -428,7 +440,8 @@
         "confirmBid": "Confirm your bid of {amount}?",
         "totalIfWin": "Total if you win:",
         "highestBidder": "You are currently the highest bidder. You'll be notified if you're outbid.",
-        "close": "Close"
+        "close": "Close",
+        "alreadyWinning": "You are the highest bidder!"
     },
     "categories": {
         "all": "All Categories",

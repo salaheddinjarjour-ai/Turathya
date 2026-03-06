@@ -121,19 +121,24 @@
                 // Track this auction view
                 trackAuctionView(auctionId);
 
-                document.getElementById('page-title').textContent = auction.title + ' - TURATHYA';
+                document.getElementById('page-title').textContent = (localizedField(auction, 'title') || auction.title) + ' - TURATHYA';
+
+                const aTitle = localizedField(auction, 'title');
+                const aDesc = localizedField(auction, 'description');
+                const aCat = localizedField(auction, 'category');
+                const aLoc = localizedField(auction, 'location');
 
                 const header = document.getElementById('auction-header');
                 header.innerHTML =
-                    '<h1>' + auction.title + '</h1>' +
+                    '<h1>' + aTitle + '</h1>' +
                     '<p class="auction-meta">' +
-                    '<span class="label">' + (auction.category || 'Auction') + '</span>' +
+                    '<span class="label">' + (aCat || 'Auction') + '</span>' +
                     '<span>•</span>' +
-                    '<span>' + (auction.location || 'TBA') + '</span>' +
+                    '<span>' + (aLoc || 'TBA') + '</span>' +
                     '<span>•</span>' +
                     '<span>' + (auction.lot_count || 0) + ' lots</span>' +
                     '</p>' +
-                    '<p class="auction-description">' + (auction.description || '') + '</p>' +
+                    '<p class="auction-description">' + (aDesc || '') + '</p>' +
                     '<div class="auction-dates">' +
                     '<div>' +
                     '<span class="text-sm auction-date-label">' + i18n.t('auction.starts') + '</span>' +
@@ -177,12 +182,13 @@
                 container.innerHTML = lots.map(lot => {
                     const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
                     const currentBid = lot.current_bid && lot.current_bid > 0;
+                    const lTitle = localizedField(lot, 'title');
 
                     return '<a href="lot.html?id=' + lot.id + '" class="card">' +
-                        '<img loading="lazy" src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
+                        '<img loading="lazy" src="' + imageUrl + '" alt="' + lTitle + '" class="card-image">' +
                         '<div class="card-content">' +
                         '<div class="label mb-2">Lot ' + lot.lot_number + '</div>' +
-                        '<h4 class="card-title" style="font-size: var(--text-lg);">' + lot.title + '</h4>' +
+                        '<h4 class="card-title" style="font-size: var(--text-lg);">' + lTitle + '</h4>' +
                         '<p class="price mt-4">' + (currentBid ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid)) + '</p>' +
                         '<p class="estimate">' + (currentBid ? 'Current Bid' : 'Starting Bid') + '</p>' +
                         '</div>' +

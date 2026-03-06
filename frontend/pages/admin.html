@@ -170,25 +170,49 @@
                     <form id="auction-form" class="admin-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" data-i18n="forms.title">Title</label>
-                                <input type="text" class="form-input" name="title" required>
+                                <label class="form-label" data-i18n="admin.titleEn">Title (English)</label>
+                                <input type="text" class="form-input" name="titleEn" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" data-i18n="auction.category">Category</label>
-                                <input type="text" class="form-input" name="category" required>
+                                <label class="form-label" data-i18n="admin.titleAr">Title (Arabic)</label>
+                                <input type="text" class="form-input" name="titleAr" dir="rtl">
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="auction.description">Description</label>
-                            <textarea class="form-textarea" name="description" required></textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" data-i18n="admin.location">Location</label>
-                                <input type="text" class="form-input" name="location" required>
+                                <label class="form-label" data-i18n="admin.categoryEn">Category (English)</label>
+                                <input type="text" class="form-input" name="categoryEn" required>
                             </div>
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="admin.categoryAr">Category (Arabic)</label>
+                                <input type="text" class="form-input" name="categoryAr" dir="rtl">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="admin.descriptionEn">Description (English)</label>
+                                <textarea class="form-textarea" name="descriptionEn" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="admin.descriptionAr">Description (Arabic)</label>
+                                <textarea class="form-textarea" name="descriptionAr" dir="rtl"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="admin.locationEn">Location (English)</label>
+                                <input type="text" class="form-input" name="locationEn" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="admin.locationAr">Location (Arabic)</label>
+                                <input type="text" class="form-input" name="locationAr" dir="rtl">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label" data-i18n="admin.auctionImage">Auction Image</label>
                                 <input type="file" class="form-input" name="auctionImage" accept="image/*">
@@ -206,14 +230,6 @@
                                 <label class="form-label" data-i18n="auction.endDate">End Date</label>
                                 <input type="datetime-local" class="form-input" name="endDate" required>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="auction.buyersPremium">Buyer's Premium (%)</label>
-                            <input type="number" class="form-input" name="buyersPremium" value="5" min="0" max="100"
-                                step="0.01" required>
-                            <small class="text-muted" data-i18n="admin.buyersPremiumHelp">Percentage added to winning
-                                bids (e.g., 5 for 5%)</small>
                         </div>
 
                         <button type="submit" class="btn btn-primary" data-i18n="admin.createAuction">Create
@@ -269,35 +285,65 @@
                                             <label class="form-label" data-i18n="admin.lotNumber">Lot Number</label>
                                             <input type="number" class="form-input" name="lotNumber" required>
                                         </div>
-                                        <div class="form-group" style="flex: 2;">
-                                            <label class="form-label" data-i18n="auction.category">Category</label>
-                                            <input type="text" class="form-input" name="category" required>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.categoryEn">Category (English)</label>
+                                            <input type="text" class="form-input" name="categoryEn" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.categoryAr">Category (Arabic)</label>
+                                            <input type="text" class="form-input" name="categoryAr" dir="rtl">
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="form-label" data-i18n="forms.title">Title</label>
-                                        <input type="text" class="form-input" name="title" required>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.titleEn">Title (English)</label>
+                                            <input type="text" class="form-input" name="titleEn" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.titleAr">Title (Arabic)</label>
+                                            <input type="text" class="form-input" name="titleAr" dir="rtl">
+                                        </div>
                                     </div>
                                 </fieldset>
 
                                 <fieldset class="admin-fieldset">
                                     <legend>Details</legend>
 
-                                    <div class="form-group">
-                                        <label class="form-label" data-i18n="auction.description">Description</label>
-                                        <textarea class="form-textarea" name="description" rows="4" required></textarea>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.descriptionEn">Description (English)</label>
+                                            <textarea class="form-textarea" name="descriptionEn" rows="4" required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.descriptionAr">Description (Arabic)</label>
+                                            <textarea class="form-textarea" name="descriptionAr" rows="4" dir="rtl"></textarea>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="form-label" data-i18n="auction.condition">Condition Report</label>
-                                        <textarea class="form-textarea" name="condition" rows="3" required></textarea>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.conditionEn">Condition (English)</label>
+                                            <textarea class="form-textarea" name="conditionEn" rows="3" required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.conditionAr">Condition (Arabic)</label>
+                                            <textarea class="form-textarea" name="conditionAr" rows="3" dir="rtl"></textarea>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="form-label" data-i18n="admin.provenanceOptional">Provenance
-                                            (Optional)</label>
-                                        <input type="text" class="form-input" name="provenance">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.provenanceEn">Provenance EN (Optional)</label>
+                                            <input type="text" class="form-input" name="provenanceEn">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="admin.provenanceAr">Provenance AR (Optional)</label>
+                                            <input type="text" class="form-input" name="provenanceAr" dir="rtl">
+                                        </div>
                                     </div>
                                 </fieldset>
                             </div>
@@ -331,13 +377,6 @@
                                                 ($)</label>
                                             <input type="number" class="form-input" name="reserve" value="0">
                                         </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label" data-i18n="admin.bidIncrementDollar">Bid Increment
-                                            ($)</label>
-                                        <input type="number" class="form-input" name="bidIncrement" value="100"
-                                            required>
                                     </div>
                                 </fieldset>
 

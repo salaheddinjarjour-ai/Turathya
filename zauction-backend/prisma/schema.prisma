@@ -28,23 +28,31 @@ model User {
 }
 
 model Auction {
-  id            String        @id @default(uuid()) @db.Uuid
-  title         String        @db.VarChar(255)
-  description   String?
-  category      String?       @db.VarChar(100)
-  location      String?       @db.VarChar(255)
-  startDate     DateTime      @map("start_date") @db.Timestamptz(6)
-  endDate       DateTime      @map("end_date") @db.Timestamptz(6)
-  buyersPremium Decimal       @default(25.00) @map("buyers_premium") @db.Decimal(5, 2)
-  imageUrl      String?       @map("image_url") @db.VarChar(500)
-  featured      Boolean       @default(false)
-  status        AuctionStatus @default(upcoming)
-  createdBy     String?       @map("created_by") @db.Uuid
-  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
-  image_data    String?
-  creator       User?         @relation(fields: [createdBy], references: [id])
-  lots          Lot[]
+  id             String        @id @default(uuid()) @db.Uuid
+  title          String        @db.VarChar(255)
+  description    String?
+  category       String?       @db.VarChar(100)
+  location       String?       @db.VarChar(255)
+  titleEn        String?       @map("title_en") @db.VarChar(255)
+  titleAr        String?       @map("title_ar") @db.VarChar(255)
+  descriptionEn  String?       @map("description_en")
+  descriptionAr  String?       @map("description_ar")
+  categoryEn     String?       @map("category_en") @db.VarChar(100)
+  categoryAr     String?       @map("category_ar") @db.VarChar(100)
+  locationEn     String?       @map("location_en") @db.VarChar(255)
+  locationAr     String?       @map("location_ar") @db.VarChar(255)
+  startDate      DateTime      @map("start_date") @db.Timestamptz(6)
+  endDate        DateTime      @map("end_date") @db.Timestamptz(6)
+  buyersPremium  Decimal       @default(0) @map("buyers_premium") @db.Decimal(5, 2)
+  imageUrl       String?       @map("image_url") @db.VarChar(500)
+  featured       Boolean       @default(false)
+  status         AuctionStatus @default(upcoming)
+  createdBy      String?       @map("created_by") @db.Uuid
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  image_data     String?
+  creator        User?         @relation(fields: [createdBy], references: [id])
+  lots           Lot[]
 
   @@index([status])
   @@index([endDate])
@@ -53,29 +61,39 @@ model Auction {
 }
 
 model Lot {
-  id           String      @id @default(uuid()) @db.Uuid
-  auctionId    String      @map("auction_id") @db.Uuid
-  lotNumber    Int         @map("lot_number")
-  title        String      @db.VarChar(255)
-  description  String?
-  category     String?     @db.VarChar(100)
-  condition    String?     @db.VarChar(100)
-  provenance   String?
-  estimateLow  Decimal?    @map("estimate_low") @db.Decimal(10, 2)
-  estimateHigh Decimal?    @map("estimate_high") @db.Decimal(10, 2)
-  startingBid  Decimal     @map("starting_bid") @db.Decimal(10, 2)
-  reservePrice Decimal?    @map("reserve_price") @db.Decimal(10, 2)
-  currentBid   Decimal?    @map("current_bid") @db.Decimal(10, 2)
-  bidIncrement Decimal     @default(100.00) @map("bid_increment") @db.Decimal(10, 2)
-  bidCount     Int         @default(0) @map("bid_count")
-  status       LotStatus   @default(active)
-  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
-  image_data   String?
-  bids         Bid[]
-  media        LotMedia[]
-  auction      Auction     @relation(fields: [auctionId], references: [id], onDelete: Cascade)
-  watchlist    Watchlist[]
+  id            String      @id @default(uuid()) @db.Uuid
+  auctionId     String      @map("auction_id") @db.Uuid
+  lotNumber     Int         @map("lot_number")
+  title         String      @db.VarChar(255)
+  description   String?
+  category      String?     @db.VarChar(100)
+  condition     String?     @db.VarChar(100)
+  provenance    String?
+  titleEn       String?     @map("title_en") @db.VarChar(255)
+  titleAr       String?     @map("title_ar") @db.VarChar(255)
+  descriptionEn String?     @map("description_en")
+  descriptionAr String?     @map("description_ar")
+  categoryEn    String?     @map("category_en") @db.VarChar(100)
+  categoryAr    String?     @map("category_ar") @db.VarChar(100)
+  conditionEn   String?     @map("condition_en") @db.VarChar(100)
+  conditionAr   String?     @map("condition_ar") @db.VarChar(100)
+  provenanceEn  String?     @map("provenance_en")
+  provenanceAr  String?     @map("provenance_ar")
+  estimateLow   Decimal?    @map("estimate_low") @db.Decimal(10, 2)
+  estimateHigh  Decimal?    @map("estimate_high") @db.Decimal(10, 2)
+  startingBid   Decimal     @map("starting_bid") @db.Decimal(10, 2)
+  reservePrice  Decimal?    @map("reserve_price") @db.Decimal(10, 2)
+  currentBid    Decimal?    @map("current_bid") @db.Decimal(10, 2)
+  bidIncrement  Decimal     @default(100.00) @map("bid_increment") @db.Decimal(10, 2)
+  bidCount      Int         @default(0) @map("bid_count")
+  status        LotStatus   @default(active)
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  image_data    String?
+  bids          Bid[]
+  media         LotMedia[]
+  auction       Auction     @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  watchlist     Watchlist[]
 
   @@unique([auctionId, lotNumber])
   @@index([auctionId])

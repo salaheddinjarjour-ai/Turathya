@@ -30,6 +30,8 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 
         let query = `
       SELECT l.*, a.title as auction_title,
+        l.title_en, l.title_ar, l.description_en, l.description_ar,
+        l.category_en, l.category_ar, l.condition_en, l.condition_ar,
         (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
         COALESCE(
           (SELECT url FROM lot_media WHERE lot_id = l.id ORDER BY display_order LIMIT 1),
@@ -85,6 +87,16 @@ router.post('/',
                 category,
                 condition,
                 provenance,
+                title_en,
+                title_ar,
+                description_en,
+                description_ar,
+                category_en,
+                category_ar,
+                condition_en,
+                condition_ar,
+                provenance_en,
+                provenance_ar,
                 estimate_low,
                 estimate_high,
                 starting_bid,
@@ -105,12 +117,23 @@ router.post('/',
             const result = await pool.query(
                 `INSERT INTO lots (
           id, auction_id, lot_number, title, description, category, condition,
-          provenance, estimate_low, estimate_high, starting_bid, reserve_price,
+          provenance, title_en, title_ar, description_en, description_ar,
+          category_en, category_ar, condition_en, condition_ar,
+          provenance_en, provenance_ar,
+          estimate_low, estimate_high, starting_bid, reserve_price,
           bid_increment, status, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'active', NOW(), NOW())
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 'active', NOW(), NOW())
         RETURNING *`,
-                [auction_id, lot_number, title, description, category, condition,
-                    provenance, estimate_low, estimate_high, starting_bid, reserve_price,
+                [auction_id, lot_number,
+                    title || title_en || title_ar,
+                    description || description_en || description_ar,
+                    category || category_en || category_ar,
+                    condition || condition_en || condition_ar,
+                    provenance || provenance_en || provenance_ar,
+                    title_en, title_ar, description_en, description_ar,
+                    category_en, category_ar, condition_en, condition_ar,
+                    provenance_en, provenance_ar,
+                    estimate_low, estimate_high, starting_bid, reserve_price,
                     bid_increment]
             );
 

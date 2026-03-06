@@ -269,13 +269,18 @@
               : `<span class="badge badge-info">${i18n.t('auction.upcoming')}</span>`)
             : (isEndingSoon(auction.end_date) ? `<span class="badge badge-accent">${i18n.t('auction.endingSoon')}</span>` : '');
 
+          const aTitle = localizedField(auction, 'title');
+          const aCat = localizedField(auction, 'category');
+          const aLoc = localizedField(auction, 'location');
+          const aHref = getAuctionHref(auction, 'pages/');
+
           return `
-          <a href="pages/auction.html?id=${auction.id}" class="card">
-            <img loading="lazy" src="${auction.image_data || auction.image_url || 'assets/images/placeholder.jpg'}" alt="${auction.title}" class="card-image">
+          <a href="${aHref}" class="card">
+            <img loading="lazy" src="${auction.image_data || auction.image_url || 'assets/images/placeholder.jpg'}" alt="${aTitle}" class="card-image">
             <div class="card-content">
-              <div class="label mb-2">${auction.category || i18n.t('auction.category')}</div>
-              <h3 class="card-title">${auction.title}</h3>
-              <p class="card-subtitle">${auction.lot_count || 0} ${i18n.t('auction.lots')} • ${auction.location || ''}</p>
+              <div class="label mb-2">${aCat || i18n.t('auction.category')}</div>
+              <h3 class="card-title">${aTitle}</h3>
+              <p class="card-subtitle">${auction.lot_count || 0} ${i18n.t('auction.lots')} • ${aLoc || ''}</p>
             </div>
             <div class="card-footer">
               <span class="text-sm text-muted">${statusText}</span>
@@ -326,13 +331,16 @@
         container.innerHTML = topEndingSoon.map(auction => {
           const imageUrl = auction.image_data || auction.image_url || 'assets/images/placeholder.jpg';
           const lotCount = auction.lot_count || 0;
+          const aTitle = localizedField(auction, 'title');
+          const aCat = localizedField(auction, 'category');
+          const aHref = getAuctionHref(auction, 'pages/');
 
           return `
-            <a href="pages/auction.html?id=${auction.id}" class="card">
-              <img loading="lazy" src="${imageUrl}" alt="${auction.title}" class="card-image">
+            <a href="${aHref}" class="card">
+              <img loading="lazy" src="${imageUrl}" alt="${aTitle}" class="card-image">
               <div class="card-content">
-                <div class="label mb-2">${auction.category || i18n.t('auction.category')}</div>
-                <h4 class="card-title">${auction.title}</h4>
+                <div class="label mb-2">${aCat || i18n.t('auction.category')}</div>
+                <h4 class="card-title">${aTitle}</h4>
                 <p class="text-sm text-graphite mb-4">${lotCount} ${i18n.t('auction.lots')}</p>
                 <div class="flex-between-center">
                   <span class="badge badge-accent" data-i18n="auction.endingSoon">Ending Soon</span>
@@ -408,14 +416,16 @@
           const endDate = auction.end_date ? new Date(auction.end_date) : null;
           const startDate = auction.start_date ? new Date(auction.start_date) : null;
           const isLiveNow = !!endDate && endDate > now && (!startDate || startDate <= now);
+          const aTitle = localizedField(auction, 'title');
+          const aHref = getAuctionHref(auction, 'pages/');
 
           return `
-              <a href="pages/auction.html?id=${auction.id}" class="suggestion-card suggestion-card-auction">
+              <a href="${aHref}" class="suggestion-card suggestion-card-auction">
                 <img loading="lazy" src="${auction.image_data || 'assets/images/placeholder.jpg'}" 
-                     alt="${auction.title}" 
+                     alt="${aTitle}" 
                      class="suggestion-card-image">
                 <div class="suggestion-card-content">
-                  <div class="suggestion-card-title">${auction.title}</div>
+                  <div class="suggestion-card-title">${aTitle}</div>
                   <div class="suggestion-card-meta">
                     <span>${auction.lot_count || 0} ${i18n.t('auction.lots')}</span>
                     ${isLiveNow ? `<span style="color: var(--color-success);">• ${i18n.t('auction.live')}</span>` : ''}
@@ -433,16 +443,19 @@
         html += `
           <div class="search-suggestions-section">
             <div class="search-suggestions-title">${i18n.t('auction.lots')}</div>
-            ${lots.map(lot => `
+            ${lots.map(lot => {
+              const lTitle = localizedField(lot, 'title');
+              const lCat = localizedField(lot, 'category');
+              return `
               <a href="pages/lot.html?id=${lot.id}" class="suggestion-card">
                 <img loading="lazy" src="${lot.primary_image || 'assets/images/placeholder.jpg'}" 
-                     alt="${lot.title}" 
+                     alt="${lTitle}" 
                      class="suggestion-card-image">
                 <div class="suggestion-card-content">
-                  <div class="suggestion-card-title">${lot.title}</div>
+                  <div class="suggestion-card-title">${lTitle}</div>
                   <div class="suggestion-card-meta">
                     <span>${i18n.t('auction.lot')} ${lot.lot_number}</span>
-                    ${lot.category ? `<span>• ${lot.category}</span>` : ''}
+                    ${lCat ? `<span>• ${lCat}</span>` : ''}
                   </div>
                   <div class="suggestion-card-price">
                     ${lot.current_bid && lot.current_bid > 0
@@ -451,7 +464,7 @@
                   </div>
                 </div>
               </a>
-            `).join('')}
+            `}).join('')}
           </div>
         `;
       }

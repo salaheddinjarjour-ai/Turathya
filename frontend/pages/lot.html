@@ -138,15 +138,6 @@
                         <span data-i18n="bidModal.yourBid">Your Bid:</span>
                         <span class="font-semibold" id="success-bid-amount"></span>
                     </div>
-                    <div class="flex justify-between mb-3">
-                        <span class="text-sm"><span data-i18n="auction.buyersPremium">Buyer's Premium</span> (<span
-                                id="success-premium-percent">25</span>%):</span>
-                        <span class="text-sm" id="success-buyers-premium"></span>
-                    </div>
-                    <div class="flex justify-between pt-3" style="border-top: 1px solid var(--color-border);">
-                        <span class="font-semibold" data-i18n="bidModal.totalIfWin">Total if you win:</span>
-                        <span class="font-semibold text-accent" id="success-total"></span>
-                    </div>
                 </div>
                 <p class="text-sm text-muted mt-6" data-i18n="bidModal.highestBidder">You are currently the highest
                     bidder. You'll be notified if you're
@@ -203,11 +194,18 @@
                     return;
                 }
 
-                document.getElementById('page-title').textContent = lot.title + ' - TURATHYA';
+                document.getElementById('page-title').textContent = (localizedField(lot, 'title') || lot.title) + ' - TURATHYA';
 
                 const isClosed = hasEnded(lot.end_date) || lot.status !== 'active';
                 const currentUser = getCurrentUser();
                 const isUserWinning = currentUser && lot.highest_bidder_id === currentUser.id;
+
+                const lTitle = localizedField(lot, 'title');
+                const lDesc = localizedField(lot, 'description');
+                const lCat = localizedField(lot, 'category');
+                const lCondition = localizedField(lot, 'condition');
+                const lProvenance = localizedField(lot, 'provenance');
+                const auctionTitle = localizedField(lot, 'auction_title') || lot.auction_title;
 
                 let bidButtonHtml;
                 if (isClosed) {
@@ -230,8 +228,8 @@
                     '<div class="lot-header">' +
                     '<div class="flex justify-between items-start mb-4">' +
                     '<div>' +
-                    '<div class="label mb-2">Lot ' + lot.lot_number + ' • ' + (lot.category || i18n.t('categories.other')) + '</div>' +
-                    '<h1 class="lot-title">' + lot.title + '</h1>' +
+                    '<div class="label mb-2">Lot ' + lot.lot_number + ' • ' + (lCat || i18n.t('categories.other')) + '</div>' +
+                    '<h1 class="lot-title">' + lTitle + '</h1>' +
                     '</div>' +
                     '<button class="watchlist-btn" data-watchlist-lot="' + lot.id + '" title="' + i18n.t('auction.addToWatchlist') + '">' +
                     '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
@@ -240,7 +238,7 @@
                     '</button>' +
                     '</div>' +
                     '<p class="text-sm text-muted mb-6">' +
-                    '<a href="auction.html?id=' + lot.auction_id + '" class="text-accent">' + (lot.auction_title || i18n.t('nav.auctions')) + '</a>' +
+                    '<a href="auction.html?id=' + lot.auction_id + '" class="text-accent">' + (auctionTitle || i18n.t('nav.auctions')) + '</a>' +
                     '</p>' +
                     '</div>' +
                     '<div class="bid-section">' +
@@ -261,20 +259,16 @@
                     '</div>' +
                     '<div class="info-section">' +
                     '<h3>' + i18n.t('auction.description') + '</h3>' +
-                    '<p>' + (lot.description || i18n.t('auction.noDescription')) + '</p>' +
+                    '<p>' + (lDesc || i18n.t('auction.noDescription')) + '</p>' +
                     '</div>' +
                     '<div class="info-section">' +
                     '<h3>' + i18n.t('auction.condition') + '</h3>' +
-                    '<p>' + (lot.condition || i18n.t('auction.notSpecified')) + '</p>' +
+                    '<p>' + (lCondition || i18n.t('auction.notSpecified')) + '</p>' +
                     '</div>' +
-                    (lot.provenance ? '<div class="info-section"><h3>' + i18n.t('auction.provenance') + '</h3><p>' + lot.provenance + '</p></div>' : '') +
+                    (lProvenance ? '<div class="info-section"><h3>' + i18n.t('auction.provenance') + '</h3><p>' + lProvenance + '</p></div>' : '') +
                     '<div class="info-section">' +
                     '<h3>' + i18n.t('auction.shippingPickup') + '</h3>' +
                     '<p>' + (lot.shipping || i18n.t('auction.contactForShipping')) + '</p>' +
-                    '</div>' +
-                    '<div class="info-section" id="buyer-premium">' +
-                    '<h3>' + i18n.t('auction.buyersPremium') + '</h3>' +
-                    '<p>' + (lot.buyers_premium || 25) + '% ' + i18n.t('auction.premiumAdded') + '</p>' +
                     '</div>' +
                     '</div>';
 

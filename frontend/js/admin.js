@@ -402,13 +402,20 @@ async function handleAuctionForm(event) {
     const endDate = new Date(endDateLocal);
 
     const auctionData = {
-        title: formData.get('title'),
-        description: formData.get('description'),
-        category: formData.get('category'),
-        location: formData.get('location'),
+        title: formData.get('titleEn') || formData.get('titleAr'),
+        title_en: formData.get('titleEn'),
+        title_ar: formData.get('titleAr'),
+        description: formData.get('descriptionEn') || formData.get('descriptionAr'),
+        description_en: formData.get('descriptionEn'),
+        description_ar: formData.get('descriptionAr'),
+        category: formData.get('categoryEn') || formData.get('categoryAr'),
+        category_en: formData.get('categoryEn'),
+        category_ar: formData.get('categoryAr'),
+        location: formData.get('locationEn') || formData.get('locationAr'),
+        location_en: formData.get('locationEn'),
+        location_ar: formData.get('locationAr'),
         start_date: startDate.toISOString(),
-        end_date: endDate.toISOString(),
-        buyers_premium: parseFloat(formData.get('buyersPremium')) || 5
+        end_date: endDate.toISOString()
     };
 
     const imageFile = formData.get('auctionImage');
@@ -468,11 +475,14 @@ function editAuction(auctionId) {
         if (!form) return;
 
         // Pre-fill form
-        form.querySelector('[name="title"]').value = auction.title;
-        form.querySelector('[name="category"]').value = auction.category || '';
-        form.querySelector('[name="description"]').value = auction.description || '';
-        form.querySelector('[name="location"]').value = auction.location || '';
-        form.querySelector('[name="buyersPremium"]').value = auction.buyers_premium || 5;
+        form.querySelector('[name="titleEn"]').value = auction.title_en || auction.title || '';
+        form.querySelector('[name="titleAr"]').value = auction.title_ar || '';
+        form.querySelector('[name="categoryEn"]').value = auction.category_en || auction.category || '';
+        form.querySelector('[name="categoryAr"]').value = auction.category_ar || '';
+        form.querySelector('[name="descriptionEn"]').value = auction.description_en || auction.description || '';
+        form.querySelector('[name="descriptionAr"]').value = auction.description_ar || '';
+        form.querySelector('[name="locationEn"]').value = auction.location_en || auction.location || '';
+        form.querySelector('[name="locationAr"]').value = auction.location_ar || '';
 
         // Convert UTC dates to local datetime-local format
         // The database stores dates in UTC, but datetime-local inputs need local time
@@ -514,16 +524,26 @@ async function handleLotForm(event) {
     const lotData = {
         auction_id: formData.get('auctionId'),
         lot_number: parseInt(formData.get('lotNumber')),
-        title: formData.get('title'),
-        category: formData.get('category'),
-        description: formData.get('description'),
-        condition: formData.get('condition'),
-        provenance: formData.get('provenance') || null,
+        title: formData.get('titleEn') || formData.get('titleAr'),
+        title_en: formData.get('titleEn'),
+        title_ar: formData.get('titleAr'),
+        category: formData.get('categoryEn') || formData.get('categoryAr'),
+        category_en: formData.get('categoryEn'),
+        category_ar: formData.get('categoryAr'),
+        description: formData.get('descriptionEn') || formData.get('descriptionAr'),
+        description_en: formData.get('descriptionEn'),
+        description_ar: formData.get('descriptionAr'),
+        condition: formData.get('conditionEn') || formData.get('conditionAr'),
+        condition_en: formData.get('conditionEn'),
+        condition_ar: formData.get('conditionAr'),
+        provenance: formData.get('provenanceEn') || formData.get('provenanceAr') || null,
+        provenance_en: formData.get('provenanceEn') || null,
+        provenance_ar: formData.get('provenanceAr') || null,
         estimate_low: parseFloat(formData.get('estimateMin')),
         estimate_high: parseFloat(formData.get('estimateMax')),
         starting_bid: parseFloat(formData.get('startingBid')),
         reserve_price: parseFloat(formData.get('reserve')) || 0,
-        bid_increment: parseFloat(formData.get('bidIncrement')) || 100
+        bid_increment: 100
     };
 
     try {
@@ -592,16 +612,20 @@ function editLot(lotId) {
         if (auctionSelect) auctionSelect.value = lot.auction_id;
 
         form.querySelector('[name="lotNumber"]').value = lot.lot_number;
-        form.querySelector('[name="title"]').value = lot.title;
-        form.querySelector('[name="category"]').value = lot.category || '';
-        form.querySelector('[name="description"]').value = lot.description || '';
-        form.querySelector('[name="condition"]').value = lot.condition || '';
-        form.querySelector('[name="provenance"]').value = lot.provenance || '';
+        form.querySelector('[name="titleEn"]').value = lot.title_en || lot.title || '';
+        form.querySelector('[name="titleAr"]').value = lot.title_ar || '';
+        form.querySelector('[name="categoryEn"]').value = lot.category_en || lot.category || '';
+        form.querySelector('[name="categoryAr"]').value = lot.category_ar || '';
+        form.querySelector('[name="descriptionEn"]').value = lot.description_en || lot.description || '';
+        form.querySelector('[name="descriptionAr"]').value = lot.description_ar || '';
+        form.querySelector('[name="conditionEn"]').value = lot.condition_en || lot.condition || '';
+        form.querySelector('[name="conditionAr"]').value = lot.condition_ar || '';
+        form.querySelector('[name="provenanceEn"]').value = lot.provenance_en || lot.provenance || '';
+        form.querySelector('[name="provenanceAr"]').value = lot.provenance_ar || '';
         form.querySelector('[name="estimateMin"]').value = lot.estimate_low || '';
         form.querySelector('[name="estimateMax"]').value = lot.estimate_high || '';
         form.querySelector('[name="startingBid"]').value = lot.starting_bid || '';
         form.querySelector('[name="reserve"]').value = lot.reserve_price || 0;
-        form.querySelector('[name="bidIncrement"]').value = lot.bid_increment || 100;
 
         // Set editing mode
         form.dataset.editingId = lotId;

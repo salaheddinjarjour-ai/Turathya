@@ -27,7 +27,9 @@ router.use(authenticate, requireAdmin);
 router.get('/', async (req: AuthRequest, res: Response) => {
     try {
         const result = await pool.query(
-            `SELECT a.*, 
+            `SELECT a.*,
+        a.title_en, a.title_ar, a.description_en, a.description_ar,
+        a.category_en, a.category_ar, a.location_en, a.location_ar,
         (SELECT COUNT(*) FROM lots WHERE auction_id = a.id) as lot_count
        FROM auctions a
        ORDER BY a.created_at DESC`
@@ -60,9 +62,16 @@ router.post('/',
                 description,
                 category,
                 location,
+                title_en,
+                title_ar,
+                description_en,
+                description_ar,
+                category_en,
+                category_ar,
+                location_en,
+                location_ar,
                 start_date,
                 end_date,
-                buyers_premium = 25,
                 image_url,
                 featured = false
             } = req.body;
@@ -86,12 +95,21 @@ router.post('/',
 
             const result = await pool.query(
                 `INSERT INTO auctions (
-          id, title, description, category, location, start_date, end_date,
+          id, title, description, category, location,
+          title_en, title_ar, description_en, description_ar,
+          category_en, category_ar, location_en, location_ar,
+          start_date, end_date,
           buyers_premium, image_url, featured, status, created_by, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 0, $15, $16, $17, $18, NOW(), NOW())
         RETURNING *`,
-                [title, description, category, location, start_date, end_date,
-                    buyers_premium, image_url, featured, status, req.user!.id]
+                [title || title_en || title_ar,
+                    description || description_en || description_ar,
+                    category || category_en || category_ar,
+                    location || location_en || location_ar,
+                    title_en, title_ar, description_en, description_ar,
+                    category_en, category_ar, location_en, location_ar,
+                    start_date, end_date,
+                    image_url, featured, status, req.user!.id]
             );
 
             res.status(201).json({

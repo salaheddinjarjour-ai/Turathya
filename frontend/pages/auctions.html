@@ -135,14 +135,18 @@
                     : `Ends ${formatDate(auction.end_date)}`;
 
             const archiveParam = isPast ? '&archive=true' : '';
+            const aTitle = localizedField(auction, 'title');
+            const aCat = localizedField(auction, 'category');
+            const aLoc = localizedField(auction, 'location');
+            const baseHref = getAuctionHref(auction);
 
             return `
-                <a href="auction.html?id=${auction.id}${archiveParam}" class="${cardClass}">
-                    <img loading="lazy" src="${auction.image_data || auction.image_url || '../assets/images/placeholder.jpg'}" alt="${auction.title}" class="card-image">
+                <a href="${baseHref}${archiveParam}" class="${cardClass}">
+                    <img loading="lazy" src="${auction.image_data || auction.image_url || '../assets/images/placeholder.jpg'}" alt="${aTitle}" class="card-image">
                     <div class="card-content">
-                        <div class="label mb-2">${auction.category || 'Auction'}</div>
-                        <h3 class="card-title">${auction.title}</h3>
-                        <p class="card-subtitle">${auction.lot_count || 0} lots • ${auction.location || 'TBA'}</p>
+                        <div class="label mb-2">${aCat || 'Auction'}</div>
+                        <h3 class="card-title">${aTitle}</h3>
+                        <p class="card-subtitle">${auction.lot_count || 0} lots • ${aLoc || 'TBA'}</p>
                     </div>
                     <div class="card-footer">
                         <span class="text-sm text-muted">${endDateText}</span>

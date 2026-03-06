@@ -324,7 +324,19 @@
         "deleteLotConfirm": "هل أنت متأكد أنك تريد حذف القطعة #{lotNumber}: \"{title}\"؟",
         "removeTopBidderConfirm": "إزالة أعلى مزايد حالي لهذه القطعة؟ سيصبح المزايد التالي هو الأعلى.",
         "auditRemovedTopBidder": "سجل التدقيق: تمت إزالة أعلى مزايد {name} ({amount}) بواسطة {by} في {at}.",
-        "unknownBidder": "مزايد غير معروف"
+        "unknownBidder": "مزايد غير معروف",
+        "titleEn": "العنوان (إنجليزي)",
+        "titleAr": "العنوان (عربي)",
+        "descriptionEn": "الوصف (إنجليزي)",
+        "descriptionAr": "الوصف (عربي)",
+        "categoryEn": "الفئة (إنجليزي)",
+        "categoryAr": "الفئة (عربي)",
+        "locationEn": "الموقع (إنجليزي)",
+        "locationAr": "الموقع (عربي)",
+        "conditionEn": "الحالة (إنجليزي)",
+        "conditionAr": "الحالة (عربي)",
+        "provenanceEn": "المصدر EN (اختياري)",
+        "provenanceAr": "المصدر AR (اختياري)"
     },
     "notifications": {
         "failedLoadDashboardStats": "فشل تحميل إحصائيات لوحة التحكم",
@@ -432,7 +444,8 @@
         "confirmBid": "تأكيد عرضك بمبلغ {amount}؟",
         "totalIfWin": "الإجمالي إذا فزت:",
         "highestBidder": "أنت حالياً صاحب أعلى عرض. سيتم إشعارك إذا تم تجاوز عرضك.",
-        "close": "إغلاق"
+        "close": "إغلاق",
+        "alreadyWinning": "أنت صاحب أعلى عرض!"
     },
     "categories": {
         "all": "جميع الفئات",

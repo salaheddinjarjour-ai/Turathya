@@ -10,8 +10,11 @@ router.get('/', async (req, res) => {
         const { category, status, featured } = req.query;
 
         let query = `
-      SELECT a.*, 
+      SELECT a.*,
+        a.title_en, a.title_ar, a.description_en, a.description_ar,
+        a.category_en, a.category_ar, a.location_en, a.location_ar,
         (SELECT COUNT(*) FROM lots WHERE auction_id = a.id) as lot_count,
+        (SELECT l.id FROM lots l WHERE l.auction_id = a.id LIMIT 1) as single_lot_id,
         (SELECT COUNT(DISTINCT b.user_id) 
          FROM bids b 
          JOIN lots l ON b.lot_id = l.id 
@@ -63,8 +66,11 @@ router.get('/:id', async (req, res) => {
         const { id } = req.params;
 
         const result = await pool.query(
-            `SELECT a.*, 
-        (SELECT COUNT(*) FROM lots WHERE auction_id = a.id) as lot_count
+            `SELECT a.*,
+        a.title_en, a.title_ar, a.description_en, a.description_ar,
+        a.category_en, a.category_ar, a.location_en, a.location_ar,
+        (SELECT COUNT(*) FROM lots WHERE auction_id = a.id) as lot_count,
+        (SELECT l.id FROM lots l WHERE l.auction_id = a.id LIMIT 1) as single_lot_id
        FROM auctions a
        WHERE a.id = $1`,
             [id]
@@ -88,6 +94,8 @@ router.get('/:id/lots', async (req, res) => {
 
         const result = await pool.query(
             `SELECT l.*, a.end_date, a.image_data as auction_image,
+        l.title_en, l.title_ar, l.description_en, l.description_ar,
+        l.category_en, l.category_ar,
         (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
         COALESCE(
           (SELECT url FROM lot_media WHERE lot_id = l.id ORDER BY display_order LIMIT 1),
