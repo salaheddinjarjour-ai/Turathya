@@ -75,48 +75,69 @@ async function deleteUserAccount(userId) {
 
 // ==================== UI FUNCTIONS ====================
 
+// In-memory cache so search never triggers extra API calls
+let _cachedUsers = [];
+
+function renderUsersTable(users) {
+    const tbody = document.querySelector('#users-table tbody');
+    if (!tbody) return;
+
+    if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">${t('admin.noUsersFound')}</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = users.map(user => {
+        const statusBadge = getStatusBadge(user.status);
+        const actions = getUserActions(user);
+        return `
+            <tr>
+                <td>${user.full_name || t('common.na')}</td>
+                <td>${user.email}</td>
+                <td>${formatDate(user.created_at)}</td>
+                <td>${statusBadge}</td>
+                <td>${actions}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function applyUserSearch() {
+    const searchQuery = (document.getElementById('user-search')?.value || '').trim().toLowerCase();
+    if (!searchQuery) {
+        renderUsersTable(_cachedUsers);
+        return;
+    }
+    const filtered = _cachedUsers.filter(u =>
+        (u.full_name || '').toLowerCase().includes(searchQuery) ||
+        (u.email || '').toLowerCase().includes(searchQuery)
+    );
+    renderUsersTable(filtered);
+}
+
+// Attach search input listener once (safe to call multiple times)
+function initUserSearch() {
+    const input = document.getElementById('user-search');
+    if (!input || input.dataset.searchBound) return;
+    input.dataset.searchBound = '1';
+    input.addEventListener('input', applyUserSearch);
+}
+
 window.loadUsers = async function () {
     try {
         const filter = document.getElementById('user-status-filter')?.value || 'all';
-        const searchQuery = (document.getElementById('user-search')?.value || '').trim().toLowerCase();
 
         const filters = {};
-        if (filter !== 'all') {
-            filters.status = filter;
-        }
+        if (filter !== 'all') filters.status = filter;
 
         const { users } = await adminAPI.users.getAll(filters);
+        _cachedUsers = users || [];
 
-        const tbody = document.querySelector('#users-table tbody');
-        if (!tbody) return;
+        // Apply any existing search query on fresh data
+        applyUserSearch();
 
-        // Client-side filter by name or email
-        const filteredUsers = searchQuery
-            ? users.filter(u =>
-                (u.full_name || '').toLowerCase().includes(searchQuery) ||
-                (u.email || '').toLowerCase().includes(searchQuery)
-            )
-            : users;
-
-        if (filteredUsers.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">${t('admin.noUsersFound')}</td></tr>`;
-            return;
-        }
-
-        tbody.innerHTML = filteredUsers.map(user => {
-            const statusBadge = getStatusBadge(user.status);
-            const actions = getUserActions(user);
-
-            return `
-                <tr>
-                    <td>${user.full_name || t('common.na')}</td>
-                    <td>${user.email}</td>
-                    <td>${formatDate(user.created_at)}</td>
-                    <td>${statusBadge}</td>
-                    <td>${actions}</td>
-                </tr>
-            `;
-        }).join('');
+        // Bind search input (idempotent)
+        initUserSearch();
     } catch (error) {
         console.error('Failed to load users:', error);
         showError(t('notifications.failedLoadUsers'));
