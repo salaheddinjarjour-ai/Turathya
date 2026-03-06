@@ -44,7 +44,7 @@
 
 .lot-title {
     font-size: var(--text-4xl);
-    margin-bottom: 0;
+    margin-bottom: var(--space-title-subtitle);
 }
 
 .bid-section {
@@ -52,6 +52,7 @@
     border: var(--border-thin) solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: var(--space-8);
+    margin-top: var(--space-subtitle-content);
     margin-bottom: var(--space-8);
 }
 
@@ -78,23 +79,26 @@
 }
 
 .info-section {
-    padding-bottom: var(--space-6);
-    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-8);
+    margin-bottom: var(--space-8);
     border-bottom: var(--border-thin) solid var(--color-border-light);
 }
 
 .info-section:last-child {
     border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .info-section h3 {
     font-size: var(--text-lg);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
 }
 
 .info-section p {
     color: var(--color-graphite);
     line-height: var(--leading-relaxed);
+    max-width: var(--text-max-width);
     margin: 0;
 }
 

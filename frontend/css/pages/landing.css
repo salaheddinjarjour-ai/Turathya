@@ -109,8 +109,11 @@
 .hero-subtitle {
     font-size: var(--text-xl);
     color: rgba(255, 255, 255, 0.95);
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--space-subtitle-content);
     font-weight: var(--weight-light);
+    max-width: var(--subtitle-max-width);
+    margin-left: auto;
+    margin-right: auto;
     /* Subtle text shadow for elegance */
     text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
 }
@@ -377,15 +380,18 @@
 
 .section-header {
     text-align: center;
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--space-section-sm);
 }
 
 .section-header h2 {
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-title-subtitle);
 }
 
 .section-header p {
     font-size: var(--text-lg);
+    max-width: var(--subtitle-max-width);
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 0;
 }
 
@@ -429,7 +435,7 @@
 
 @media (max-width: 639px) {
     .section-header {
-        margin-bottom: var(--space-8);
+        margin-bottom: var(--space-subtitle-content);
     }
 
     .trust-item {
@@ -564,7 +570,7 @@
     line-height: 1.8;
     color: rgba(250, 248, 243, 0.9);
     margin-bottom: var(--space-10);
-    max-width: 600px;
+    max-width: var(--text-max-width);
     margin-left: auto;
     margin-right: auto;
     opacity: 0;

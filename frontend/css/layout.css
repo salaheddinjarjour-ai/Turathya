@@ -313,28 +313,83 @@
 /* ==================== SECTIONS ==================== */
 
 .section {
-    padding-top: var(--section-padding-md);
-    padding-bottom: var(--section-padding-md);
+    padding-top: var(--space-section-lg);
+    padding-bottom: var(--space-section-lg);
 }
 
 .section-sm {
-    padding-top: var(--section-padding-sm);
-    padding-bottom: var(--section-padding-sm);
+    padding-top: var(--space-section-sm);
+    padding-bottom: var(--space-section-sm);
 }
 
 .section-lg {
-    padding-top: var(--section-padding-lg);
-    padding-bottom: var(--section-padding-lg);
+    padding-top: var(--space-section-xl);
+    padding-bottom: var(--space-section-xl);
 }
 
 .section-spacing {
-    margin-bottom: var(--space-16);
+    margin-bottom: var(--space-section-md);
 }
 
 @media (min-width: 1024px) {
     .section-spacing {
-        margin-bottom: var(--space-24);
+        margin-bottom: var(--space-section-lg);
     }
+}
+
+/* ==================== PAGE HEADER ==================== */
+
+.page-header {
+    text-align: center;
+    padding-top: var(--space-section-lg);
+    margin-bottom: var(--space-section-md);
+}
+
+.page-header h1 {
+    margin-bottom: var(--space-title-subtitle);
+}
+
+.page-subtitle,
+.page-header > p {
+    max-width: var(--subtitle-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+}
+
+/* ==================== SECTION DIVIDER ==================== */
+
+.section-divider {
+    width: 60px;
+    height: 2px;
+    background-color: #49110C;
+    opacity: 0.5;
+    margin: var(--space-section-sm) auto;
+    border: none;
+}
+
+/* ==================== READABLE TEXT WIDTH ==================== */
+
+.readable-width {
+    max-width: var(--text-max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ==================== INFO PAGES – Title/Subtitle rhythm ==================== */
+/* Info pages use container-md with h1 + p.text-lg as title/subtitle */
+
+.container-md > h1 {
+    text-align: center;
+    padding-top: var(--space-section-sm);
+}
+
+.container-md > h1 + .text-lg {
+    text-align: center;
+    max-width: var(--subtitle-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: var(--space-subtitle-content);
 }
 
 /* ==================== DISPLAY ==================== */

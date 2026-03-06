@@ -736,4 +736,21 @@ body.rtl .trust-item p {
     text-align: center;
 }
 
+/* Page/Section Headers - Keep centered in RTL */
+body.rtl .page-header,
+body.rtl .page-header h1,
+body.rtl .page-header > p,
+body.rtl .page-subtitle,
+body.rtl .section-header,
+body.rtl .section-header h2,
+body.rtl .section-header p {
+    text-align: center;
+}
+
+/* Info page titles - Keep centered in RTL */
+body.rtl .container-md > h1,
+body.rtl .container-md > h1 + .text-lg {
+    text-align: center;
+}
+
 /* deploy trigger */

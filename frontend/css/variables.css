@@ -192,6 +192,20 @@
   --section-padding-md: var(--space-20);
   --section-padding-lg: var(--space-24);
 
+  /* Semantic Section Spacing – Vertical rhythm tokens */
+  --space-section-xl: 120px;
+  --space-section-lg: 90px;
+  --space-section-md: 70px;
+  --space-section-sm: 40px;
+
+  /* Title/Subtitle hierarchy gaps */
+  --space-title-subtitle: 14px;
+  --space-subtitle-content: 32px;
+
+  /* Readable text width */
+  --text-max-width: 640px;
+  --subtitle-max-width: 620px;
+
   /* ==================== LAYOUT ==================== */
 
   /* Container Widths */
@@ -267,6 +281,18 @@
     --section-padding-sm: var(--space-20);
     --section-padding-md: var(--space-24);
     --section-padding-lg: var(--space-32);
+  }
+}
+
+/* Mobile – tighter section spacing */
+@media (max-width: 639px) {
+  :root {
+    --space-section-xl: 80px;
+    --space-section-lg: 60px;
+    --space-section-md: 50px;
+    --space-section-sm: 28px;
+    --space-title-subtitle: 10px;
+    --space-subtitle-content: 24px;
   }
 }
 
