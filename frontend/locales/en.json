@@ -302,6 +302,8 @@
         "highestBidderInfo": "Highest Bidder Information",
         "currentBidAmount": "Current Bid Amount",
         "filterByStatus": "Filter by Status",
+        "searchUsers": "Search Users",
+        "searchUsersPlaceholder": "Search by name or email...",
         "allUsers": "All Users",
         "registered": "Registered",
         "noBids": "No bids",

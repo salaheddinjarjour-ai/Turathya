@@ -78,6 +78,7 @@ async function deleteUserAccount(userId) {
 window.loadUsers = async function () {
     try {
         const filter = document.getElementById('user-status-filter')?.value || 'all';
+        const searchQuery = (document.getElementById('user-search')?.value || '').trim().toLowerCase();
 
         const filters = {};
         if (filter !== 'all') {
@@ -89,12 +90,20 @@ window.loadUsers = async function () {
         const tbody = document.querySelector('#users-table tbody');
         if (!tbody) return;
 
-        if (users.length === 0) {
+        // Client-side filter by name or email
+        const filteredUsers = searchQuery
+            ? users.filter(u =>
+                (u.full_name || '').toLowerCase().includes(searchQuery) ||
+                (u.email || '').toLowerCase().includes(searchQuery)
+            )
+            : users;
+
+        if (filteredUsers.length === 0) {
             tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">${t('admin.noUsersFound')}</td></tr>`;
             return;
         }
 
-        tbody.innerHTML = users.map(user => {
+        tbody.innerHTML = filteredUsers.map(user => {
             const statusBadge = getStatusBadge(user.status);
             const actions = getUserActions(user);
 

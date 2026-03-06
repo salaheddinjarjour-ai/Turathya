@@ -306,6 +306,8 @@
         "highestBidderInfo": "معلومات أعلى مزايد",
         "currentBidAmount": "مبلغ العرض الحالي",
         "filterByStatus": "تصفية حسب الحالة",
+        "searchUsers": "البحث عن مستخدم",
+        "searchUsersPlaceholder": "ابحث بالاسم أو البريد الإلكتروني...",
         "allUsers": "جميع المستخدمين",
         "registered": "مسجل",
         "noBids": "لا توجد عروض",
