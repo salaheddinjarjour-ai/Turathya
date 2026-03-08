@@ -355,7 +355,7 @@ window.loadLots = async function () {
                         <td><span class="badge badge-${statusBadgeClass}">${statusText}</span></td>
                         <td>
                             <button class="btn btn-ghost btn-sm" onclick="editLot('${lot.id}')">${t('buttons.edit')}</button>
-                            <button class="btn btn-ghost btn-sm" onclick="confirmDeleteLot('${lot.id}', ${lot.lot_number}, '${lot.title}')">${t('buttons.delete')}</button>
+                            <button class="btn btn-ghost btn-sm" onclick="confirmDeleteLot('${lot.id}', ${lot.lot_number}, '${(lot.title || '').replace(/'/g, "\\'")}')">&#8203;${t('buttons.delete')}</button>
                         </td>
                     </tr>
                 `;
@@ -463,9 +463,12 @@ async function handleAuctionForm(event) {
 }
 
 function editAuction(auctionId) {
-    // We need to fetch the auction details
+    // Switch to auctions view so the form is visible and accessible
+    if (typeof switchView === 'function') switchView('auctions');
+
     adminAPI.auctions.getAll().then(({ auctions }) => {
-        const auction = auctions.find(a => a.id === auctionId);
+        // Use string coercion to handle both numeric and string IDs from the API
+        const auction = auctions.find(a => String(a.id) === String(auctionId));
         if (!auction) {
             showError(t('notifications.auctionNotFound'));
             return;
@@ -474,22 +477,26 @@ function editAuction(auctionId) {
         const form = document.getElementById('auction-form');
         if (!form) return;
 
+        // Safe field setter — silently skips missing fields
+        const setVal = (name, value) => {
+            const el = form.querySelector(`[name="${name}"]`);
+            if (el) el.value = value ?? '';
+        };
+
         // Pre-fill form
-        form.querySelector('[name="titleEn"]').value = auction.title_en || auction.title || '';
-        form.querySelector('[name="titleAr"]').value = auction.title_ar || '';
-        form.querySelector('[name="categoryEn"]').value = auction.category_en || auction.category || '';
-        form.querySelector('[name="categoryAr"]').value = auction.category_ar || '';
-        form.querySelector('[name="descriptionEn"]').value = auction.description_en || auction.description || '';
-        form.querySelector('[name="descriptionAr"]').value = auction.description_ar || '';
-        form.querySelector('[name="locationEn"]').value = auction.location_en || auction.location || '';
-        form.querySelector('[name="locationAr"]').value = auction.location_ar || '';
+        setVal('titleEn', auction.title_en || auction.title || '');
+        setVal('titleAr', auction.title_ar || '');
+        setVal('categoryEn', auction.category_en || auction.category || '');
+        setVal('categoryAr', auction.category_ar || '');
+        setVal('descriptionEn', auction.description_en || auction.description || '');
+        setVal('descriptionAr', auction.description_ar || '');
+        setVal('locationEn', auction.location_en || auction.location || '');
+        setVal('locationAr', auction.location_ar || '');
 
         // Convert UTC dates to local datetime-local format
-        // The database stores dates in UTC, but datetime-local inputs need local time
         const startDate = new Date(auction.start_date);
         const endDate = new Date(auction.end_date);
 
-        // Format as YYYY-MM-DDTHH:MM for datetime-local input
         const formatForInput = (date) => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -499,13 +506,14 @@ function editAuction(auctionId) {
             return `${year}-${month}-${day}T${hours}:${minutes}`;
         };
 
-        form.querySelector('[name="startDate"]').value = formatForInput(startDate);
-        form.querySelector('[name="endDate"]').value = formatForInput(endDate);
+        setVal('startDate', formatForInput(startDate));
+        setVal('endDate', formatForInput(endDate));
         // Note: Can't pre-fill file input for security reasons
 
         // Set editing mode
         form.dataset.editingId = auctionId;
-        form.querySelector('button[type="submit"]').textContent = t('admin.updateAuction');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.textContent = t('admin.updateAuction');
 
         // Scroll to form
         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -596,9 +604,12 @@ async function handleLotForm(event) {
 }
 
 function editLot(lotId) {
-    // Fetch lot details from API
+    // Switch to lots view so the form is visible and accessible
+    if (typeof switchView === 'function') switchView('lots');
+
     adminAPI.lots.getAll().then(({ lots }) => {
-        const lot = lots.find(l => l.id === lotId);
+        // Use string coercion to handle both numeric and string IDs from the API
+        const lot = lots.find(l => String(l.id) === String(lotId));
         if (!lot) {
             showError(t('notifications.lotNotFound'));
             return;
@@ -607,29 +618,34 @@ function editLot(lotId) {
         const form = document.getElementById('lot-form');
         if (!form) return;
 
-        // Pre-fill form
-        const auctionSelect = form.querySelector('[name="auctionId"]');
-        if (auctionSelect) auctionSelect.value = lot.auction_id;
+        // Safe field setter — silently skips missing fields
+        const setVal = (name, value) => {
+            const el = form.querySelector(`[name="${name}"]`);
+            if (el) el.value = value ?? '';
+        };
 
-        form.querySelector('[name="lotNumber"]').value = lot.lot_number;
-        form.querySelector('[name="titleEn"]').value = lot.title_en || lot.title || '';
-        form.querySelector('[name="titleAr"]').value = lot.title_ar || '';
-        form.querySelector('[name="categoryEn"]').value = lot.category_en || lot.category || '';
-        form.querySelector('[name="categoryAr"]').value = lot.category_ar || '';
-        form.querySelector('[name="descriptionEn"]').value = lot.description_en || lot.description || '';
-        form.querySelector('[name="descriptionAr"]').value = lot.description_ar || '';
-        form.querySelector('[name="conditionEn"]').value = lot.condition_en || lot.condition || '';
-        form.querySelector('[name="conditionAr"]').value = lot.condition_ar || '';
-        form.querySelector('[name="provenanceEn"]').value = lot.provenance_en || lot.provenance || '';
-        form.querySelector('[name="provenanceAr"]').value = lot.provenance_ar || '';
-        form.querySelector('[name="estimateMin"]').value = lot.estimate_low || '';
-        form.querySelector('[name="estimateMax"]').value = lot.estimate_high || '';
-        form.querySelector('[name="startingBid"]').value = lot.starting_bid || '';
-        form.querySelector('[name="reserve"]').value = lot.reserve_price || 0;
+        // Pre-fill form
+        setVal('auctionId', lot.auction_id);
+        setVal('lotNumber', lot.lot_number);
+        setVal('titleEn', lot.title_en || lot.title || '');
+        setVal('titleAr', lot.title_ar || '');
+        setVal('categoryEn', lot.category_en || lot.category || '');
+        setVal('categoryAr', lot.category_ar || '');
+        setVal('descriptionEn', lot.description_en || lot.description || '');
+        setVal('descriptionAr', lot.description_ar || '');
+        setVal('conditionEn', lot.condition_en || lot.condition || '');
+        setVal('conditionAr', lot.condition_ar || '');
+        setVal('provenanceEn', lot.provenance_en || lot.provenance || '');
+        setVal('provenanceAr', lot.provenance_ar || '');
+        setVal('estimateMin', lot.estimate_low || '');
+        setVal('estimateMax', lot.estimate_high || '');
+        setVal('startingBid', lot.starting_bid || '');
+        setVal('reserve', lot.reserve_price ?? 0);
 
         // Set editing mode
         form.dataset.editingId = lotId;
-        form.querySelector('button[type="submit"]').textContent = t('admin.updateLot');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.textContent = t('admin.updateLot');
 
         // Scroll to form
         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
