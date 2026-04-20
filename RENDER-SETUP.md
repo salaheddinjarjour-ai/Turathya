@@ -1,262 +1,93 @@
-# 🚀 Zauction on Render - Complete Guide
+# Render Backend Setup (Data-Safe)
 
-## Why Render?
+This guide moves your backend from local PostgreSQL to Render PostgreSQL while preserving existing users, products, lots, bids, and all current data.
 
-✅ **Free PostgreSQL database** (proper database, not a toy)
-✅ **Free backend hosting** (750 hours/month)
-✅ **Auto-deploys** from GitHub
-✅ **Easy upgrades** to paid plans when needed
-✅ **No credit card required** for free tier
+## 1. What is already configured in this repo
 
----
+- Render blueprint exists in `render.yaml`.
+- Backend production start is now data-safe:
+   - `npm run start:prod` runs `prisma migrate deploy` (non-destructive) then starts server.
+- Netlify frontend can continue as-is; only API base URL must point to Render backend.
 
-## 🎯 Development Strategy
+## 2. Create Render resources
 
-### Phase 1: Development (FREE)
-- **Database**: Render PostgreSQL (Free tier)
-  - 1 GB storage
-  - Expires after 90 days (can create new one)
-  - Perfect for development!
-- **Backend**: Render Web Service (Free tier)
-  - Spins down after 15 minutes of inactivity
-  - Spins up automatically when accessed
-- **Frontend**: Netlify/Vercel (Free static hosting)
+1. In Render, create a PostgreSQL database.
+2. In Render, create a Web Service from this repo:
+1. `Root Directory`: `zauction-backend`
+2. `Build Command`: `npm install && npx prisma generate && npm run build`
+3. `Start Command`: `npm run start:prod`
+3. In Web Service environment variables, set:
+1. `NODE_ENV=production`
+2. `DATABASE_URL=<Render Internal Database URL>`
+3. `DB_SSL=true`
+4. `JWT_SECRET=<strong-random-secret>`
+5. `FRONTEND_URL=https://your-netlify-domain.netlify.app`
+6. `WHATSAPP_OTP_ENABLED=true`
+7. `WHATSAPP_BRIDGE_URL=https://turathya-whatsapp-bridge.onrender.com`
 
-### Phase 2: Production (When Ready)
-- **Database**: Render PostgreSQL (Starter $7/month or higher)
-  - Persistent storage
-  - Automated backups
-  - Better performance
-- **Backend**: Render Web Service (Starter $7/month)
-  - Always on
-  - No spin-down delay
-- **Frontend**: Same (Netlify/Vercel free tier is great)
+Note: `WHATSAPP_BRIDGE_URL` cannot be `localhost` when backend runs on Render.
 
-**Total Cost**: 
-- Development: **$0/month**
-- Production: **$14/month** (can start with just database upgrade at $7/month)
+## 3. Migrate current local data to Render DB (no data loss)
 
----
+Run these from your Mac terminal.
 
-## 📋 Setup Instructions
+1. Export your current local DB to a dump:
 
-### Step 1: Create Render Account
-
-1. Go to https://render.com
-2. Sign up (free, no credit card needed)
-3. Connect your GitHub account
-
-### Step 2: Create PostgreSQL Database
-
-1. Click **"New +"** → **"PostgreSQL"**
-2. Configure:
-   - **Name**: `zauction-db`
-   - **Database**: `zauction_db`
-   - **User**: (auto-generated)
-   - **Region**: Choose closest to you
-   - **Plan**: **Free** (for development)
-3. Click **"Create Database"**
-4. Wait 2-3 minutes for provisioning
-
-### Step 3: Get Database Connection Info
-
-1. Once created, go to database dashboard
-2. Scroll down to **"Connections"**
-3. Copy the **"External Database URL"**
-   - Format: `postgresql://user:password@host:port/database`
-4. Keep this handy!
-
-### Step 4: Run Database Schema
-
-**Option A: Using Render's Dashboard**
-
-1. In database dashboard, click **"Connect"** → **"External Connection"**
-2. Install psql if you don't have it
-3. Run:
-   ```powershell
-   # Copy connection command from Render dashboard
-   psql postgresql://user:pass@host:port/db
-   
-   # Then paste schema (you'll need to copy-paste the SQL)
-   # Or use \i command:
-   \i c:/Users/leno o/Desktop/Zauction/zauction-backend/database/schema.sql
-   ```
-
-**Option B: Using Render's Shell** (Easier!)
-
-1. In database dashboard, click **"Shell"**
-2. Opens a web-based terminal connected to your database
-3. You can paste SQL directly here!
-4. Copy contents of `zauction-backend/database/schema.sql`
-5. Paste into shell and press Enter
-
-**Option C: Using a GUI Tool** (Recommended)
-
-1. Download **pgAdmin** or **DBeaver** (free)
-2. Create new connection with details from Render
-3. Open SQL editor
-4. Copy-paste contents of `schema.sql`
-5. Execute
-
-### Step 5: Update Local .env for Render Database
-
-Update `zauction-backend/.env`:
-
-```env
-# Comment out local database settings
-# DB_HOST=localhost
-# DB_PORT=5432
-# DB_NAME=zauction_db
-# DB_USER=postgres
-# DB_PASSWORD=postgres
-
-# Use Render database URL
-DATABASE_URL=postgresql://user:password@host:port/zauction_db
-
-# Keep other settings
-PORT=3000
-NODE_ENV=development
-FRONTEND_URL=http://localhost:8000
-JWT_SECRET=zauction-super-secret-key-change-in-production-2026
+```bash
+PGPASSWORD='your_local_db_password' pg_dump \
+   -h localhost \
+   -p 5433 \
+   -U zauction \
+   -d zauction_db \
+   -Fc \
+   -f zauction_data.dump
 ```
 
-### Step 6: Test Local Connection to Render Database
+2. Restore dump into Render PostgreSQL:
 
-```powershell
-cd zauction-backend
-npm run dev
+```bash
+pg_restore \
+   --no-owner \
+   --no-privileges \
+   --clean \
+   --if-exists \
+   -d "postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require" \
+   zauction_data.dump
 ```
 
-You should see:
-```
-✅ Connected to PostgreSQL database
-🚀 Zauction Backend Server running on port 3000
-```
+3. Verify important row counts in Render DB:
 
-Now your **local backend** is using **Render's database**!
-
----
-
-## 🌐 Deploy Backend to Render (Optional - For Live Testing)
-
-### Step 1: Push Code to GitHub
-
-```powershell
-# Initialize git if you haven't
-cd "c:\Users\leno o\Desktop\Zauction"
-git init
-git add .
-git commit -m "Initial commit"
-
-# Create repository on GitHub, then:
-git remote add origin https://github.com/YOUR_USERNAME/zauction.git
-git branch -M main
-git push -u origin main
+```bash
+psql "postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require" -c "\
+SELECT 'users' AS table, count(*) FROM users \
+UNION ALL SELECT 'auctions', count(*) FROM auctions \
+UNION ALL SELECT 'lots', count(*) FROM lots \
+UNION ALL SELECT 'bids', count(*) FROM bids;"
 ```
 
-### Step 2: Create Web Service on Render
+## 4. Connect Netlify frontend to Render backend
 
-1. In Render dashboard, click **"New +"** → **"Web Service"**
-2. Connect your GitHub repository
-3. Configure:
-   - **Name**: `zauction-backend`
-   - **Region**: Same as database
-   - **Branch**: `main`
-   - **Root Directory**: `zauction-backend`
-   - **Environment**: `Node`
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-   - **Plan**: **Free**
+1. In Netlify Site settings -> Environment variables, set your API base URL variable to your Render backend URL.
+2. If your frontend uses a hardcoded URL in JS, update it to:
 
-### Step 3: Add Environment Variables
-
-In the web service settings, add:
-
-```
-DATABASE_URL=<paste your database URL>
-JWT_SECRET=zauction-super-secret-key-change-in-production-2026
-NODE_ENV=production
-FRONTEND_URL=https://your-frontend.netlify.app
+```text
+https://<your-render-service>.onrender.com/api
 ```
 
-### Step 4: Deploy!
+3. Trigger `Clear cache and deploy site` once in Netlify.
 
-1. Click **"Create Web Service"**
-2. Wait 5-10 minutes for first deploy
-3. You'll get a URL like: `https://zauction-backend.onrender.com`
+## 5. Post-deploy checks
 
----
+1. Open backend health endpoint:
+1. `https://<your-render-service>.onrender.com/health`
+2. Test login and product/auction listing from Netlify frontend.
+3. Test one create/update action from admin panel to confirm DB writes are on Render.
 
-## 🎨 Deploy Frontend (Netlify - Recommended)
+## 6. Rollback strategy
 
-### Option 1: Netlify (Easiest)
-
-1. Go to https://netlify.com
-2. Sign up (free)
-3. Click **"Add new site"** → **"Import an existing project"**
-4. Connect GitHub → Select repository
-5. Configure:
-   - **Base directory**: `frontend`
-   - **Build command**: (leave empty)
-   - **Publish directory**: `.` (dot)
-6. Click **"Deploy site"**
-7. You'll get URL like: `https://zauction-abc123.netlify.app`
-
-### Option 2: Vercel
-
-1. Go to https://vercel.com
-2. Import repository
-3. Set **Root Directory**: `frontend`
-4. Deploy!
-
-### Update Frontend API URL
-
-Once backend is deployed, update `frontend/js/api.js`:
-
-```javascript
-// Change this line:
-const API_BASE_URL = 'http://localhost:3000/api';
-
-// To your Render backend URL:
-const API_BASE_URL = 'https://zauction-backend.onrender.com/api';
-```
-
-Commit and push - Netlify/Vercel will auto-deploy!
-
----
-
-## 📊 Database Management
-
-### Access Your Render Database
-
-**Via Web Shell:**
-1. Go to database in Render dashboard
-2. Click "Shell"
-3. Run SQL commands directly
-
-**Via psql:**
-```powershell
-psql postgresql://user:pass@host:port/db
-```
-
-**Via GUI (pgAdmin/DBeaver):**
-- Host: dpg-xxxxx.oregon-postgres.render.com
-- Port: 5432
-- Database: zauction_db
-- User: (from Render)
-- Password: (from Render)
-
-### Useful SQL Commands
-
-```sql
--- View all users
-SELECT id, email, full_name, role, status FROM users;
-
--- Approve a user
-UPDATE users SET status = 'approved' WHERE email = 'user@example.com';
-
--- Make someone admin
-UPDATE users SET role = 'admin', status = 'approved' WHERE email = 'admin@example.com';
+1. Keep `zauction_data.dump` safely.
+2. If anything fails, redeploy previous backend commit in Render.
+3. Restore dump again to Render DB if needed.
 
 -- View all auctions
 SELECT id, title, status, start_date, end_date FROM auctions;

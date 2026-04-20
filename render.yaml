@@ -35,6 +35,19 @@ services:
       - key: WHATSAPP_OTP_ENABLED
         value: "true"
       - key: WHATSAPP_BRIDGE_URL
-        value: https://YOUR-WHATSAPP-BRIDGE-URL
+        value: https://turathya-whatsapp-bridge.onrender.com
       - key: WHATSAPP_LIVE_NOTIFICATIONS_ENABLED
         value: "false"
+
+  - type: web
+    name: turathya-whatsapp-bridge
+    plan: free
+    runtime: node
+    rootDir: whatsapp-integration/backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://melodious-parfait-a2944a.netlify.app
