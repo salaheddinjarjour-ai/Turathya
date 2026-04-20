@@ -293,7 +293,11 @@
 .nav {
     display: flex;
     align-items: center;
-    gap: var(--space-8);
+    gap: var(--space-6);
+    /* Center absolutely within .header-content */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav-link {
@@ -332,6 +336,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .logo {
@@ -347,11 +352,11 @@
     object-fit: contain;
 }
 
+
 /* Mobile Header Layout */
 @media (max-width: 639px) {
     .header-content {
         flex-wrap: wrap;
-        /* Allow wrapping for the dropdown */
     }
 
     /* Mobile Toggle Button */
@@ -364,7 +369,6 @@
         color: var(--theme-text);
         padding: var(--space-2);
         cursor: pointer;
-        /* Position it to the right, logo is on left */
         margin-left: auto;
     }
 
@@ -376,17 +380,18 @@
 
     /* Mobile Navigation Menu */
     .nav {
+        /* Reset absolute centering on mobile */
+        position: static;
+        transform: none;
+        left: auto;
         display: none;
-        /* Hidden by default on mobile */
         width: 100%;
         flex-direction: column;
         align-items: flex-start;
         gap: 0;
-        /* Stack items without gap, use padding */
         padding-top: var(--space-4);
         border-top: 1px solid var(--theme-border);
         margin-top: var(--space-2);
-        /* Animation */
         animation: slideDown var(--duration-fast) var(--ease-out);
     }
 
@@ -405,11 +410,11 @@
         border-bottom: none;
     }
 
-    /* Hide the lang toggle container in the main list flow to reposition if needed, 
-       but for now simpler to keep it at bottom of list */
+    /* Lang toggle on mobile — moves below nav */
     .lang-toggle-container {
-        margin-top: var(--space-4);
+        order: 99;
         width: 100%;
+        margin-top: var(--space-4);
         justify-content: flex-start;
     }
 }
@@ -442,7 +447,7 @@
 /* ==================== FOOTER ==================== */
 
 .footer {
-    background-color: var(--theme-surface-2);
+    background-color: #AD9E89;
     border-top: var(--border-thin) solid var(--theme-border);
     padding: var(--space-16) 0 var(--space-8) 0;
     margin-top: var(--section-padding-lg);

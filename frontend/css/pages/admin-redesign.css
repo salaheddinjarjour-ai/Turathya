@@ -1,8 +1,7 @@
 /* Admin Redesign Layout */
 body {
-    background-color: var(--color-off-white);
-    background-image: radial-gradient(circle at 10% 20%, rgba(47, 79, 62, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(47, 79, 62, 0.05) 0%, transparent 20%);
+    background-color: var(--theme-bg);
+    background-image: none;
     display: flex;
     flex-direction: column;
     min-height: 100vh;

@@ -6,7 +6,7 @@
 :root {
   /* ==================== SEMANTIC THEME TOKENS ==================== */
   /* These are the variables the Theme Editor will manipulate */
-  --theme-bg: #F4F1EA;
+  --theme-bg: #EDE3D9;
   /* Was --color-ivory (Refined) */
   --theme-surface: #F4F1EA;
   /* Ivory as surface per new identity? Or keep white? Prompt says "Keep beige / ivory base". Let's map to refined ivory/white. */
@@ -15,7 +15,7 @@
   --theme-surface-default: #FFFFFF;
   /* Keep a white option if needed, but defaults below */
 
-  --theme-bg: #F4F1EA;
+  --theme-bg: #EDE3D9;
   --theme-surface: #FFFFFF;
   --theme-surface-2: #E6DFD2;
   /* Mapped to new --color-parchment */
@@ -104,9 +104,15 @@
 
   /* ==================== TYPOGRAPHY ==================== */
 
-  /* Font Families */
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Font Families — Brand Typography System */
+  --font-heading:    "Darby Sans Poster", "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-subheading: "Kepler Std Semicondensed", "Kepler Std", "Playfair Display", Georgia, serif;
+  --font-body:       "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-body-ar:    "Helvetica Neue", "Noto Sans Arabic", "Cairo", "Tajawal", Tahoma, sans-serif;
+
+  /* Legacy aliases — kept for backward compatibility */
+  --font-serif: var(--font-heading);
+  --font-sans:  var(--font-body);
 
   /* Font Sizes - Fluid Scale */
   --text-xs: 0.75rem;
@@ -300,6 +306,7 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--theme-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
