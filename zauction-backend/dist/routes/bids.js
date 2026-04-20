@@ -5,6 +5,18 @@ const express_validator_1 = require("express-validator");
 const database_1 = require("../config/database");
 const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
+// Tiered bid increment based on current bid value
+function getBidIncrement(currentBid) {
+    if (currentBid < 100)
+        return 10;
+    if (currentBid < 500)
+        return 20;
+    if (currentBid < 1000)
+        return 50;
+    if (currentBid < 10000)
+        return 100;
+    return 500;
+}
 // All routes require authentication and approved status
 router.use(auth_1.authenticate, auth_1.requireApproved);
 // Place a bid
@@ -50,15 +62,18 @@ router.post('/', [
                 await client.query('ROLLBACK');
                 return res.status(400).json({ error: 'Auction has ended' });
             }
-            // Validation 3: Check minimum bid
-            const minBid = lot.current_bid
-                ? parseFloat(lot.current_bid) + parseFloat(lot.bid_increment)
+            // Validation 3: Check minimum bid using tiered increments
+            const currentBidValue = lot.current_bid ? parseFloat(lot.current_bid) : 0;
+            const increment = getBidIncrement(currentBidValue);
+            const minBid = currentBidValue > 0
+                ? currentBidValue + increment
                 : parseFloat(lot.starting_bid);
             if (amount < minBid) {
                 await client.query('ROLLBACK');
                 return res.status(400).json({
                     error: `Minimum bid is $${minBid.toFixed(2)}`,
-                    minimum_bid: minBid
+                    minimum_bid: minBid,
+                    increment: increment
                 });
             }
             // Validation 4: Check user isn't outbidding themselves

@@ -9,9 +9,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3002',
+    process.env.FRONTEND_URL
+].filter(Boolean);
+
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000'
+    origin(origin, callback) {
+        // Allow non-browser requests (curl/Postman) and allowed local frontends.
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    }
 }));
 app.use(express.json());
 
@@ -196,6 +209,84 @@ app.post('/api/auth/verify-otp', async (req, res) => {
             error: 'Failed to verify OTP',
             message: error.message
         });
+    }
+});
+
+/**
+ * POST /api/users/subscribe
+ * Upsert a user into WhatsApp notifications audience
+ * Body: { phoneNumber: "1234567890", fullName?: "Name" }
+ */
+app.post('/api/users/subscribe', (req, res) => {
+    try {
+        const { phoneNumber } = req.body;
+
+        if (!phoneNumber) {
+            return res.status(400).json({ error: 'Phone number is required' });
+        }
+
+        const normalizedPhone = String(phoneNumber).replace(/\D/g, '');
+        if (!normalizedPhone) {
+            return res.status(400).json({ error: 'Phone number is invalid' });
+        }
+
+        const user = dbService.createUser(normalizedPhone);
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error('Subscribe user error:', error);
+        res.status(500).json({ error: 'Failed to subscribe user', message: error.message });
+    }
+});
+
+/**
+ * POST /api/events/broadcast
+ * Send a generic automated event notification to all opted-in users
+ * Body: { eventType, title, message, url? }
+ */
+app.post('/api/events/broadcast', async (req, res) => {
+    try {
+        const { eventType = 'general', title, message, url } = req.body;
+
+        if (!title || !message) {
+            return res.status(400).json({ error: 'Title and message are required' });
+        }
+
+        const users = dbService.getAllOptedInUsers();
+        if (users.length === 0) {
+            return res.json({
+                success: true,
+                message: 'No users to notify',
+                sent: 0,
+                eventType
+            });
+        }
+
+        const text = `🔔 *${title}*\n\n${message}${url ? `\n\n🔗 ${url}` : ''}`;
+
+        const results = [];
+        for (const user of users) {
+            try {
+                await whatsappService.sendTextMessage(user.phone_number, text);
+                results.push({ phoneNumber: user.phone_number, success: true });
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            } catch (error) {
+                results.push({ phoneNumber: user.phone_number, success: false, error: error.message });
+            }
+        }
+
+        const sent = results.filter((r) => r.success).length;
+
+        res.json({
+            success: true,
+            message: `Event broadcast sent to ${sent}/${users.length} users`,
+            eventType,
+            sent,
+            total: users.length,
+            results
+        });
+    } catch (error) {
+        console.error('Broadcast event error:', error);
+        res.status(500).json({ error: 'Failed to broadcast event', message: error.message });
     }
 });
 

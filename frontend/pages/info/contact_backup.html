@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="icon" type="image/png" href="../../assets/images/Beigelogo.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Contact Turathya — reach our specialist departments, submit inquiries, and learn how to consign your collection.">
+  <title>Contact Us — Turathya</title>
+
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/typography.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/rtl.css?v=5">
+  <link rel="stylesheet" href="../../css/components/lang-toggle.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════
+       CONTACT PAGE — PREMIUM REDESIGN
+       Accent colour: WHITE throughout
+    ═══════════════════════════════════════════ */
+
+    :root {
+      --w:          #ffffff;
+      --w-70:       rgba(255,255,255,0.70);
+      --w-30:       rgba(255,255,255,0.30);
+      --w-12:       rgba(255,255,255,0.12);
+      --card-glass: rgba(255,255,255,0.04);
+      --card-bdr:   rgba(255,255,255,0.16);
+    }
+
+    /* ── Scroll-Reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity 0.70s cubic-bezier(.22,.68,0,1.2),
+                  transform 0.70s cubic-bezier(.22,.68,0,1.2);
+    }
+    .reveal.is-visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:.10s; }
+    .reveal-delay-2 { transition-delay:.20s; }
+    .reveal-delay-3 { transition-delay:.30s; }
+    .reveal-delay-4 { transition-delay:.40s; }
+    .reveal-delay-5 { transition-delay:.50s; }
+
+    /* ════════════════════════════════════════════
+       HERO
+    ════════════════════════════════════════════ */
+    .contact-hero {
+      position: relative;
+      width: 100%;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 110px 24px 90px;
+      overflow: hidden;
+    }
+
+    .contact-hero__bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('../../assets/images/bg-4.png');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+    .contact-hero__bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.72) 100%);
+    }
+
+    /* No bottom fade — clean hard edge */
+
+    .contact-hero__content {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Eyebrow — plain text, no backdrop or white glow */
+    .contact-hero__eyebrow {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--w-70);
+      margin-bottom: 18px;
+    }
+
+    .contact-hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.12;
+      margin-bottom: 16px;
+    }
+    .contact-hero__title em {
+      font-style: italic;
+      color: var(--w);
+    }
+
+    .contact-hero__subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--w-70);
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    .contact-hero__line {
+      width: 48px;
+      height: 1px;
+      background: var(--w-30);
+      margin: 20px auto 0;
+    }
+
+    /* ════════════════════════════════════════════
+       PAGE BODY
+    ════════════════════════════════════════════ */
+    .contact-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Section header ── */
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--theme-text-muted, #888);
+      margin-bottom: 6px;
+    }
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 400;
+      color: var(--theme-text, #1a1208);
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 0.97rem;
+      color: var(--theme-text-muted, #666);
+      max-width: 560px;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    /* ════════════════════════════════════════════
+       INQUIRY FORM  (first section)
+    ════════════════════════════════════════════ */
+    .inquiry-section {
+      background: var(--theme-surface, #fff);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 24px;
+      padding: 52px 48px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+      margin-bottom: 64px;
+    }
+
+    .inquiry-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .form-group--full { grid-column: 1 / -1; }
+
+    .form-group label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--theme-text-muted, #666);
+    }
+    .form-group label .req { color: #c0392b; margin-left: 2px; }
+
+    .form-control {
+      width: 100%;
+      padding: 13px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--theme-text, #1a1208);
+      background: var(--theme-bg, #fafafa);
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      box-sizing: border-box;
+    }
+    .form-control:focus {
+      border-color: rgba(0,0,0,0.35);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.07);
+    }
+    .form-control::placeholder { color: var(--theme-text-muted, #bbb); font-weight:300; }
+
+    select.form-control {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 10px 6px;
+      padding-right: 36px;
+    }
+    textarea.form-control { resize: vertical; min-height: 140px; line-height:1.6; }
+
+    .form-submit-wrap {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 4px;
+    }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--theme-bg, #fff);
+      background: var(--theme-text, #1a1208);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s ease;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.22);
+    }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit svg {
+      width:16px; height:16px;
+      stroke: currentColor;
+      fill: none; stroke-width:2;
+      stroke-linecap:round; stroke-linejoin:round;
+      transition: transform 0.25s;
+    }
+    .btn-submit:hover svg { transform: translateX(4px); }
+
+    .form-note {
+      font-size: 0.8rem;
+      color: var(--theme-text-muted, #999);
+    }
+
+    .form-success {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 22px;
+      background: rgba(62,107,85,0.10);
+      border: 1px solid rgba(62,107,85,0.30);
+      border-radius: 10px;
+      color: #2d6a4f;
+      font-size: 0.92rem;
+      grid-column: 1 / -1;
+    }
+    .form-success.visible { display:flex; }
+    .form-success svg {
+      width:20px; height:20px;
+      stroke:#2d6a4f; fill:none;
+      stroke-width:2; stroke-linecap:round; flex-shrink:0;
+    }
+
+    /* ════════════════════════════════════════════
+       INFO CARDS  (second, no Location)
+    ════════════════════════════════════════════ */
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 64px;
+    }
+
+    .info-card {
+      border: 1px solid rgba(0,0,0,0.09);
+      border-radius: 16px;
+      padding: 30px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.35s cubic-bezier(.22,.68,0,1.2),
+                  box-shadow 0.35s ease;
+    }
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.10);
+    }
+
+    .info-card__icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.05);
+      display: flex; align-items:center; justify-content:center;
+    }
+    .info-card__icon svg {
+      width:22px; height:22px;
+      stroke: var(--theme-text, #1a1208);
+      fill:none; stroke-width:1.6;
+      stroke-linecap:round; stroke-linejoin:round;
+    }
+
+    .info-card__label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--theme-text-muted, #888);
+    }
+
+    .info-card__value {
+      font-size: 0.97rem;
+      color: var(--theme-text, #1a1208);
+      line-height: 1.5;
+    }
+    .info-card__value a {
+      color: inherit; text-decoration:none;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      transition: border-color 0.2s;
+    }
+    .info-card__value a:hover { border-color: var(--theme-text, #1a1208); }
+
+    .info-card__note {
+      font-size: 0.8rem;
+      color: var(--theme-text-muted, #999);
+      font-style: italic;
+    }
+
+    /* ════════════════════════════════════════════
+       DEPARTMENTS GRID  (third section)
+    ════════════════════════════════════════════ */
+    .dept-section { margin-bottom: 48px; }
+
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .dept-card {
+      border: 1px solid rgba(0,0,0,0.09);
+      border-radius: 12px;
+      padding: 20px 22px;
+      transition: border-color 0.25s, background 0.25s, transform 0.3s cubic-bezier(.22,.68,0,1.2);
+    }
+    .dept-card:hover {
+      border-color: rgba(0,0,0,0.22);
+      background: rgba(0,0,0,0.03);
+      transform: translateY(-3px);
+    }
+
+    .dept-card__name {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--theme-text, #1a1208);
+      margin-bottom: 6px;
+    }
+    .dept-card__email {
+      font-size: 0.82rem;
+      color: var(--theme-text-muted, #777);
+      text-decoration: none;
+      display: flex; align-items:center; gap:5px;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .dept-card__email::before { content:'→'; font-size:0.75rem; }
+    .dept-card__email:hover { color: var(--theme-text, #1a1208); gap: 8px; }
+
+    /* ════════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .contact-hero { min-height:280px; padding:80px 20px 60px; }
+      .inquiry-section { padding:32px 22px; }
+      .inquiry-form { grid-template-columns:1fr; }
+      .form-group--full { grid-column:1; }
+      .form-submit-wrap { grid-column:1; flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="site-header"></div>
+
+  <!-- ══ HERO ══ -->
+  <section class="contact-hero">
+    <div class="contact-hero__bg"></div>
+    <div class="contact-hero__content">
+      <p class="contact-hero__eyebrow reveal">Turathya Support</p>
+      <h1 class="contact-hero__title reveal reveal-delay-1">
+        Get in <em>Touch</em>
+      </h1>
+      <p class="contact-hero__subtitle reveal reveal-delay-2">
+        Our specialists are ready to assist — from bidding support to consignment evaluations and everything in between.
+      </p>
+      <div class="contact-hero__line reveal reveal-delay-3"></div>
+    </div>
+  </section>
+
+  <!-- ══ BODY ══ -->
+  <main class="contact-body">
+
+    <!-- 1 ── INQUIRY FORM ── -->
+    <div class="inquiry-section reveal">
+      <div style="margin-bottom:36px;">
+        <p class="section-label">Send an Inquiry</p>
+        <h2 class="section-heading">We'd Love to Hear From You</h2>
+        <p class="section-desc">Fill in the form and the relevant specialist will respond within two business days.</p>
+      </div>
+
+      <form class="inquiry-form" id="inquiryForm" novalidate>
+
+        <div class="form-group">
+          <label for="inq-name">Full Name <span class="req">*</span></label>
+          <input id="inq-name" name="name" type="text" class="form-control" placeholder="Your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="inq-email">Email Address <span class="req">*</span></label>
+          <input id="inq-email" name="email" type="email" class="form-control" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="inq-phone">Phone Number</label>
+          <input id="inq-phone" name="phone" type="tel" class="form-control" placeholder="+966 5x xxx xxxx">
+        </div>
+
+
+
+        <div class="form-group form-group--full">
+          <label for="inq-subject">Subject <span class="req">*</span></label>
+          <input id="inq-subject" name="subject" type="text" class="form-control" placeholder="Brief description of your inquiry" required>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label for="inq-message">Message <span class="req">*</span></label>
+          <textarea id="inq-message" name="message" class="form-control" placeholder="Provide as much detail as possible. For consignment inquiries include item description, age, and provenance." required></textarea>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label for="inq-attach">Attachments <span style="text-transform:none;letter-spacing:0;font-style:italic;font-weight:400;">(optional — photos, docs)</span></label>
+          <input id="inq-attach" name="attachments" type="file" class="form-control" multiple accept="image/*,.pdf,.doc,.docx">
+        </div>
+
+        <div class="form-submit-wrap">
+          <button type="submit" class="btn-submit" id="submitBtn">
+            Send Inquiry
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <p class="form-note">We do not share your information with third parties.</p>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Thank you — your inquiry has been sent. We'll be in touch within 2 business days.
+        </div>
+
+      </form>
+    </div>
+
+    <!-- 2 ── INFO CARDS (no Location) ── -->
+    <div class="info-cards">
+
+      <div class="info-card reveal reveal-delay-1">
+        <div class="info-card__icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <span class="info-card__label">General Email</span>
+        <div class="info-card__value"><a href="mailto:info@turathya.com">info@turathya.com</a></div>
+        <div class="info-card__note">Responds within 2 business days</div>
+      </div>
+
+      <div class="info-card reveal reveal-delay-2">
+        <div class="info-card__icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 8 8l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 17z"/></svg>
+        </div>
+        <span class="info-card__label">Bidding Support</span>
+        <div class="info-card__value"><a href="mailto:support@turathya.com">support@turathya.com</a></div>
+        <div class="info-card__note">For bids, accounts &amp; payments</div>
+      </div>
+
+      <div class="info-card reveal reveal-delay-3">
+        <div class="info-card__icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <span class="info-card__label">Business Hours</span>
+        <div class="info-card__value">Sunday – Thursday<br>9:00 AM – 6:00 PM (AST)</div>
+        <div class="info-card__note">Closed on public holidays</div>
+      </div>
+
+    </div>
+
+    <!-- 3 ── DEPARTMENTS ── -->
+    <div class="dept-section">
+      <div class="reveal">
+        <p class="section-label">Specialist Departments</p>
+        <h2 class="section-heading">Reach the Right Expert</h2>
+        <p class="section-desc">Connect directly with our curators for category-specific questions or potential consignments.</p>
+      </div>
+      <div class="dept-grid">
+        <div class="dept-card reveal reveal-delay-1">
+          <div class="dept-card__name">European Decorative Arts</div>
+          <a href="mailto:euro.deco@turathya.com" class="dept-card__email">euro.deco@turathya.com</a>
+        </div>
+        <div class="dept-card reveal reveal-delay-2">
+          <div class="dept-card__name">Fine Art</div>
+          <a href="mailto:fine.art@turathya.com" class="dept-card__email">fine.art@turathya.com</a>
+        </div>
+        <div class="dept-card reveal reveal-delay-3">
+          <div class="dept-card__name">Asian Art</div>
+          <a href="mailto:asian.art@turathya.com" class="dept-card__email">asian.art@turathya.com</a>
+        </div>
+        <div class="dept-card reveal reveal-delay-4">
+          <div class="dept-card__name">Rare Books &amp; Manuscripts</div>
+          <a href="mailto:books@turathya.com" class="dept-card__email">books@turathya.com</a>
+        </div>
+        <div class="dept-card reveal reveal-delay-5">
+          <div class="dept-card__name">Jewelry &amp; Watches</div>
+          <a href="mailto:jewelry@turathya.com" class="dept-card__email">jewelry@turathya.com</a>
+        </div>
+        <div class="dept-card reveal reveal-delay-1">
+          <div class="dept-card__name">Islamic &amp; Middle Eastern Art</div>
+          <a href="mailto:islamic.art@turathya.com" class="dept-card__email">islamic.art@turathya.com</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/data.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script>
+    /* ── Scroll Reveal ── */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ── Form submit ── */
+    document.getElementById('inquiryForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const success = document.getElementById('formSuccess');
+      const required = this.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(f => { f.style.borderColor=''; if (!f.value.trim()) { f.style.borderColor='#c0392b'; valid=false; } });
+      if (!valid) return;
+      btn.disabled = true; btn.style.opacity = '0.65';
+      await new Promise(r => setTimeout(r, 1200));
+      btn.style.display = 'none';
+      success.classList.add('visible');
+      this.reset();
+    });
+  </script>
+</body>
+
+</html>

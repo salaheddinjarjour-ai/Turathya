@@ -26,9 +26,7 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         value: https://turathya.netlify.app
-      - key: EMAIL_OTP_REQUIRED
-        value: "false"
       - key: WHATSAPP_OTP_ENABLED
-        value: "false"
+        value: "true"
       - key: WHATSAPP_LIVE_NOTIFICATIONS_ENABLED
         value: "false"

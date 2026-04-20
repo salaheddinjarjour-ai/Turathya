@@ -24,6 +24,7 @@
         }
     </style>
     <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/brand-fonts.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
     <link rel="stylesheet" href="../css/layout.css">
@@ -60,11 +61,6 @@
                         <div class="form-group">
                             <label class="form-label">Full Name</label>
                             <input type="text" class="form-input" id="name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-input" id="email" placeholder="your@email.com" required>
                         </div>
 
                         <div class="form-group">
@@ -215,19 +211,19 @@
             initializeGoogleRegister();
         });
 
-        function validateRegistrationInput(full_name, email, countryCode, phoneLocal, password, confirmPassword) {
+        function validateRegistrationInput(full_name, countryCode, phoneLocal, password, confirmPassword) {
             const sanitizedCountryCodeDigits = (countryCode || '').replace(/\D/g, '');
             const sanitizedLocal = (phoneLocal || '').replace(/\D/g, '');
             const normalizedPhone = `+${sanitizedCountryCodeDigits}${sanitizedLocal}`;
-            const phoneRegex = /^\+[0-9]{8,15}$/;
+            const phoneRegex = /^\+[0-9]{6,15}$/;
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
-            if (!full_name || !email || !countryCode || !phoneLocal || !password || !confirmPassword) {
+            if (!full_name || !countryCode || !phoneLocal || !password || !confirmPassword) {
                 throw new Error('Please fill all required fields.');
             }
 
             if (!phoneRegex.test(normalizedPhone)) {
-                throw new Error('Phone number must be 8-15 digits including country code.');
+                throw new Error('Phone number must be 6-15 digits including country code.');
             }
 
             if (!passwordRegex.test(password)) {
@@ -243,7 +239,6 @@
 
         function setRegistrationFieldsDisabled(disabled) {
             document.getElementById('name').disabled = disabled;
-            document.getElementById('email').disabled = disabled;
             document.getElementById('country-code').disabled = disabled;
             document.getElementById('phone-local').disabled = disabled;
             document.getElementById('password').disabled = disabled;
@@ -254,7 +249,6 @@
             e.preventDefault();
 
             const full_name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
             const countryCode = document.getElementById('country-code').value;
             const phoneLocal = document.getElementById('phone-local').value;
             const password = document.getElementById('password').value;
@@ -270,10 +264,10 @@
             errorElement.style.display = 'none';
 
             try {
-                const normalizedPhone = validateRegistrationInput(full_name, email, countryCode, phoneLocal, password, confirmPassword);
+                const normalizedPhone = validateRegistrationInput(full_name, countryCode, phoneLocal, password, confirmPassword);
 
                 if (!otpRequested) {
-                    await authAPI.requestRegistrationOtp(email, password, confirmPassword, full_name, normalizedPhone);
+                    await authAPI.requestRegistrationOtp(password, confirmPassword, full_name, normalizedPhone);
                     otpRequested = true;
                     setRegistrationFieldsDisabled(true);
                     otpGroup.style.display = 'block';
@@ -287,7 +281,7 @@
                     throw new Error('Please enter the 6-digit OTP code.');
                 }
 
-                const result = await authAPI.verifyRegistrationOtp(email, otpCode);
+                const result = await authAPI.verifyRegistrationOtp(normalizedPhone, otpCode);
 
                 alert('Account created successfully! Your session is active. If your account is pending approval, bidding will be enabled automatically after approval.');
                 if (result?.user?.role === 'admin') {

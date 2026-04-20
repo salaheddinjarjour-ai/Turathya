@@ -215,6 +215,69 @@ function tt(key, replacements = {}) {
     return message;
 }
 
+let whatsappAdminPollTimer = null;
+
+window.stopWhatsAppIntegrationPolling = function () {
+    if (whatsappAdminPollTimer) {
+        clearInterval(whatsappAdminPollTimer);
+        whatsappAdminPollTimer = null;
+    }
+};
+
+window.loadWhatsAppIntegration = async function () {
+    const statusEl = document.getElementById('whatsapp-admin-status');
+    const stateEl = document.getElementById('whatsapp-connection-state');
+    const jidEl = document.getElementById('whatsapp-connected-jid');
+    const qrWrapper = document.getElementById('whatsapp-qr-wrapper');
+    const qrImage = document.getElementById('whatsapp-qr-image');
+
+    if (!statusEl || !stateEl || !jidEl || !qrWrapper || !qrImage) {
+        return;
+    }
+
+    const refreshWhatsAppState = async () => {
+        try {
+            const qrPayload = await adminAPI.whatsapp.getQr();
+            const isConnected = !!qrPayload.isConnected;
+
+            stateEl.textContent = isConnected ? 'Connected' : 'Disconnected';
+            jidEl.textContent = qrPayload.connectedJid || '-';
+
+            if (isConnected) {
+                qrWrapper.style.display = 'none';
+                statusEl.className = 'alert alert-success';
+                statusEl.textContent = 'WhatsApp is connected. Automated notifications are active.';
+                statusEl.style.display = 'block';
+            } else {
+                qrWrapper.style.display = qrPayload.qrCode ? 'block' : 'none';
+                if (qrPayload.qrCode) {
+                    qrImage.src = qrPayload.qrCode;
+                }
+
+                statusEl.className = 'alert alert-error';
+                statusEl.textContent = 'WhatsApp is not connected. Scan the QR code below.';
+                statusEl.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Failed to load WhatsApp admin state:', error);
+            stateEl.textContent = 'Unavailable';
+            jidEl.textContent = '-';
+            qrWrapper.style.display = 'none';
+
+            statusEl.className = 'alert alert-error';
+            statusEl.textContent = error.message || 'Could not connect to WhatsApp bridge.';
+            statusEl.style.display = 'block';
+        }
+    };
+
+    window.stopWhatsAppIntegrationPolling();
+    await refreshWhatsAppState();
+
+    whatsappAdminPollTimer = setInterval(() => {
+        refreshWhatsAppState();
+    }, 5000);
+}
+
 // Require admin access
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('admin.html')) {
@@ -415,7 +478,8 @@ async function handleAuctionForm(event) {
         location_en: formData.get('locationEn'),
         location_ar: formData.get('locationAr'),
         start_date: startDate.toISOString(),
-        end_date: endDate.toISOString()
+        end_date: endDate.toISOString(),
+        featured: formData.get('featured') === 'true'
     };
 
     const imageFile = formData.get('auctionImage');
@@ -508,6 +572,10 @@ function editAuction(auctionId) {
 
         setVal('startDate', formatForInput(startDate));
         setVal('endDate', formatForInput(endDate));
+        const featuredCheckbox = form.querySelector('[name="featured"]');
+        if (featuredCheckbox) {
+            featuredCheckbox.checked = !!auction.featured;
+        }
         // Note: Can't pre-fill file input for security reasons
 
         // Set editing mode

@@ -7,7 +7,7 @@ Production-ready backend API for the Zauction premium auction platform.
 - ✅ User registration with admin approval workflow
 - ✅ JWT authentication
 - ✅ Google OAuth sign-in/register endpoint
-- ✅ Gmail OTP verification endpoints for registration
+- ✅ WhatsApp OTP verification endpoints for registration
 - ✅ Role-based access control (user/admin)
 - ✅ PostgreSQL database with Supabase
 - ✅ Password hashing with bcrypt
@@ -46,9 +46,8 @@ DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/
 JWT_SECRET=your-random-secret-key-here
 FRONTEND_URL=http://localhost:8000
 GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
-GMAIL_USER=your-gmail-address@gmail.com
-GMAIL_APP_PASSWORD=your-16-char-gmail-app-password
-EMAIL_OTP_REQUIRED=false
+WHATSAPP_OTP_ENABLED=true
+WHATSAPP_BRIDGE_URL=http://localhost:3001
 ```
 
 ### 4. Run Development Server
@@ -64,7 +63,7 @@ Server will start on `http://localhost:3000`
 ### Authentication
 
 - `POST /api/auth/register` - Register new user (status: pending)
-- `POST /api/auth/register/request-otp` - Send OTP to email for registration
+- `POST /api/auth/register/request-otp` - Send OTP to WhatsApp for registration
 - `POST /api/auth/register/verify-otp` - Verify OTP and create account
 - `POST /api/auth/login` - Login and get JWT token
 - `POST /api/auth/oauth/google` - Login/register with Google ID token

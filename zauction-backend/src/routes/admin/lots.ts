@@ -4,6 +4,7 @@ import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { pool } from '../../config/database';
 import { authenticate, requireAdmin, AuthRequest } from '../../middleware/auth';
+import { notifyNewLotCreated } from '../../services/whatsappBridge';
 
 const router = Router();
 
@@ -106,7 +107,7 @@ router.post('/',
 
             // Check auction exists
             const auctionCheck = await pool.query(
-                'SELECT id FROM auctions WHERE id = $1',
+                'SELECT id, title FROM auctions WHERE id = $1',
                 [auction_id]
             );
 
@@ -140,6 +141,13 @@ router.post('/',
             res.status(201).json({
                 message: 'Lot created successfully',
                 lot: result.rows[0]
+            });
+
+            void notifyNewLotCreated({
+                ...result.rows[0],
+                auction_title: auctionCheck.rows[0]?.title
+            }).catch((error) => {
+                console.error('Automated WhatsApp notification (new product) failed:', error);
             });
         } catch (error: any) {
             if (error.code === '23505') { // Unique constraint violation

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="icon" type="image/png" href="../../assets/images/Beigelogo.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="About Turathya - Curated timed auctions of antiques and rare collectibles">
+  <title>About Us — Turathya</title>
+
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/brand-fonts.css">
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/typography.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/rtl.css?v=5">
+  <link rel="stylesheet" href="../../css/components/lang-toggle.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════════
+       TURATHYA — ABOUT US PAGE
+       Premium luxury editorial · matches Contact page
+    ═══════════════════════════════════════════════════ */
+
+    :root {
+      --gold-1:     #c9a96e;
+      --gold-2:     #a8844c;
+      --gold-glow:  rgba(201,169,110,.22);
+      --gold-line:  rgba(201,169,110,.36);
+      --gold-bg:    rgba(201,169,110,.07);
+      --shadow-lg:  0 24px 64px rgba(0,0,0,.09), 0 4px 16px rgba(0,0,0,.05);
+      --shadow-card:0 8px 28px rgba(0,0,0,.07);
+      --r-xl: 20px; --r-lg: 14px; --r-md: 10px;
+      --ease: cubic-bezier(.22,.68,0,1.2);
+    }
+    * { box-sizing: border-box; }
+
+    /* ── Scroll reveal ── */
+    .sr { opacity:0; transform:translateY(28px); transition:opacity .65s var(--ease), transform .65s var(--ease); }
+    .sr.sr--left  { transform:translateX(-28px); }
+    .sr.sr--right { transform:translateX( 28px); }
+    .sr.visible   { opacity:1; transform:translate(0); }
+    .sr-d1{transition-delay:.08s} .sr-d2{transition-delay:.16s} .sr-d3{transition-delay:.24s}
+    .sr-d4{transition-delay:.32s} .sr-d5{transition-delay:.40s} .sr-d6{transition-delay:.48s}
+
+    /* ════════════════════════════════
+       HERO
+    ════════════════════════════════ */
+    .ab-hero {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 120px 24px 96px;
+    }
+
+    .ab-hero__bg {
+      position: absolute; inset: 0;
+      background-image: url('../../assets/images/bg-3.png');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+
+    .ab-hero__overlay {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.18) 0%, transparent 55%),
+        linear-gradient(175deg, rgba(10,8,4,.60) 0%, rgba(5,4,2,.80) 100%);
+      z-index: 1;
+    }
+
+    .ab-hero__content {
+      position: relative; z-index: 2;
+      max-width: 700px;
+      text-align: center !important;
+      width: 100%;
+    }
+
+    .ab-hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.10;
+      margin-bottom: 18px;
+      text-align: center !important;
+    }
+
+    .ab-hero__sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.70;
+      color: rgba(255,255,255,.72);
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: center !important;
+    }
+
+    .ab-hero__line {
+      width: 52px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
+      margin: 22px auto 0;
+    }
+
+    /* ════════════════════════════════
+       PAGE WRAPPER
+    ════════════════════════════════ */
+    .ab-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 28px 80px;
+    }
+
+    /* ── Shared section label/heading ── */
+    .ab-tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold-1);
+      margin-bottom: 6px;
+    }
+
+    .ab-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.55rem, 2.8vw, 2.1rem);
+      font-weight: 400;
+      color: var(--theme-text, #1a1208);
+      margin-bottom: 16px;
+      line-height: 1.25;
+    }
+
+    .ab-body {
+      font-family: 'Inter', sans-serif;
+      font-size: .97rem;
+      color: var(--theme-text-muted, #555);
+      line-height: 1.75;
+    }
+
+    .ab-body p + p { margin-top: 14px; }
+
+    /* ── Decorative gold divider ── */
+    .ab-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 56px 0;
+    }
+
+    .ab-divider__line {
+      flex: 1;
+      max-width: 180px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-line));
+    }
+
+    .ab-divider__line--r {
+      background: linear-gradient(90deg, var(--gold-line), transparent);
+    }
+
+    .ab-divider__icon {
+      width: 28px; height: 28px;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-line);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-1);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ════════════════════════════════
+       § 1 · INTRO (centered)
+    ════════════════════════════════ */
+    .ab-intro {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .ab-intro__text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.05rem, 2vw, 1.22rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--theme-text, #1a1208);
+      line-height: 1.80;
+    }
+
+    /* ════════════════════════════════
+       § 2–3 · MISSION & APPROACH
+       2-column split layout
+    ════════════════════════════════ */
+    .ab-split {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .ab-split--reverse {
+      grid-template-columns: 1fr 280px;
+    }
+
+    .ab-split--reverse .ab-split__label { order: 2; }
+    .ab-split--reverse .ab-split__content { order: 1; }
+
+    .ab-split__label {
+      padding-top: 6px;
+    }
+
+    .ab-split__label-line {
+      width: 36px;
+      height: 2px;
+      background: var(--gold-1);
+      border-radius: 2px;
+      margin-top: 10px;
+    }
+
+    /* RTL: reverse column order */
+    .rtl .ab-split {
+      grid-template-columns: 1fr 280px;
+      direction: rtl;
+    }
+    .rtl .ab-split--reverse {
+      grid-template-columns: 280px 1fr;
+    }
+    .rtl .ab-split--reverse .ab-split__label { order: 1; }
+    .rtl .ab-split--reverse .ab-split__content { order: 2; }
+
+    /* ════════════════════════════════
+       § 4 · VALUES CARDS GRID
+    ════════════════════════════════ */
+    .ab-values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .ab-vcard {
+      background: var(--theme-surface, #fff);
+      border: 1px solid var(--gold-line);
+      border-radius: var(--r-lg);
+      padding: 32px 30px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .35s var(--ease), box-shadow .35s ease, border-color .3s;
+    }
+
+    /* Gold top accent line */
+    .ab-vcard::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 24px; right: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
+      border-radius: 2px;
+    }
+
+    /* Subtle shimmer */
+    .ab-vcard::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, var(--gold-bg) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity .35s;
+      pointer-events: none;
+    }
+
+    .ab-vcard:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-card), 0 0 0 1px rgba(201,169,110,.30);
+      border-color: var(--gold-1);
+    }
+    .ab-vcard:hover::after { opacity: 1; }
+
+    .ab-vcard__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.12rem;
+      font-weight: 600;
+      color: var(--theme-text, #1a1208);
+      margin-bottom: 12px;
+    }
+
+    .ab-vcard__text {
+      font-family: 'Inter', sans-serif;
+      font-size: .90rem;
+      color: var(--theme-text-muted, #666);
+      line-height: 1.70;
+    }
+
+    .ab-vcard__text p + p { margin-top: 10px; }
+
+    /* ════════════════════════════════
+       § 5 · CLOSING CTA
+    ════════════════════════════════ */
+    .ab-closing {
+      text-align: center;
+      padding: 72px 24px;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-line);
+      border-radius: var(--r-xl);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ab-closing::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(201,169,110,.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(201,169,110,.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .ab-closing__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 400;
+      color: var(--theme-text, #1a1208);
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .ab-closing__sub {
+      font-size: .95rem;
+      color: var(--theme-text-muted, #666);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.70;
+      position: relative;
+    }
+
+    .ab-closing__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 42px;
+      font-family: 'Inter', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      color: #fff;
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      transition: transform .3s var(--ease), box-shadow .3s ease;
+    }
+
+    .ab-closing__btn:hover {
+      transform: translateY(-2px) scale(1.025);
+      box-shadow: 0 12px 36px var(--gold-glow);
+    }
+
+    .ab-closing__btn svg {
+      width:16px; height:16px;
+      stroke:#fff; fill:none;
+      stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+      transition: transform .25s;
+    }
+    .ab-closing__btn:hover svg { transform: translateX(4px); }
+    .rtl .ab-closing__btn:hover svg { transform: translateX(-4px); }
+
+    /* ════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════ */
+    @media (max-width: 860px) {
+      .ab-split, .ab-split--reverse { grid-template-columns: 1fr; gap: 28px; }
+      .ab-split--reverse .ab-split__label { order: 1; }
+      .ab-split--reverse .ab-split__content { order: 2; }
+      .ab-values { grid-template-columns: 1fr; }
+      .rtl .ab-split, .rtl .ab-split--reverse { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .ab-hero { min-height: 320px; padding: 90px 20px 72px; }
+      .ab-wrap { padding: 48px 20px 64px; }
+      .ab-closing { padding: 52px 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="site-header"></div>
+
+  <!-- ══ HERO ══ -->
+  <section class="ab-hero">
+    <div class="ab-hero__bg"></div>
+    <div class="ab-hero__overlay"></div>
+    <div class="ab-hero__content">
+      <h1 class="ab-hero__title sr" data-i18n="info.about.title">About Turathya</h1>
+      <p class="ab-hero__sub sr sr-d1" data-i18n="info.about.subtitle">
+        Trusted platform for timed auctions of antiques and rare items
+      </p>
+      <div class="ab-hero__line sr sr-d2"></div>
+    </div>
+  </section>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="ab-wrap">
+
+    <!-- § 1 · INTRO ·························· -->
+    <div class="ab-intro sr">
+      <p class="ab-intro__text" data-i18n="info.about.intro">
+        Turathya is a curated marketplace for discerning collectors seeking exceptional pieces of historical and cultural significance. We bridge the expertise of traditional auction houses with the convenience of modern online bidding.
+      </p>
+    </div>
+
+    <!-- Decorative divider -->
+    <div class="ab-divider sr">
+      <div class="ab-divider__line"></div>
+      <div class="ab-divider__icon">✦</div>
+      <div class="ab-divider__line ab-divider__line--r"></div>
+    </div>
+
+    <!-- § 2 · MISSION ························ -->
+    <div class="ab-split sr">
+      <div class="ab-split__label">
+        <p class="ab-tag" data-i18n="info.about.mission.title">Our Mission</p>
+        <h2 class="ab-heading" data-i18n="info.about.mission.title">Our Mission</h2>
+        <div class="ab-split__label-line"></div>
+      </div>
+      <div class="ab-split__content ab-body">
+        <p data-i18n="info.about.mission.p1">Turathya connects discerning collectors with exceptional pieces through carefully curated timed auctions. We specialize in antiques, fine art, rare books, ceramics, and collectibles of historical and aesthetic significance.</p>
+        <p data-i18n="info.about.mission.p2">Our platform combines the ease of online bidding with the rigor and expertise of traditional auction houses. Every item offered is evaluated by specialists and presented with detailed condition reports and provenance documentation.</p>
+      </div>
+    </div>
+
+    <!-- Decorative divider -->
+    <div class="ab-divider sr">
+      <div class="ab-divider__line"></div>
+      <div class="ab-divider__icon">✦</div>
+      <div class="ab-divider__line ab-divider__line--r"></div>
+    </div>
+
+    <!-- § 3 · APPROACH ······················· -->
+    <div class="ab-split ab-split--reverse sr">
+      <div class="ab-split__label">
+        <p class="ab-tag" data-i18n="info.about.approach.title">Our Approach</p>
+        <h2 class="ab-heading" data-i18n="info.about.approach.title">Our Approach</h2>
+        <div class="ab-split__label-line"></div>
+      </div>
+      <div class="ab-split__content ab-body">
+        <p data-i18n="info.about.approach.p1">We believe quality trumps quantity. Rather than flooding bidders with endless listings, we focus on thoughtful curation. Each auction consists of items selected for their authenticity, condition, and cultural value.</p>
+        <p data-i18n="info.about.approach.p2">Timed auctions allow participants from around the world to bid at their convenience, while maintaining the competitive dynamics and transparency of live sales. Bidding periods are clearly defined, increments are standardized, and all activity is recorded.</p>
+      </div>
+    </div>
+
+    <!-- Decorative divider -->
+    <div class="ab-divider sr">
+      <div class="ab-divider__line"></div>
+      <div class="ab-divider__icon">✦</div>
+      <div class="ab-divider__line ab-divider__line--r"></div>
+    </div>
+
+    <!-- § 4 · VALUES / TRUST GRID ············ -->
+    <div class="sr" style="margin-bottom: 28px;">
+      <p class="ab-tag" style="text-align:center;">Our Values</p>
+      <h2 class="ab-heading" style="text-align:center; max-width:500px; margin-left:auto; margin-right:auto; margin-bottom:36px;">Built on Trust &amp; Expertise</h2>
+    </div>
+
+    <div class="ab-values">
+      <!-- Trust & Transparency -->
+      <div class="ab-vcard sr sr-d1">
+        <div class="ab-vcard__title" data-i18n="info.about.trust.title">Trust &amp; Transparency</div>
+        <div class="ab-vcard__text">
+          <p data-i18n="info.about.trust.p1">Every piece is accompanied by comprehensive documentation including high-resolution images, detailed descriptions, condition assessments, and available provenance.</p>
+          <p data-i18n="info.about.trust.p2">Buyer's premium and fee structures are clearly outlined. Payment terms, shipping arrangements, and return policies are established before bidding begins.</p>
+        </div>
+      </div>
+
+      <!-- Expertise -->
+      <div class="ab-vcard sr sr-d2">
+        <div class="ab-vcard__title" data-i18n="info.about.expertise.title">Expertise</div>
+        <div class="ab-vcard__text">
+          <p data-i18n="info.about.expertise.p1">Our team includes specialists in European decorative arts, Asian ceramics, rare books and manuscripts, fine art, and antique jewelry. Items are evaluated for authenticity, condition, and market value.</p>
+          <p data-i18n="info.about.expertise.p2">We work with independent experts, restorers, and appraisers when specialized knowledge is required. Third-party authentication and appraisals are obtained for high-value items.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative divider -->
+    <div class="ab-divider sr">
+      <div class="ab-divider__line"></div>
+      <div class="ab-divider__icon">✦</div>
+      <div class="ab-divider__line ab-divider__line--r"></div>
+    </div>
+
+    <!-- § 5 · CLOSING CTA ···················· -->
+    <div class="ab-closing sr">
+      <h2 class="ab-closing__title" data-i18n="info.about.collectors.title">For Collectors</h2>
+      <p class="ab-closing__sub" data-i18n="info.about.collectors.text">
+        Whether you are building a collection, looking for a specific piece, or exploring a new area of interest, Turathya provides access to vetted items with clear documentation.
+      </p>
+      <a href="../auctions.html" class="ab-closing__btn">
+        <span data-i18n="nav.auctions">Explore Auctions</span>
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/data.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/auth.js"></script>
+
+  <script>
+    /* Scroll reveal */
+    const srObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); srObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
+    document.querySelectorAll('.sr').forEach(el => srObs.observe(el));
+  </script>
+</body>
+
+</html>

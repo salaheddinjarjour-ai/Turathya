@@ -16,6 +16,12 @@ class WhatsAppService {
     this.logger = pino({ level: 'silent' }); // Silent logger for production
   }
 
+  formatPhoneNumber(phoneNumber) {
+    return phoneNumber.includes('@s.whatsapp.net')
+      ? phoneNumber
+      : `${phoneNumber}@s.whatsapp.net`;
+  }
+
   /**
    * Initialize WhatsApp connection
    * This is COMPLETELY FREE - no API keys needed!
@@ -83,10 +89,7 @@ class WhatsAppService {
     }
 
     try {
-      // Format phone number (add country code if needed)
-      const formattedNumber = phoneNumber.includes('@s.whatsapp.net') 
-        ? phoneNumber 
-        : `${phoneNumber}@s.whatsapp.net`;
+      const formattedNumber = this.formatPhoneNumber(phoneNumber);
 
       const message = `🔐 *Your Verification Code*\n\nYour OTP is: *${otp}*\n\nThis code will expire in 5 minutes.\n\n_Do not share this code with anyone._`;
 
@@ -100,6 +103,20 @@ class WhatsAppService {
     }
   }
 
+  async sendTextMessage(phoneNumber, message) {
+    if (!this.isConnected) {
+      throw new Error('WhatsApp not connected. Please scan QR code first.');
+    }
+
+    if (!message || !String(message).trim()) {
+      throw new Error('Message text is required');
+    }
+
+    const formattedNumber = this.formatPhoneNumber(phoneNumber);
+    await this.sock.sendMessage(formattedNumber, { text: String(message) });
+    return { success: true };
+  }
+
   /**
    * Send auction notification to users
    * @param {string} phoneNumber - Phone number to notify
@@ -111,9 +128,7 @@ class WhatsAppService {
     }
 
     try {
-      const formattedNumber = phoneNumber.includes('@s.whatsapp.net') 
-        ? phoneNumber 
-        : `${phoneNumber}@s.whatsapp.net`;
+      const formattedNumber = this.formatPhoneNumber(phoneNumber);
 
       const message = `🔔 *New Auction Alert!*\n\n` +
         `📦 *${auctionData.title}*\n\n` +

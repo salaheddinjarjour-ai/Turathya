@@ -18,13 +18,10 @@
             if (isAr) document.documentElement.classList.add('rtl');
         })();
     </script>
-    <style>
-        html.i18n-pending body {
-            opacity: 0;
-            pointer-events: none;
-        }
-    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/brand-fonts.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
     <link rel="stylesheet" href="../css/layout.css">
@@ -32,17 +29,200 @@
     <link rel="stylesheet" href="../css/pages/auction.css">
     <link rel="stylesheet" href="../css/rtl.css?v=5">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
+
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ══════════════════════════════════════════
+           PREMIUM AUCTION HERO
+        ══════════════════════════════════════════ */
+        .auction-hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 140px 24px 80px;
+        }
+
+        /* Background image layer — set via JS */
+        .ah-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Subtle scale for cinematic feel */
+            transform: scale(1.04);
+            transition: transform 12s ease-out;
+            z-index: 0;
+        }
+        .ah-bg.loaded { transform: scale(1); }
+
+        /* Dark gradient overlay */
+        .ah-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(15, 10, 5, 0.72) 0%,
+                rgba(15, 10, 5, 0.82) 60%,
+                rgba(15, 10, 5, 0.92) 100%
+            );
+            z-index: 1;
+        }
+
+        /* Content container */
+        .ah-content {
+            position: relative;
+            z-index: 2;
+            max-width: 760px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+
+            /* Staggered fade-in */
+            animation: ahFadeUp 0.9s cubic-bezier(.22,.68,0,1.2) both;
+        }
+
+        @keyframes ahFadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Small gold category label */
+        .ah-label {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #C6A46C;
+            margin-bottom: 22px;
+            opacity: 0;
+            animation: ahFadeUp 0.7s 0.1s cubic-bezier(.22,.68,0,1.2) forwards;
+        }
+
+        /* Main auction title */
+        .ah-title {
+            font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 3.6rem);
+            font-weight: 400;
+            color: #f5ede0;
+            line-height: 1.18;
+            margin: 0 0 22px 0;
+            text-align: center !important;
+            opacity: 0;
+            animation: ahFadeUp 0.75s 0.2s cubic-bezier(.22,.68,0,1.2) forwards;
+        }
+
+        /* Gold divider */
+        .ah-divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #C6A46C, transparent);
+            margin: 0 auto 28px;
+            opacity: 0;
+            animation: ahFadeUp 0.7s 0.3s cubic-bezier(.22,.68,0,1.2) forwards;
+        }
+
+        /* Short description */
+        .ah-desc {
+            font-family: 'Inter', 'Helvetica Neue', sans-serif;
+            font-size: 0.97rem;
+            font-weight: 300;
+            color: rgba(245, 237, 224, 0.75);
+            line-height: 1.72;
+            max-width: 600px;
+            text-align: center !important;
+            margin: 0 0 36px 0;
+            opacity: 0;
+            animation: ahFadeUp 0.7s 0.38s cubic-bezier(.22,.68,0,1.2) forwards;
+        }
+
+        /* Info cards row */
+        .ah-cards {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            width: 100%;
+            opacity: 0;
+            animation: ahFadeUp 0.7s 0.48s cubic-bezier(.22,.68,0,1.2) forwards;
+        }
+
+        .ah-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(198, 164, 108, 0.25);
+            padding: 14px 22px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-width: 140px;
+            transition: border-color 0.25s, background 0.25s;
+        }
+        .ah-card:hover {
+            border-color: rgba(198, 164, 108, 0.5);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .ah-card-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #C6A46C;
+            white-space: nowrap;
+        }
+
+        .ah-card-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 400;
+            color: rgba(245, 237, 224, 0.88);
+            white-space: nowrap;
+        }
+
+        /* RTL — keep centered */
+        html[dir="rtl"] .ah-content,
+        html[dir="rtl"] .ah-title,
+        html[dir="rtl"] .ah-desc {
+            text-align: center !important;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .ah-cards { gap: 10px; }
+            .ah-card  { min-width: 120px; padding: 12px 14px; }
+            .ah-card-value { font-size: 0.78rem; }
+        }
+    </style>
 </head>
 
 <body>
     <div id="site-header"></div>
 
-    <!-- Auction Hero (full-width, viewport-height) -->
+    <!-- ── Premium Auction Hero ── -->
     <section class="auction-hero" id="auction-hero">
-        <div class="auction-hero__content">
-            <div class="auction-header" id="auction-header">
-                <!-- Populated by JavaScript -->
-            </div>
+        <!-- BG image: set from JS once auction data is loaded -->
+        <div class="ah-bg" id="ah-bg"></div>
+        <div class="ah-overlay"></div>
+
+        <div class="ah-content" id="auction-header">
+            <!-- Populated by JavaScript -->
         </div>
     </section>
 
@@ -86,9 +266,9 @@
         }
         window.addEventListener('load', setHeaderHeight);
         window.addEventListener('resize', setHeaderHeight);
-        // Run immediately in case header is already rendered
         setTimeout(setHeaderHeight, 100);
     </script>
+
     <script>
         const auctionId = getUrlParameter('id');
         let currentSort = 'lotNumber';
@@ -96,17 +276,9 @@
         // Track auction view for featured section
         function trackAuctionView(auctionId) {
             const recentAuctions = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
-
-            // Remove if already exists (to update position)
             const filtered = recentAuctions.filter(id => id !== auctionId);
-
-            // Add to beginning
             filtered.unshift(auctionId);
-
-            // Keep only last 5
-            const updated = filtered.slice(0, 5);
-
-            localStorage.setItem('recentAuctions', JSON.stringify(updated));
+            localStorage.setItem('recentAuctions', JSON.stringify(filtered.slice(0, 5)));
         }
 
         async function loadAuction() {
@@ -118,42 +290,74 @@
                     return;
                 }
 
-                // Track this auction view
                 trackAuctionView(auctionId);
 
-                document.getElementById('page-title').textContent = (localizedField(auction, 'title') || auction.title) + ' - TURATHYA';
-
                 const aTitle = localizedField(auction, 'title');
-                const aDesc = localizedField(auction, 'description');
-                const aCat = localizedField(auction, 'category');
-                const aLoc = localizedField(auction, 'location');
+                const aDesc  = localizedField(auction, 'description');
+                const aCat   = localizedField(auction, 'category');
 
+                document.getElementById('page-title').textContent = aTitle + ' - TURATHYA';
+
+                /* ── Set hero background image ── */
+                const bg = document.getElementById('ah-bg');
+                if (auction.image_url || auction.image_data) {
+                    bg.style.backgroundImage = `url('${auction.image_url || auction.image_data}')`;
+                    // Fallback to fill-bg-3 if auction has no image
+                } else {
+                    bg.style.backgroundImage = "url('../assets/images/fill-bg-3.png')";
+                }
+                // Trigger scale animation
+                requestAnimationFrame(() => setTimeout(() => bg.classList.add('loaded'), 50));
+
+                /* ── Label text ── */
+                const labelText = (aCat || 'Curated Auction').toUpperCase();
+
+                /* ── Format dates ── */
+                const startFmt = auction.start_date ? formatDateTime(auction.start_date) : '—';
+                const endFmt   = auction.end_date   ? formatDateTime(auction.end_date)   : '—';
+                const lotCount = auction.lot_count || 0;
+
+                /* ── i18n keys ── */
+                const lang = localStorage.getItem('lang') || 'ar';
+                const isAr = lang === 'ar';
+
+                const startsLbl = isAr ? 'بداية المزاد' : 'Auction Starts';
+                const endsLbl   = isAr ? 'نهاية المزاد' : 'Auction Ends';
+                const lotsLbl   = isAr ? 'إجمالي القطع' : 'Total Lots';
+
+                /* ── Inject premium hero markup ── */
                 const header = document.getElementById('auction-header');
-                header.innerHTML =
-                    '<h1>' + aTitle + '</h1>' +
-                    '<p class="auction-meta">' +
-                    '<span class="label">' + (aCat || 'Auction') + '</span>' +
-                    '<span>•</span>' +
-                    '<span>' + (aLoc || 'TBA') + '</span>' +
-                    '<span>•</span>' +
-                    '<span>' + (auction.lot_count || 0) + ' lots</span>' +
-                    '</p>' +
-                    '<p class="auction-description">' + (aDesc || '') + '</p>' +
-                    '<div class="auction-dates">' +
-                    '<div>' +
-                    '<span class="text-sm auction-date-label">' + i18n.t('auction.starts') + '</span>' +
-                    '<span class="text-sm font-medium">' + formatDateTime(auction.start_date) + '</span>' +
-                    '</div>' +
-                    '<div>' +
-                    '<span class="text-sm auction-date-label">' + i18n.t('auction.ends') + '</span>' +
-                    '<span class="text-sm font-medium">' + formatDateTime(auction.end_date) + '</span>' +
-                    '</div>' +
-                    '</div>';
+                header.innerHTML = `
+                    <span class="ah-label">${labelText}</span>
+
+                    <h1 class="ah-title">${aTitle}</h1>
+
+                    <div class="ah-divider"></div>
+
+                    ${aDesc ? `<p class="ah-desc">${aDesc}</p>` : ''}
+
+                    <div class="ah-cards">
+                        <div class="ah-card">
+                            <span class="ah-card-label" data-i18n="auction.starts">${startsLbl}</span>
+                            <span class="ah-card-value">${startFmt}</span>
+                        </div>
+                        <div class="ah-card">
+                            <span class="ah-card-label" data-i18n="auction.ends">${endsLbl}</span>
+                            <span class="ah-card-value">${endFmt}</span>
+                        </div>
+                        <div class="ah-card">
+                            <span class="ah-card-label" data-i18n="auction.totalLots">${lotsLbl}</span>
+                            <span class="ah-card-value">${lotCount}</span>
+                        </div>
+                    </div>
+                `;
+
+                // Re-translate any i18n keys injected into the DOM
+                if (window.i18n) window.i18n.translatePage();
 
                 await loadLots();
             } catch (error) {
                 console.error('Failed to load auction:', error);
-                alert('Failed to load auction');
                 window.location.href = 'auctions.html';
             }
         }
@@ -170,7 +374,8 @@
                     lots.sort((a, b) => (b.current_bid || 0) - (a.current_bid || 0));
                 }
 
-                document.getElementById('lot-count').textContent = lots.length + ' lot' + (lots.length !== 1 ? 's' : '');
+                document.getElementById('lot-count').textContent =
+                    lots.length + ' lot' + (lots.length !== 1 ? 's' : '');
 
                 const container = document.getElementById('lots-grid');
 
@@ -180,9 +385,9 @@
                 }
 
                 container.innerHTML = lots.map(lot => {
-                    const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
+                    const imageUrl   = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
                     const currentBid = lot.current_bid && lot.current_bid > 0;
-                    const lTitle = localizedField(lot, 'title');
+                    const lTitle     = localizedField(lot, 'title');
 
                     return '<a href="lot.html?id=' + lot.id + '" class="card">' +
                         '<img loading="lazy" src="' + imageUrl + '" alt="' + lTitle + '" class="card-image">' +
@@ -202,7 +407,8 @@
                 initCountdowns();
             } catch (error) {
                 console.error('Failed to load lots:', error);
-                container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load lots</p>';
+                document.getElementById('lots-grid').innerHTML =
+                    '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load lots</p>';
             }
         }
 

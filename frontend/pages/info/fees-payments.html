@@ -9,23 +9,38 @@
     <title>الرسوم والمدفوعات - تراثيا</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/brand-fonts.css">
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/typography.css">
     <link rel="stylesheet" href="../../css/layout.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/rtl.css?v=5">
     <link rel="stylesheet" href="../../css/components/lang-toggle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/pages/info-pages.css">
 </head>
 
 <body>
     <div id="site-header"></div>
+  <!-- Premium hero — info-pages design system -->
+  <section class="ip-hero">
+    <div class="ip-hero__bg" style="background-image:url('../../assets/images/fill-bg-1.png')"></div>
+    <div class="ip-hero__overlay"></div>
+    <div class="ip-hero__content">
+      <div class="ip-hero__title"><h1 class="mb-4" data-i18n="info.fees.title">الرسوم والمدفوعات</h1></div>
+      <div class="ip-hero__sub"><p class="text-graphite text-lg mb-12" data-i18n="info.fees.subtitle">فهم التكاليف وطرق الدفع</p></div>
+      <div class="ip-hero__line"></div>
+    </div>
+  </section>
+
+
 
     <main class="section">
-        <div class="container container-md">
-            <h1 class="mb-4" data-i18n="info.fees.title">الرسوم والمدفوعات</h1>
-            <p class="text-graphite text-lg mb-12" data-i18n="info.fees.subtitle">فهم التكاليف وطرق الدفع</p>
+        <div class="ip-body">
+            
+            
 
-            <section class="mb-12">
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.premium.title">علاوة المشتري</h2>
                 <p class="mb-4" data-i18n="info.fees.premium.p1">تضاف علاوة المشتري إلى سعر المطرقة (عرضك الفائز) لكل
                     قطعة. تغطي هذه الرسوم التكاليف
@@ -38,7 +53,9 @@
                     قبل الشحن والضرائب هو 1250 دولاراً.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.tax.title">ضريبة المبيعات</h2>
                 <p class="mb-4" data-i18n="info.fees.tax.p1">قد يتم تطبيق ضريبة المبيعات اعتماداً على موقع المشتري
                     وطبيعة العنصر. تختلف معدلات
@@ -48,7 +65,9 @@
                     المبيعات حيثما يقتضي القانون ذلك.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.methods.title">طرق الدفع</h2>
                 <p class="mb-4" data-i18n="info.fees.methods.p1">نقبل طرق الدفع التالية:</p>
                 <ul class="mb-4" style="margin-left: var(--space-6); margin-bottom: var(--space-4);">
@@ -66,7 +85,9 @@
                     التي تزيد عن 5000 دولار.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.deadline.title">موعد الدفع</h2>
                 <p class="mb-4" data-i18n="info.fees.deadline.p1">يستحق الدفع خلال 7 أيام من إغلاق المزاد. لن يتم
                     الإفراج عن القطع حتى يتم استلام الدفع
@@ -76,14 +97,18 @@
                     الحسابات ذات الأرصدة المتأخرة من المزايدة في المزادات المستقبلية.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.currency.title">العملة</h2>
                 <p class="mb-4" data-i18n="info.fees.currency.p1">جميع الأسعار مدرجة بالدولار الأمريكي (USD). سيتم تحويل
                     المدفوعات بعملات أخرى بسعر الصرف
                     السائد في تاريخ الدفع، بالإضافة إلى أي رسوم مصرفية مطبقة.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.invoicing.title">الفواتير</h2>
                 <p class="mb-4" data-i18n="info.fees.invoicing.p1">يتلقى مقدمو العروض الفائزون فاتورة عبر البريد
                     الإلكتروني في غضون 24 ساعة من إغلاق
@@ -102,7 +127,9 @@
                     الترتيبات.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.refunds.title">المبالغ المستردة والمرتجعات</h2>
                 <p class="mb-4" data-i18n="info.fees.refunds.p1">جميع المبيعات نهائية. يتم قبول المرتجعات فقط في حالات
                     التحريف الجوهري كما هو محدد في
@@ -112,7 +139,9 @@
                     العنصر المرتجع في حالته الأصلية. علاوة المشتري وتكاليف الشحن غير قابلة للاسترداد.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.fees.questions.title">الأسئلة</h2>
                 <p><span data-i18n="info.fees.questions.text">للأسئلة حول الفواتير أو طرق الدفع أو الرسوم، اتصل بفريق
                         الدعم لدينا على</span> <a href="mailto:support@turathya.com"
@@ -127,6 +156,14 @@
     <script src="../../js/data.js"></script>
     <script src="../../js/utils.js"></script>
     <script src="../../js/auth.js"></script>
+
+  <script>
+    /* Info page scroll reveal */
+    const _sr = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); _sr.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    document.querySelectorAll('.ip-sr').forEach(el => _sr.observe(el));
+  </script>
 </body>
 
 </html>

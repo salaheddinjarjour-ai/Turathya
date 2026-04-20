@@ -3,6 +3,37 @@
    Hero, featured sections, trust elements
    ============================================ */
 
+/* ── Featured Auctions — dark Islamic pattern background ── */
+.section--featured-bg {
+  position: relative;
+  background-image: url('../../assets/images/bg-1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Semi-transparent overlay for text legibility */
+.section--featured-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.40);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content sits above the overlay */
+.section--featured-bg .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Light text colour overrides */
+.text-light {
+  color: #f5f0e8 !important;
+}
+
+
 /* ==================== TRANSPARENT HEADER FOR LANDING ==================== */
 
 /* Override header styles on landing page only */
@@ -26,6 +57,9 @@
 #landing-page .header .nav-link {
     color: rgba(255, 255, 255, 0.9);
     text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: var(--text-base);
+    font-weight: var(--weight-normal);
 }
 
 #landing-page .header .nav-link:hover {
@@ -398,9 +432,27 @@
 /* ==================== TRUST SECTION ==================== */
 
 .trust-section {
-    background-color: var(--color-white);
-    border-top: var(--border-thin) solid var(--color-border);
-    border-bottom: var(--border-thin) solid var(--color-border);
+    position: relative;
+    background-color: #1a1208;
+    background-image: url('../../assets/images/fill-bg-2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-top: none;
+    border-bottom: none;
+    overflow: hidden;
+}
+.trust-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    pointer-events: none;
+    z-index: 0;
+}
+.trust-section .container {
+    position: relative;
+    z-index: 1;
 }
 
 .trust-item {
@@ -415,20 +467,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-olive);
-    background-color: rgba(47, 79, 62, 0.1);
+    color: #c9a96e;
+    background-color: rgba(201,169,110,0.15);
+    border: 1px solid rgba(201,169,110,0.30);
     border-radius: 50%;
 }
 
 .trust-item h3 {
     font-size: var(--text-xl);
     margin-bottom: var(--space-3);
+    color: #ffffff;
 }
 
 .trust-item p {
     font-size: var(--text-base);
     line-height: var(--leading-relaxed);
     margin: 0;
+    color: rgba(255,255,255,0.72);
 }
 
 /* ==================== RESPONSIVE GRID ADJUSTMENTS ==================== */
@@ -461,8 +516,11 @@
 /* ==================== CTA BAND (PREMIUM BURGUNDY) ==================== */
 
 .cta-band {
-    background-color: #49110C !important;
-    /* Deep burgundy base */
+    background-color: #1a1208;         /* deep fallback if image fails */
+    background-image: url('../../assets/images/fill-bg-2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: var(--color-ivory, #FAF8F3);
     padding: 6rem 0;
     text-align: center;
@@ -470,18 +528,16 @@
     z-index: 1;
     border-top: 1px solid rgba(250, 248, 243, 0.15);
     overflow: hidden;
+}
 
-    /* Heritage Embossed Texture (CSS Only) */
-    background-image:
-        /* Soft Spotlight */
-        radial-gradient(circle at 50% 50%, rgba(255, 80, 80, 0.06) 0%, transparent 60%),
-        /* Vignette */
-        radial-gradient(circle at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.25) 100%),
-        /* Faint Geometric Pattern (Diamond Mesh) */
-        linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.03) 75%, rgba(255, 255, 255, 0.03)),
-        linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.03) 75%, rgba(255, 255, 255, 0.03));
-    background-position: 0 0, 0 0, 0 0, 10px 10px;
-    background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+/* Dark overlay for text legibility over the pattern */
+.cta-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.50);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* Luxury Grain Overlay */

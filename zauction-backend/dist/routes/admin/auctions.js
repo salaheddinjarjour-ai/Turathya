@@ -9,6 +9,7 @@ const multer_1 = __importDefault(require("multer"));
 const cloudinary_1 = require("cloudinary");
 const database_1 = require("../../config/database");
 const auth_1 = require("../../middleware/auth");
+const whatsappBridge_1 = require("../../services/whatsappBridge");
 const router = (0, express_1.Router)();
 // Configure Cloudinary
 cloudinary_1.v2.config({
@@ -26,7 +27,9 @@ router.use(auth_1.authenticate, auth_1.requireAdmin);
 // Get all auctions
 router.get('/', async (req, res) => {
     try {
-        const result = await database_1.pool.query(`SELECT a.*, 
+        const result = await database_1.pool.query(`SELECT a.*,
+        a.title_en, a.title_ar, a.description_en, a.description_ar,
+        a.category_en, a.category_ar, a.location_en, a.location_ar,
         (SELECT COUNT(*) FROM lots WHERE auction_id = a.id) as lot_count
        FROM auctions a
        ORDER BY a.created_at DESC`);
@@ -49,7 +52,7 @@ router.post('/', [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { title, description, category, location, start_date, end_date, buyers_premium = 25, image_url, featured = false } = req.body;
+        const { title, description, category, location, title_en, title_ar, description_en, description_ar, category_en, category_ar, location_en, location_ar, start_date, end_date, image_url, featured = false } = req.body;
         // Validate dates
         if (new Date(end_date) <= new Date(start_date)) {
             return res.status(400).json({ error: 'End date must be after start date' });
@@ -66,15 +69,32 @@ router.post('/', [
             status = 'ended';
         }
         const result = await database_1.pool.query(`INSERT INTO auctions (
-          id, title, description, category, location, start_date, end_date,
+          id, title, description, category, location,
+          title_en, title_ar, description_en, description_ar,
+          category_en, category_ar, location_en, location_ar,
+          start_date, end_date,
           buyers_premium, image_url, featured, status, created_by, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
-        RETURNING *`, [title, description, category, location, start_date, end_date,
-            buyers_premium, image_url, featured, status, req.user.id]);
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 0, $15, $16, $17, $18, NOW(), NOW())
+        RETURNING *`, [title || title_en || title_ar,
+            description || description_en || description_ar,
+            category || category_en || category_ar,
+            location || location_en || location_ar,
+            title_en, title_ar, description_en, description_ar,
+            category_en, category_ar, location_en, location_ar,
+            start_date, end_date,
+            image_url, featured, status, req.user.id]);
         res.status(201).json({
             message: 'Auction created successfully',
             auction: result.rows[0]
         });
+        void (0, whatsappBridge_1.notifyNewAuctionCreated)(result.rows[0]).catch((error) => {
+            console.error('Automated WhatsApp notification (new auction) failed:', error);
+        });
+        if (featured === true || featured === 'true') {
+            void (0, whatsappBridge_1.notifyAuctionFeatured)(result.rows[0]).catch((error) => {
+                console.error('Automated WhatsApp notification (featured auction) failed:', error);
+            });
+        }
     }
     catch (error) {
         console.error('Create auction error:', error);
@@ -111,6 +131,11 @@ router.patch('/:id', [
             message: 'Auction updated successfully',
             auction: result.rows[0]
         });
+        if (Object.prototype.hasOwnProperty.call(updates, 'featured') && (updates.featured === true || updates.featured === 'true')) {
+            void (0, whatsappBridge_1.notifyAuctionFeatured)(result.rows[0]).catch((error) => {
+                console.error('Automated WhatsApp notification (featured auction) failed:', error);
+            });
+        }
     }
     catch (error) {
         console.error('Update auction error:', error);

@@ -8,6 +8,7 @@ import adminUsersRoutes from './routes/admin/users';
 import adminAuctionsRoutes from './routes/admin/auctions';
 import adminLotsRoutes from './routes/admin/lots';
 import adminStatsRoutes from './routes/admin/stats';
+import adminWhatsAppRoutes from './routes/admin/whatsapp';
 import auctionsRoutes from './routes/auctions';
 import lotsRoutes from './routes/lots';
 import bidsRoutes from './routes/bids';
@@ -23,7 +24,12 @@ const app = express();
 const httpServer = createServer(app);
 
 // Build allowed origins from FRONTEND_URL env var + localhost defaults
-const allowedOrigins: string[] = ['http://localhost:8000', 'http://127.0.0.1:8000'];
+const allowedOrigins: string[] = [
+    'http://localhost:5050',
+    'http://127.0.0.1:5050',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000'
+];
 if (process.env.FRONTEND_URL) {
     // Remove trailing slash if present
     const frontendUrl = process.env.FRONTEND_URL.replace(/\/+$/, '');
@@ -81,6 +87,7 @@ app.use('/api/admin/stats', adminStatsRoutes);
 app.use('/api/admin/users', adminUsersRoutes);
 app.use('/api/admin/auctions', adminAuctionsRoutes);
 app.use('/api/admin/lots', adminLotsRoutes);
+app.use('/api/admin/whatsapp', adminWhatsAppRoutes);
 app.use('/api/auctions', auctionsRoutes);
 app.use('/api/lots', lotsRoutes);
 app.use('/api/bids', bidsRoutes);

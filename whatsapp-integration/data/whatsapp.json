@@ -13,6 +13,20 @@
       "phone_verified": true,
       "whatsapp_opt_in": true,
       "created_at": "2026-02-13T23:39:17.777Z"
+    },
+    {
+      "id": 3,
+      "phone_number": "15551234567",
+      "phone_verified": true,
+      "whatsapp_opt_in": true,
+      "created_at": "2026-04-20T15:58:13.999Z"
+    },
+    {
+      "id": 4,
+      "phone_number": "963944123456",
+      "phone_verified": true,
+      "whatsapp_opt_in": true,
+      "created_at": "2026-04-20T16:39:23.361Z"
     }
   ],
   "otp_verifications": [
@@ -63,6 +77,30 @@
       "expires_at": 1771026257229,
       "verified": false,
       "created_at": "2026-02-13T23:39:17.229Z"
+    },
+    {
+      "id": 7,
+      "phone_number": "15551234567",
+      "otp_code": "333929",
+      "expires_at": 1776695907548,
+      "verified": false,
+      "created_at": "2026-04-20T14:33:27.548Z"
+    },
+    {
+      "id": 8,
+      "phone_number": "963944123456",
+      "otp_code": "850399",
+      "expires_at": 1776703462150,
+      "verified": false,
+      "created_at": "2026-04-20T16:39:22.150Z"
+    },
+    {
+      "id": 9,
+      "phone_number": "905370456979",
+      "otp_code": "799502",
+      "expires_at": 1776703695633,
+      "verified": false,
+      "created_at": "2026-04-20T16:43:15.633Z"
     }
   ],
   "notification_logs": [
@@ -113,6 +151,22 @@
       "notification_type": "whatsapp",
       "status": "sent",
       "sent_at": "2026-02-13T23:55:06.680Z"
+    },
+    {
+      "id": 7,
+      "phone_number": "96171800472",
+      "auction_id": "01",
+      "notification_type": "whatsapp",
+      "status": "sent",
+      "sent_at": "2026-04-20T14:56:52.643Z"
+    },
+    {
+      "id": 8,
+      "phone_number": "905370456979",
+      "auction_id": "01",
+      "notification_type": "whatsapp",
+      "status": "sent",
+      "sent_at": "2026-04-20T14:56:52.643Z"
     }
   ]
 }

@@ -9,24 +9,39 @@
     <title>الشحن والاستلام - تراثيا</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/brand-fonts.css">
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/typography.css">
     <link rel="stylesheet" href="../../css/layout.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/rtl.css?v=5">
     <link rel="stylesheet" href="../../css/components/lang-toggle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/pages/info-pages.css">
 </head>
 
 <body>
     <div id="site-header"></div>
+  <!-- Premium hero — info-pages design system -->
+  <section class="ip-hero">
+    <div class="ip-hero__bg" style="background-image:url('../../assets/images/fill-bg-2.png')"></div>
+    <div class="ip-hero__overlay"></div>
+    <div class="ip-hero__content">
+      <div class="ip-hero__title"><h1 class="mb-4" data-i18n="info.shipping.title">الشحن والاستلام</h1></div>
+      <div class="ip-hero__sub"><p class="text-graphite text-lg mb-12" data-i18n="info.shipping.subtitle">خيارات التسليم ومسؤوليات المشتري
+            </p></div>
+      <div class="ip-hero__line"></div>
+    </div>
+  </section>
+
+
 
     <main class="section">
-        <div class="container container-md">
-            <h1 class="mb-4" data-i18n="info.shipping.title">الشحن والاستلام</h1>
-            <p class="text-graphite text-lg mb-12" data-i18n="info.shipping.subtitle">خيارات التسليم ومسؤوليات المشتري
-            </p>
+        <div class="ip-body">
+            
+            
 
-            <section class="mb-12">
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.buyerResponsibility.title">مسؤولية المشتري</h2>
                 <p class="mb-4" data-i18n="info.shipping.buyerResponsibility.p1">يتحمل المشترون مسؤولية ترتيب ودفع جميع
                     تكاليف الشحن والتعبئة والتأمين. نحن لا نقدم خدمات
@@ -36,7 +51,9 @@
                     للعناصر المتبقية بعد هذه الفترة.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.shippers.title">شركات الشحن الموصى بها</h2>
                 <p class="mb-4" data-i18n="info.shipping.shippers.p1">نحتفظ بقائمة من شركات الشحن الفنية المحترفة وعمال
                     التعبئة ووكلاء الشحن ذوي الخبرة في
@@ -46,7 +63,9 @@
                     نحن لسنا مسؤولين عن أداء الشاحن أو التأخير أو التلف أثناء النقل.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.packing.title">معايير التعبئة</h2>
                 <p class="mb-4" data-i18n="info.shipping.packing.p1">ينصح بشدة بالتعبئة المهنية للعناصر الهشة أو القيمة
                     أو الكبيرة. تقلل مواد وتقنيات التعبئة
@@ -56,7 +75,9 @@
                     الأساسية (صناديق، غلاف فقاعي، ورق) مقابل رسوم، لكننا لا نقوم بتعبئة العناصر.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.pickup.title">الاستلام المحلي</h2>
                 <p class="mb-4" data-i18n="info.shipping.pickup.p1">يمكن للمشترين المحليين ترتيب استلام العناصر شخصياً.
                     يجب جدولة الاستلام مسبقاً عن طريق
@@ -69,7 +90,9 @@
                     التحميل للعناصر الكبيرة أو الثقيلة.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.international.title">الشحن الدولي</h2>
                 <p class="mb-4" data-i18n="info.shipping.international.p1">يتحمل المشترون الدوليون مسؤولية جميع الرسوم
                     الجمركية والضرائب ورسوم الاستيراد والامتثال
@@ -82,7 +105,9 @@
                     إمكانية استيراد العناصر بشكل قانوني إلى بلدهم قبل المزايدة.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.insurance.title">التأمين</h2>
                 <p class="mb-4" data-i18n="info.shipping.insurance.p1">يتحمل المشترون مسؤولية التأمين على العناصر أثناء
                     النقل. تقدم معظم شركات الشحن المهنية
@@ -92,7 +117,9 @@
                     تحدث بعد مغادرة العناصر منشأتنا.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.storage.title">رسوم التخزين</h2>
                 <p class="mb-4" data-i18n="info.shipping.storage.p1">يجب استلام العناصر أو ترتيب الشحن خلال 14 يوماً من
                     الدفع. بعد هذه الفترة، سيتم تطبيق
@@ -102,7 +129,9 @@
                     الشحن.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.claims.title">مطالبات التلف</h2>
                 <p class="mb-4" data-i18n="info.shipping.claims.p1">افحص العناصر بعناية قبل قبول التسليم. لاحظ أي تلف في
                     إيصال الشحن وقم بتصوير العبوة
@@ -112,7 +141,9 @@
                     (عادةً 24-48 ساعة). لا يمكننا المساعدة في المطالبات عن التلف الذي يحدث أثناء النقل.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.shipping.questions.title">الأسئلة</h2>
                 <p><span data-i18n="info.shipping.questions.text">للأسئلة حول الشحن أو ترتيبات الاستلام أو شركات الشحن
                         الموصى بها، اتصل بفريق الدعم لدينا على</span> <a href="mailto:support@turathya.com"
@@ -127,6 +158,14 @@
     <script src="../../js/data.js"></script>
     <script src="../../js/utils.js"></script>
     <script src="../../js/auth.js"></script>
+
+  <script>
+    /* Info page scroll reveal */
+    const _sr = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); _sr.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    document.querySelectorAll('.ip-sr').forEach(el => _sr.observe(el));
+  </script>
 </body>
 
 </html>

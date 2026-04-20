@@ -66,24 +66,24 @@ async function apiRequest(endpoint, options = {}) {
 
 // Auth API
 const authAPI = {
-    async register(email, password, confirm_password, full_name, phone) {
+    async register(password, confirm_password, full_name, phone, email = '') {
         return apiRequest('/auth/register', {
             method: 'POST',
             body: JSON.stringify({ email, password, confirm_password, full_name, phone })
         });
     },
 
-    async requestRegistrationOtp(email, password, confirm_password, full_name, phone) {
+    async requestRegistrationOtp(password, confirm_password, full_name, phone, email = '') {
         return apiRequest('/auth/register/request-otp', {
             method: 'POST',
             body: JSON.stringify({ email, password, confirm_password, full_name, phone })
         });
     },
 
-    async verifyRegistrationOtp(email, otp) {
+    async verifyRegistrationOtp(phone, otp) {
         const data = await apiRequest('/auth/register/verify-otp', {
             method: 'POST',
-            body: JSON.stringify({ email, otp })
+            body: JSON.stringify({ phone, otp })
         });
 
         if (data.token && data.user) {
@@ -93,10 +93,10 @@ const authAPI = {
         return data;
     },
 
-    async login(email, password) {
+    async login(phone, password) {
         const data = await apiRequest('/auth/login', {
             method: 'POST',
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ phone, password })
         });
 
         if (data.token && data.user) {
@@ -140,6 +140,7 @@ async function syncAuthUserStatus() {
         const refreshedUser = {
             id: data.user.id,
             email: data.user.email,
+            phone: data.user.phone,
             full_name: data.user.full_name || data.user.fullName || data.user.email,
             role: data.user.role,
             status: data.user.status
@@ -227,6 +228,16 @@ const watchlistAPI = {
 const adminAPI = {
     async getStats() {
         return apiRequest('/admin/stats');
+    },
+
+    whatsapp: {
+        async getStatus() {
+            return apiRequest('/admin/whatsapp/status');
+        },
+
+        async getQr() {
+            return apiRequest('/admin/whatsapp/qr');
+        }
     },
 
     users: {

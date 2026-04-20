@@ -1,0 +1,218 @@
+/* ═══════════════════════════════════════════════════════════════════
+   TURATHYA — BRAND TYPOGRAPHY SYSTEM
+   Backup: variables_backup_fonts.css / typography_backup_fonts.css
+
+   FONT HIERARCHY:
+     H1 H2 H3  →  "Darby Sans Poster"       (heading)
+     H4 H5     →  "Kepler Std Semicondensed" (subheading)
+     Body / UI →  "Helvetica Neue"           (body)
+
+   LOCAL() STRATEGY:
+     Fonts load from system if installed (Adobe Fonts / macOS).
+     Production: drop .woff2 files into /assets/fonts/ and
+     uncomment the src: url() lines below.
+
+   ARABIC:
+     "Helvetica Neue" renders Arabic glyphs on macOS/iOS.
+     "Noto Sans Arabic" / "Cairo" serve as web-safe fallbacks.
+
+   RULE: Only font-family and font-weight change.
+         No sizes, spacing, margins, or layout touched.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+   @font-face — Local references
+   Uncomment url() lines + add woff2 files
+   to /assets/fonts/ for production hosting.
+───────────────────────────────────────── */
+
+@font-face {
+  font-family: "Darby Sans Poster";
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Darby Sans Poster Regular"),
+       local("DarbySansPoster-Regular");
+       /* url("../assets/fonts/DarbySansPoster-Regular.woff2") format("woff2") */
+}
+
+@font-face {
+  font-family: "Kepler Std Semicondensed";
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Kepler Std Semicondensed"),
+       local("KeplerStd-SemiCn");
+       /* url("../assets/fonts/KeplerStd-SemiCn.woff2") format("woff2") */
+}
+
+@font-face {
+  font-family: "Kepler Std Semicondensed";
+  font-style:  normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local("Kepler Std Semicondensed Semibold"),
+       local("KeplerStd-SemiCnSemibold");
+       /* url("../assets/fonts/KeplerStd-SemiCnSemibold.woff2") format("woff2") */
+}
+
+
+/* ═══════════════════════════════════════
+   GLOBAL BASE
+═══════════════════════════════════════ */
+
+/* Body + all UI elements */
+body,
+p, span, li, a,
+input, textarea, select, option,
+button, label,
+td, th,
+blockquote,
+.nav-link,
+.btn,
+.badge,
+.form-label,
+.form-input,
+.card-subtitle,
+.text-muted,
+.text-graphite,
+.price,
+.label {
+  font-family: var(--font-body);
+}
+
+/* Arabic override: switch to Arabic-optimised stack */
+html[lang="ar"] body,
+html[lang="ar"] p,
+html[lang="ar"] span,
+html[lang="ar"] a,
+html[lang="ar"] li,
+html[lang="ar"] input,
+html[lang="ar"] textarea,
+html[lang="ar"] select,
+html[lang="ar"] button,
+html[lang="ar"] label,
+html[lang="ar"] .nav-link,
+html[lang="ar"] .btn,
+html[lang="ar"] .badge,
+html[lang="ar"] .form-label,
+html[lang="ar"] .form-input {
+  font-family: var(--font-body-ar);
+}
+
+
+/* ═══════════════════════════════════════
+   HEADINGS  →  Darby Sans Poster
+═══════════════════════════════════════ */
+
+h1, h2, h3,
+.title,
+.hero-title,
+.card-title,
+.section-title,
+.ab-hero__title,
+.auc-hero__title,
+.col-hero__title,
+.ip-hero__title,
+.cta-band__title,
+.ip-hero__title h1,
+.ab-heading {
+  font-family: var(--font-heading);
+}
+
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] .title,
+html[lang="ar"] .card-title,
+html[lang="ar"] .cta-band__title {
+  font-family: var(--font-body-ar);
+}
+
+
+/* ═══════════════════════════════════════
+   SUBHEADINGS  →  Kepler Std Semicondensed
+═══════════════════════════════════════ */
+
+h4, h5,
+.subtitle,
+.section-subtitle,
+.page-subtitle,
+.ab-tag,
+.ip-card h2,
+.card-label,
+.cta-band__eyebrow,
+.section-header p,
+.ab-intro__text {
+  font-family: var(--font-subheading);
+}
+
+html[lang="ar"] h4,
+html[lang="ar"] h5,
+html[lang="ar"] .subtitle,
+html[lang="ar"] .ab-tag,
+html[lang="ar"] .cta-band__eyebrow {
+  font-family: var(--font-body-ar);
+}
+
+
+/* ═══════════════════════════════════════
+   FONT-WEIGHT MAPPING
+   Only font-weight is set here.
+   font-size, line-height, spacing: unchanged.
+═══════════════════════════════════════ */
+
+strong, b,
+.font-bold,
+.font-semibold,
+[class*="weight-bold"],
+.price,
+.badge {
+  font-weight: 700;   /* Helvetica Neue Bold */
+}
+
+.text-muted,
+.text-graphite,
+.ab-hero__sub,
+.ip-hero__sub,
+.ab-body,
+.ab-closing__sub {
+  font-weight: 300;   /* Helvetica Neue Light */
+}
+
+
+/* ═══════════════════════════════════════
+   NAVBAR  (hero overlay doesn't affect font)
+═══════════════════════════════════════ */
+
+.nav-link,
+.lang-toggle {
+  font-family: var(--font-body);
+  /* font-size and weight inherited from components.css */
+}
+
+html[lang="ar"] .nav-link,
+html[lang="ar"] .lang-toggle {
+  font-family: var(--font-body-ar);
+}
+
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+
+.footer,
+.footer-links a,
+.footer-section h4 {
+  font-family: var(--font-body);
+}
+
+.footer-section h4 {
+  font-family: var(--font-subheading);
+}
+
+html[lang="ar"] .footer,
+html[lang="ar"] .footer-links a,
+html[lang="ar"] .footer-section h4 {
+  font-family: var(--font-body-ar);
+}

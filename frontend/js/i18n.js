@@ -116,12 +116,14 @@ class I18n {
 
         // Update links
         const links = {
-            'logo-link': `${rootPath}index.html`,
+            'logo-link':     `${rootPath}index.html`,
             'auctions-link': `${pagesPath}auctions.html`,
             'collection-link': `${pagesPath}collection.html`,
-            'account-link': `${pagesPath}account.html`,
-            'admin-link': `${pagesPath}admin.html`,
-            'login-link': `${pagesPath}login.html`,
+            'about-link':    `${pagesPath}info/about-us.html`,
+            'contact-link':  `${pagesPath}info/contact.html`,
+            'account-link':  `${pagesPath}account.html`,
+            'admin-link':    `${pagesPath}admin.html`,
+            'login-link':    `${pagesPath}login.html`,
             'register-link': `${pagesPath}register.html`
         };
 

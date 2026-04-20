@@ -3,10 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
 import { OAuth2Client } from 'google-auth-library';
-import nodemailer from 'nodemailer';
 import { randomBytes, randomInt } from 'crypto';
 import { prisma } from '../config/prisma';
 import { authenticate, AuthRequest } from '../middleware/auth';
+import { notifyNewSubscriber, syncSubscriberToWhatsApp } from '../services/whatsappBridge';
 
 const router = Router();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -22,10 +22,15 @@ type PendingRegistration = {
 
 const pendingRegistrations = new Map<string, PendingRegistration>();
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
-const PHONE_REGEX = /^\+?[0-9]{8,15}$/;
+const PHONE_REGEX = /^\+?[0-9]{6,15}$/;
 
 function normalizePhone(phone: string) {
     return phone.replace(/[\s\-()]/g, '');
+}
+
+function phoneToEmail(phone: string) {
+    const digits = phone.replace(/\D/g, '');
+    return `phone.${digits}@turathya.local`;
 }
 
 function signUserToken(user: { id: string; email: string; role: string; status: string }) {
@@ -45,57 +50,26 @@ function formatUserResponse(user: {
     id: string;
     email: string;
     fullName: string;
+    phone?: string | null;
     role: string;
     status: string;
 }) {
     return {
         id: user.id,
         email: user.email,
+        phone: user.phone || null,
         full_name: user.fullName,
         role: user.role,
         status: user.status
     };
 }
 
-async function sendOtpEmail(email: string, otp: string) {
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
-
-    if (!gmailUser || !gmailAppPassword) {
-        throw new Error('Gmail SMTP credentials are missing. Set GMAIL_USER and GMAIL_APP_PASSWORD.');
-    }
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: gmailUser,
-            pass: gmailAppPassword
-        }
-    });
-
-    await transporter.sendMail({
-        from: `Zauction <${gmailUser}>`,
-        to: email,
-        subject: 'Your Zauction verification code',
-        text: `Your verification code is: ${otp}. This code expires in 10 minutes.`,
-        html: `<p>Your verification code is:</p><h2 style="letter-spacing:4px">${otp}</h2><p>This code expires in 10 minutes.</p>`
-    });
-}
-
-function hasEmailOtpChannelConfigured() {
-    return !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
-}
-
 function generateOtp() {
     return randomInt(100000, 999999).toString();
 }
 
-function isOtpRequired() {
-    return process.env.EMAIL_OTP_REQUIRED === 'true';
-}
-
 function isWhatsAppOtpEnabled() {
-    return process.env.WHATSAPP_OTP_ENABLED === 'true';
+    return process.env.WHATSAPP_OTP_ENABLED !== 'false';
 }
 
 async function sendOtpViaWhatsApp(phoneNumber: string, otp: string) {
@@ -130,14 +104,14 @@ async function sendOtpViaWhatsApp(phoneNumber: string, otp: string) {
     }
 }
 
-function getPendingRegistration(email: string) {
-    const pending = pendingRegistrations.get(email);
+function getPendingRegistration(phone: string) {
+    const pending = pendingRegistrations.get(phone);
     if (!pending) {
         return null;
     }
 
     if (Date.now() > pending.expiresAt) {
-        pendingRegistrations.delete(email);
+        pendingRegistrations.delete(phone);
         return null;
     }
 
@@ -147,7 +121,6 @@ function getPendingRegistration(email: string) {
 // Request OTP for registration
 router.post('/register/request-otp',
     [
-        body('email').isEmail().normalizeEmail(),
         body('password').matches(PASSWORD_REGEX).withMessage('Password must be at least 8 characters and include uppercase, lowercase, number, and special character'),
         body('confirm_password').custom((value, { req }) => {
             if (value !== req.body.password) {
@@ -176,18 +149,28 @@ router.post('/register/request-otp',
 
             const { email, password, full_name, phone } = req.body;
             const normalizedPhone = normalizePhone(phone);
+            const normalizedEmail = email && String(email).trim()
+                ? String(email).toLowerCase().trim()
+                : phoneToEmail(normalizedPhone);
 
-            const existingUser = await prisma.user.findUnique({ where: { email } });
+            const existingUser = await prisma.user.findFirst({ where: { phone: normalizedPhone } });
             if (existingUser) {
-                return res.status(400).json({ error: 'Email already registered' });
+                return res.status(400).json({ error: 'Phone number already registered' });
+            }
+
+            if (email && String(email).trim()) {
+                const existingEmailUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+                if (existingEmailUser) {
+                    return res.status(400).json({ error: 'Email already registered' });
+                }
             }
 
             const passwordHash = await bcrypt.hash(password, 12);
             const otp = generateOtp();
             const expiresAt = Date.now() + 10 * 60 * 1000;
 
-            pendingRegistrations.set(email, {
-                email,
+            pendingRegistrations.set(normalizedPhone, {
+                email: normalizedEmail,
                 fullName: full_name,
                 phone: normalizedPhone,
                 passwordHash,
@@ -195,40 +178,14 @@ router.post('/register/request-otp',
                 expiresAt
             });
 
-            const deliveryPromises: Array<Promise<{ channel: string }>> = [];
-
-            if (hasEmailOtpChannelConfigured()) {
-                deliveryPromises.push(
-                    sendOtpEmail(email, otp).then(() => ({ channel: 'email' }))
-                );
-            }
-
             if (isWhatsAppOtpEnabled()) {
-                deliveryPromises.push(
-                    sendOtpViaWhatsApp(normalizedPhone, otp).then(() => ({ channel: 'whatsapp' }))
-                );
+                await sendOtpViaWhatsApp(normalizedPhone, otp);
+            } else {
+                throw new Error('WhatsApp OTP bridge is disabled. Set WHATSAPP_OTP_ENABLED=true.');
             }
-
-            if (deliveryPromises.length === 0) {
-                throw new Error('No OTP delivery channel is configured. Configure Gmail SMTP or enable WhatsApp OTP bridge.');
-            }
-
-            const deliveryResults = await Promise.allSettled(deliveryPromises);
-            const successfulChannels = deliveryResults
-                .filter((result): result is PromiseFulfilledResult<{ channel: string }> => result.status === 'fulfilled')
-                .map((result) => result.value.channel);
-
-            if (successfulChannels.length === 0) {
-                throw new Error('Failed to deliver OTP through configured channels');
-            }
-
-            const failedDeliveries = deliveryResults
-                .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
-                .map((result) => result.reason?.message || 'Unknown delivery error');
 
             res.json({
-                message: `OTP sent via ${successfulChannels.join(' and ')}. It expires in 10 minutes.`,
-                warning: failedDeliveries.length > 0 ? `Some delivery channels failed: ${failedDeliveries.join(' | ')}` : undefined
+                message: 'OTP sent via WhatsApp. It expires in 10 minutes.'
             });
         } catch (error: any) {
             console.error('Request OTP error:', error);
@@ -240,7 +197,13 @@ router.post('/register/request-otp',
 // Verify OTP and complete registration
 router.post('/register/verify-otp',
     [
-        body('email').isEmail().normalizeEmail(),
+        body('phone').trim().notEmpty().withMessage('Phone number is required').custom((value) => {
+            const normalized = normalizePhone(value);
+            if (!PHONE_REGEX.test(normalized)) {
+                throw new Error('Phone number format is invalid');
+            }
+            return true;
+        }),
         body('otp').isLength({ min: 6, max: 6 }).isNumeric()
     ],
     async (req: AuthRequest, res: Response) => {
@@ -253,8 +216,9 @@ router.post('/register/verify-otp',
                 });
             }
 
-            const { email, otp } = req.body;
-            const pending = getPendingRegistration(email);
+            const { phone, otp } = req.body;
+            const normalizedPhone = normalizePhone(phone);
+            const pending = getPendingRegistration(normalizedPhone);
 
             if (!pending) {
                 return res.status(400).json({ error: 'OTP expired or not requested' });
@@ -264,18 +228,24 @@ router.post('/register/verify-otp',
                 return res.status(400).json({ error: 'Invalid OTP' });
             }
 
-            const existingUser = await prisma.user.findUnique({ where: { email } });
+            const existingUser = await prisma.user.findFirst({ where: { phone: normalizedPhone } });
             if (existingUser) {
-                pendingRegistrations.delete(email);
+                pendingRegistrations.delete(normalizedPhone);
+                return res.status(400).json({ error: 'Phone number already registered' });
+            }
+
+            const existingEmailUser = await prisma.user.findUnique({ where: { email: pending.email } });
+            if (existingEmailUser) {
+                pendingRegistrations.delete(normalizedPhone);
                 return res.status(400).json({ error: 'Email already registered' });
             }
 
             const user = await prisma.user.create({
                 data: {
-                    email,
+                    email: pending.email,
                     passwordHash: pending.passwordHash,
                     fullName: pending.fullName,
-                    phone: pending.phone,
+                    phone: normalizedPhone,
                     role: 'user',
                     status: 'pending'
                 },
@@ -283,6 +253,7 @@ router.post('/register/verify-otp',
                     id: true,
                     email: true,
                     fullName: true,
+                    phone: true,
                     role: true,
                     status: true
                 }
@@ -290,7 +261,15 @@ router.post('/register/verify-otp',
 
             const token = signUserToken(user);
 
-            pendingRegistrations.delete(email);
+            pendingRegistrations.delete(normalizedPhone);
+
+            void syncSubscriberToWhatsApp(pending.phone, pending.fullName).catch((error) => {
+                console.error('WhatsApp subscriber sync failed:', error);
+            });
+
+            void notifyNewSubscriber({ fullName: pending.fullName }).catch((error) => {
+                console.error('Automated WhatsApp notification (new subscriber) failed:', error);
+            });
 
             res.status(201).json({
                 message: 'Registration successful. Your account is pending admin approval.',
@@ -370,6 +349,12 @@ router.post('/oauth/google',
 
             const token = signUserToken(user);
 
+            if (isNewUser) {
+                void notifyNewSubscriber({ fullName: user.fullName }).catch((error) => {
+                    console.error('Automated WhatsApp notification (new subscriber) failed:', error);
+                });
+            }
+
             res.json({
                 token,
                 is_new_user: isNewUser,
@@ -385,7 +370,6 @@ router.post('/oauth/google',
 // Register new user
 router.post('/register',
     [
-        body('email').isEmail().normalizeEmail(),
         body('password').matches(PASSWORD_REGEX).withMessage('Password must be at least 8 characters and include uppercase, lowercase, number, and special character'),
         body('confirm_password').custom((value, { req }) => {
             if (value !== req.body.password) {
@@ -415,30 +399,36 @@ router.post('/register',
 
             const { email, password, full_name, phone, otp } = req.body;
             const normalizedPhone = normalizePhone(phone);
+            const normalizedEmail = email && String(email).trim()
+                ? String(email).toLowerCase().trim()
+                : phoneToEmail(normalizedPhone);
 
-            if (isOtpRequired()) {
-                const pending = getPendingRegistration(email);
-                if (!pending) {
-                    return res.status(400).json({
-                        error: 'OTP required',
-                        message: 'Request OTP first via /api/auth/register/request-otp'
-                    });
-                }
-
-                if (!otp || pending.otp !== otp) {
-                    return res.status(400).json({ error: 'Invalid OTP' });
-                }
-
-                pendingRegistrations.delete(email);
+            const pending = getPendingRegistration(normalizedPhone);
+            if (!pending) {
+                return res.status(400).json({
+                    error: 'OTP required',
+                    message: 'Request OTP first via /api/auth/register/request-otp'
+                });
             }
 
+            if (!otp || pending.otp !== otp) {
+                return res.status(400).json({ error: 'Invalid OTP' });
+            }
+
+            pendingRegistrations.delete(normalizedPhone);
+
             // Check if user already exists
-            const existingUser = await prisma.user.findUnique({
-                where: { email }
-            });
+            const existingUser = await prisma.user.findFirst({ where: { phone: normalizedPhone } });
 
             if (existingUser) {
-                return res.status(400).json({ error: 'Email already registered' });
+                return res.status(400).json({ error: 'Phone number already registered' });
+            }
+
+            if (email && String(email).trim()) {
+                const existingEmailUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+                if (existingEmailUser) {
+                    return res.status(400).json({ error: 'Email already registered' });
+                }
             }
 
             // Hash password
@@ -447,7 +437,7 @@ router.post('/register',
             // Create user (status defaults to 'pending')
             const user = await prisma.user.create({
                 data: {
-                    email,
+                    email: normalizedEmail,
                     passwordHash,
                     fullName: full_name,
                     phone: normalizedPhone,
@@ -458,6 +448,7 @@ router.post('/register',
                     id: true,
                     email: true,
                     fullName: true,
+                    phone: true,
                     role: true,
                     status: true,
                     createdAt: true
@@ -466,12 +457,21 @@ router.post('/register',
 
             const token = signUserToken(user);
 
+            void syncSubscriberToWhatsApp(normalizedPhone, full_name).catch((error) => {
+                console.error('WhatsApp subscriber sync failed:', error);
+            });
+
+            void notifyNewSubscriber({ fullName: full_name }).catch((error) => {
+                console.error('Automated WhatsApp notification (new subscriber) failed:', error);
+            });
+
             res.status(201).json({
                 message: 'Registration successful. Your account is pending admin approval.',
                 token,
                 user: {
                     id: user.id,
                     email: user.email,
+                    phone: user.phone,
                     full_name: user.fullName,
                     role: user.role,
                     status: user.status
@@ -487,7 +487,13 @@ router.post('/register',
 // Login
 router.post('/login',
     [
-        body('email').isEmail().normalizeEmail(),
+        body('phone').trim().notEmpty().withMessage('Phone number is required').custom((value) => {
+            const normalized = normalizePhone(value);
+            if (!PHONE_REGEX.test(normalized)) {
+                throw new Error('Phone number format is invalid');
+            }
+            return true;
+        }),
         body('password').notEmpty()
     ],
     async (req: AuthRequest, res: Response) => {
@@ -497,21 +503,22 @@ router.post('/login',
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const { email, password } = req.body;
+            const { phone, password } = req.body;
+            const normalizedPhone = normalizePhone(phone);
 
             // Find user
-            const user = await prisma.user.findUnique({
-                where: { email }
+            const user = await prisma.user.findFirst({
+                where: { phone: normalizedPhone }
             });
 
             if (!user) {
-                return res.status(401).json({ error: 'Invalid email or password' });
+                return res.status(401).json({ error: 'Invalid phone number or password' });
             }
 
             // Verify password
             const validPassword = await bcrypt.compare(password, user.passwordHash);
             if (!validPassword) {
-                return res.status(401).json({ error: 'Invalid email or password' });
+                return res.status(401).json({ error: 'Invalid phone number or password' });
             }
 
             const token = signUserToken(user);

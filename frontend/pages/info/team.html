@@ -9,24 +9,39 @@
     <title>فريقنا - تراثيا</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/brand-fonts.css">
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/typography.css">
     <link rel="stylesheet" href="../../css/layout.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/rtl.css?v=5">
     <link rel="stylesheet" href="../../css/components/lang-toggle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/pages/info-pages.css">
 </head>
 
 <body>
     <div id="site-header"></div>
+  <!-- Premium hero — info-pages design system -->
+  <section class="ip-hero">
+    <div class="ip-hero__bg" style="background-image:url('../../assets/images/bg-1.png')"></div>
+    <div class="ip-hero__overlay"></div>
+    <div class="ip-hero__content">
+      <div class="ip-hero__title"><h1 class="mb-4" data-i18n="info.team.title">Our Team</h1></div>
+      <div class="ip-hero__sub"><p class="text-graphite text-lg mb-12" data-i18n="info.team.subtitle">Specialists in Fine and Decorative
+                Arts</p></div>
+      <div class="ip-hero__line"></div>
+    </div>
+  </section>
+
+
 
     <main class="section">
-        <div class="container container-md">
-            <h1 class="mb-4" data-i18n="info.team.title">Our Team</h1>
-            <p class="text-graphite text-lg mb-12" data-i18n="info.team.subtitle">Specialists in Fine and Decorative
-                Arts</p>
+        <div class="ip-body">
+            
+            
 
-            <section class="mb-12">
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.team.expertise.title">Experience and Expertise</h2>
                 <p class="mb-4" data-i18n="info.team.expertise.p1">Turathya is supported by a team of specialists with
                     backgrounds in art history, museum curation, conservation, and auction house practices. Our
@@ -36,7 +51,9 @@
                     restorers, and academic institutions to ensure accuracy of attribution and valuation.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.team.departments.title">Departments</h2>
 
                 <h3 class="mb-3" data-i18n="info.team.departments.euroDeco.title">European Decorative Arts</h3>
@@ -67,7 +84,9 @@
                     horologists when detailed technical evaluation is needed.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.team.research.title">Continuous Research</h2>
                 <p class="mb-4" data-i18n="info.team.research.p1">Our team maintains active research practices,
                     consulting auction archives, museum collections, and scholarly publications. We attend professional
@@ -85,6 +104,14 @@
     <script src="../../js/data.js"></script>
     <script src="../../js/utils.js"></script>
     <script src="../../js/auth.js"></script>
+
+  <script>
+    /* Info page scroll reveal */
+    const _sr = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); _sr.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    document.querySelectorAll('.ip-sr').forEach(el => _sr.observe(el));
+  </script>
 </body>
 
 </html>

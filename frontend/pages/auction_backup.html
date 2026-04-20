@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/images/Beigelogo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="View all lots in this auction">
+    <title id="page-title">Auction - TURATHYA</title>
+
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+    <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/brand-fonts.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/typography.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/auction.css">
+    <link rel="stylesheet" href="../css/rtl.css?v=5">
+    <link rel="stylesheet" href="../css/components/lang-toggle.css">
+</head>
+
+<body>
+    <div id="site-header"></div>
+
+    <!-- Auction Hero (full-width, viewport-height) -->
+    <section class="auction-hero" id="auction-hero">
+        <div class="auction-hero__content">
+            <div class="auction-header" id="auction-header">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <main class="section">
+        <div class="container">
+
+            <!-- Sort Controls -->
+            <div class="auction-toolbar">
+                <span class="text-sm text-muted" id="lot-count">Loading...</span>
+                <select class="form-select" id="sort-select" style="width: auto;">
+                    <option value="lotNumber">Lot Number</option>
+                    <option value="endingSoon">Ending Soon</option>
+                    <option value="currentBid">Current Bid</option>
+                </select>
+            </div>
+
+            <!-- Lots Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg" id="lots-grid">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script src="../js/i18n.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js?v=2"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/countdown.js"></script>
+    <script src="../js/watchlist.js"></script>
+
+    <!-- Compute header height for hero sizing -->
+    <script>
+        function setHeaderHeight() {
+            const siteHeader = document.getElementById('site-header');
+            if (siteHeader) {
+                const h = siteHeader.offsetHeight || 0;
+                document.documentElement.style.setProperty('--header-h', h + 'px');
+            }
+        }
+        window.addEventListener('load', setHeaderHeight);
+        window.addEventListener('resize', setHeaderHeight);
+        // Run immediately in case header is already rendered
+        setTimeout(setHeaderHeight, 100);
+    </script>
+    <script>
+        const auctionId = getUrlParameter('id');
+        let currentSort = 'lotNumber';
+
+        // Track auction view for featured section
+        function trackAuctionView(auctionId) {
+            const recentAuctions = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
+
+            // Remove if already exists (to update position)
+            const filtered = recentAuctions.filter(id => id !== auctionId);
+
+            // Add to beginning
+            filtered.unshift(auctionId);
+
+            // Keep only last 5
+            const updated = filtered.slice(0, 5);
+
+            localStorage.setItem('recentAuctions', JSON.stringify(updated));
+        }
+
+        async function loadAuction() {
+            try {
+                const { auction } = await auctionsAPI.getById(auctionId);
+
+                if (!auction) {
+                    window.location.href = 'auctions.html';
+                    return;
+                }
+
+                // Track this auction view
+                trackAuctionView(auctionId);
+
+                document.getElementById('page-title').textContent = (localizedField(auction, 'title') || auction.title) + ' - TURATHYA';
+
+                const aTitle = localizedField(auction, 'title');
+                const aDesc = localizedField(auction, 'description');
+                const aCat = localizedField(auction, 'category');
+                const aLoc = localizedField(auction, 'location');
+
+                const header = document.getElementById('auction-header');
+                header.innerHTML =
+                    '<h1>' + aTitle + '</h1>' +
+                    '<p class="auction-meta">' +
+                    '<span class="label">' + (aCat || 'Auction') + '</span>' +
+                    '<span>•</span>' +
+                    '<span>' + (aLoc || 'TBA') + '</span>' +
+                    '<span>•</span>' +
+                    '<span>' + (auction.lot_count || 0) + ' lots</span>' +
+                    '</p>' +
+                    '<p class="auction-description">' + (aDesc || '') + '</p>' +
+                    '<div class="auction-dates">' +
+                    '<div>' +
+                    '<span class="text-sm auction-date-label">' + i18n.t('auction.starts') + '</span>' +
+                    '<span class="text-sm font-medium">' + formatDateTime(auction.start_date) + '</span>' +
+                    '</div>' +
+                    '<div>' +
+                    '<span class="text-sm auction-date-label">' + i18n.t('auction.ends') + '</span>' +
+                    '<span class="text-sm font-medium">' + formatDateTime(auction.end_date) + '</span>' +
+                    '</div>' +
+                    '</div>';
+
+                await loadLots();
+            } catch (error) {
+                console.error('Failed to load auction:', error);
+                alert('Failed to load auction');
+                window.location.href = 'auctions.html';
+            }
+        }
+
+        async function loadLots() {
+            try {
+                const { lots } = await auctionsAPI.getLots(auctionId);
+
+                if (currentSort === 'lotNumber') {
+                    lots.sort((a, b) => a.lot_number - b.lot_number);
+                } else if (currentSort === 'endingSoon') {
+                    lots.sort((a, b) => new Date(a.end_date) - new Date(b.end_date));
+                } else if (currentSort === 'currentBid') {
+                    lots.sort((a, b) => (b.current_bid || 0) - (a.current_bid || 0));
+                }
+
+                document.getElementById('lot-count').textContent = lots.length + ' lot' + (lots.length !== 1 ? 's' : '');
+
+                const container = document.getElementById('lots-grid');
+
+                if (lots.length === 0) {
+                    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No lots in this auction yet</p>';
+                    return;
+                }
+
+                container.innerHTML = lots.map(lot => {
+                    const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
+                    const currentBid = lot.current_bid && lot.current_bid > 0;
+                    const lTitle = localizedField(lot, 'title');
+
+                    return '<a href="lot.html?id=' + lot.id + '" class="card">' +
+                        '<img loading="lazy" src="' + imageUrl + '" alt="' + lTitle + '" class="card-image">' +
+                        '<div class="card-content">' +
+                        '<div class="label mb-2">Lot ' + lot.lot_number + '</div>' +
+                        '<h4 class="card-title" style="font-size: var(--text-lg);">' + lTitle + '</h4>' +
+                        '<p class="price mt-4">' + (currentBid ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid)) + '</p>' +
+                        '<p class="estimate">' + (currentBid ? 'Current Bid' : 'Starting Bid') + '</p>' +
+                        '</div>' +
+                        '<div class="card-footer">' +
+                        '<span class="text-xs" data-countdown="' + lot.end_date + '" data-compact></span>' +
+                        (isEndingSoon(lot.end_date) ? '<span class="badge badge-accent">Ending Soon</span>' : '') +
+                        '</div>' +
+                        '</a>';
+                }).join('');
+
+                initCountdowns();
+            } catch (error) {
+                console.error('Failed to load lots:', error);
+                container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load lots</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auctionId) {
+                window.location.href = 'auctions.html';
+                return;
+            }
+
+            loadAuction();
+
+            document.getElementById('sort-select').addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                loadLots();
+            });
+        });
+    </script>
+</body>
+
+</html>

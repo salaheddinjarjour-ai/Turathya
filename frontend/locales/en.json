@@ -510,6 +510,7 @@
         "about": {
             "title": "About Turathya",
             "subtitle": "Trusted platform for timed auctions of antiques and rare items",
+            "intro": "Turathya is a curated marketplace for discerning collectors seeking exceptional pieces of historical and cultural significance. We bridge the expertise of traditional auction houses with the convenience of modern online bidding.",
             "mission": {
                 "title": "Our Mission",
                 "p1": "Turathya connects discerning collectors with exceptional pieces through carefully curated timed auctions. We specialize in antiques, fine art, rare books, ceramics, and collectibles of historical and aesthetic significance.",
@@ -599,7 +600,9 @@
                 "jewelry": {
                     "title": "Jewelry & Watches:"
                 },
-                "support": "email support directly"
+                "support": "email support directly",
+                "sub": "Connect directly with our curators for category-specific guidance or consignment discussions.",
+                "heading": "Reach the Right Expert"
             },
             "support": {
                 "title": "Bidding & Account Support",
@@ -618,6 +621,44 @@
             "responseTimes": {
                 "title": "Response Times",
                 "text": "We aim to respond to all inquiries within two business days. During active auction periods, response times for bidding support may be faster. Complex consignment evaluations may require additional time for research and consultation."
+            },
+            "hero": {
+                "tag": "",
+                "titleA": "Get in ",
+                "titleB": "Touch",
+                "sub": "Our specialists are ready to assist — from bidding support to consignment evaluations and everything in between."
+            },
+            "form": {
+                "tag": "Send an Inquiry",
+                "title": "We'd Love to Hear From You",
+                "sub": "Fill in the form and the relevant specialist will respond within two business days.",
+                "name": "Full Name",
+                "namePh": "Your full name",
+                "email": "Email Address",
+                "emailPh": "you@example.com",
+                "phone": "Phone Number",
+                "subject": "Subject",
+                "subjectPh": "Brief description of your inquiry",
+                "message": "Message",
+                "messagePh": "Provide as much detail as possible. For consignment inquiries include item description, age, and provenance.",
+                "attach": "Attachments",
+                "send": "Send Inquiry",
+                "note": "We do not share your information with third parties.",
+                "successMsg": "Thank you — your inquiry has been sent. We'll be in touch within 2 business days."
+            },
+            "info": {
+                "tag": "Contact Information",
+                "title": "How to Reach Us"
+            },
+            "hours": {
+                "label": "Business Hours",
+                "value": "Sunday – Thursday · 9 AM – 6 PM (AST)",
+                "note": "Closed on public holidays"
+            },
+            "cta": {
+                "title": "Ready to Get Started?",
+                "sub": "Whether you're bidding, selling, or simply curious — our team is always happy to help.",
+                "btn": "Start Your Inquiry"
             }
         },
         "howBiddingWorks": {

@@ -9,6 +9,7 @@ const multer_1 = __importDefault(require("multer"));
 const cloudinary_1 = require("cloudinary");
 const database_1 = require("../../config/database");
 const auth_1 = require("../../middleware/auth");
+const whatsappBridge_1 = require("../../services/whatsappBridge");
 const router = (0, express_1.Router)();
 // Configure Cloudinary
 cloudinary_1.v2.config({
@@ -29,6 +30,8 @@ router.get('/', async (req, res) => {
         const { auction_id } = req.query;
         let query = `
       SELECT l.*, a.title as auction_title,
+        l.title_en, l.title_ar, l.description_en, l.description_ar,
+        l.category_en, l.category_ar, l.condition_en, l.condition_ar,
         (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
         COALESCE(
           (SELECT url FROM lot_media WHERE lot_id = l.id ORDER BY display_order LIMIT 1),
@@ -70,23 +73,40 @@ router.post('/', [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { auction_id, lot_number, title, description, category, condition, provenance, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100 } = req.body;
+        const { auction_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100 } = req.body;
         // Check auction exists
-        const auctionCheck = await database_1.pool.query('SELECT id FROM auctions WHERE id = $1', [auction_id]);
+        const auctionCheck = await database_1.pool.query('SELECT id, title FROM auctions WHERE id = $1', [auction_id]);
         if (auctionCheck.rows.length === 0) {
             return res.status(404).json({ error: 'Auction not found' });
         }
         const result = await database_1.pool.query(`INSERT INTO lots (
           id, auction_id, lot_number, title, description, category, condition,
-          provenance, estimate_low, estimate_high, starting_bid, reserve_price,
+          provenance, title_en, title_ar, description_en, description_ar,
+          category_en, category_ar, condition_en, condition_ar,
+          provenance_en, provenance_ar,
+          estimate_low, estimate_high, starting_bid, reserve_price,
           bid_increment, status, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'active', NOW(), NOW())
-        RETURNING *`, [auction_id, lot_number, title, description, category, condition,
-            provenance, estimate_low, estimate_high, starting_bid, reserve_price,
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 'active', NOW(), NOW())
+        RETURNING *`, [auction_id, lot_number,
+            title || title_en || title_ar,
+            description || description_en || description_ar,
+            category || category_en || category_ar,
+            condition || condition_en || condition_ar,
+            provenance || provenance_en || provenance_ar,
+            title_en, title_ar, description_en, description_ar,
+            category_en, category_ar, condition_en, condition_ar,
+            provenance_en, provenance_ar,
+            estimate_low, estimate_high, starting_bid, reserve_price,
             bid_increment]);
         res.status(201).json({
             message: 'Lot created successfully',
             lot: result.rows[0]
+        });
+        void (0, whatsappBridge_1.notifyNewLotCreated)({
+            ...result.rows[0],
+            auction_title: auctionCheck.rows[0]?.title
+        }).catch((error) => {
+            console.error('Automated WhatsApp notification (new product) failed:', error);
         });
     }
     catch (error) {

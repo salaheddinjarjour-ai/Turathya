@@ -14,6 +14,7 @@ const users_1 = __importDefault(require("./routes/admin/users"));
 const auctions_1 = __importDefault(require("./routes/admin/auctions"));
 const lots_1 = __importDefault(require("./routes/admin/lots"));
 const stats_1 = __importDefault(require("./routes/admin/stats"));
+const whatsapp_1 = __importDefault(require("./routes/admin/whatsapp"));
 const auctions_2 = __importDefault(require("./routes/auctions"));
 const lots_2 = __importDefault(require("./routes/lots"));
 const bids_1 = __importDefault(require("./routes/bids"));
@@ -26,7 +27,12 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
 // Build allowed origins from FRONTEND_URL env var + localhost defaults
-const allowedOrigins = ['http://localhost:8000', 'http://127.0.0.1:8000'];
+const allowedOrigins = [
+    'http://localhost:5050',
+    'http://127.0.0.1:5050',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000'
+];
 if (process.env.FRONTEND_URL) {
     // Remove trailing slash if present
     const frontendUrl = process.env.FRONTEND_URL.replace(/\/+$/, '');
@@ -77,6 +83,7 @@ app.use('/api/admin/stats', stats_1.default);
 app.use('/api/admin/users', users_1.default);
 app.use('/api/admin/auctions', auctions_1.default);
 app.use('/api/admin/lots', lots_1.default);
+app.use('/api/admin/whatsapp', whatsapp_1.default);
 app.use('/api/auctions', auctions_2.default);
 app.use('/api/lots', lots_2.default);
 app.use('/api/bids', bids_1.default);

@@ -1,0 +1,357 @@
+/* ============================================
+   TURATHYA - DESIGN SYSTEM VARIABLES
+   Premium Timed Auction Platform
+   ============================================ */
+
+:root {
+  /* ==================== SEMANTIC THEME TOKENS ==================== */
+  /* These are the variables the Theme Editor will manipulate */
+  --theme-bg: #F4F1EA;
+  /* Was --color-ivory (Refined) */
+  --theme-surface: #F4F1EA;
+  /* Ivory as surface per new identity? Or keep white? Prompt says "Keep beige / ivory base". Let's map to refined ivory/white. */
+  /* User said "PRIMARY BACKGROUND SYSTEM... --color-ivory: #F4F1EA". */
+  /* Usually surface is white or ivory. Let's stick to the requested palette. */
+  --theme-surface-default: #FFFFFF;
+  /* Keep a white option if needed, but defaults below */
+
+  --theme-bg: #F4F1EA;
+  --theme-surface: #FFFFFF;
+  --theme-surface-2: #E6DFD2;
+  /* Mapped to new --color-parchment */
+
+  --theme-text: #262626;
+  /* Mapped to new --color-charcoal */
+  --theme-text-muted: #8C8C8C;
+  /* Mapped to new --color-text-muted */
+
+  --theme-accent: #2F4F3E;
+  /* Mapped to new --color-olive */
+  --theme-accent-2: #3E6B55;
+  /* Mapped to new --color-olive-light (Used for hovers) */
+  --theme-accent-dark: #1F372C;
+  /* Mapped to new --color-olive-dark */
+
+  --theme-border: #D8D2C6;
+  /* Mapped to new --color-border */
+
+  --theme-success: #3E6B55;
+  --theme-error: #9C4F4F;
+  --theme-warning: #7A6A3A;
+
+  /* ==================== COLORS (MAPPED TO TOKENS) ==================== */
+
+  /* Primary Palette - Beige Refinement */
+  --color-ivory: #F4F1EA;
+  --color-ivory-dark: #EDE8DD;
+  --color-parchment: #E6DFD2;
+
+  /* Text Colors - Deep Charcoal */
+  --color-charcoal: #262626;
+  --color-graphite: #3F3F3F;
+  --color-graphite-light: #666666;
+  --color-text-muted: #8C8C8C;
+  --color-text-light: var(--color-text-muted);
+
+  /* Accent - Deep Olive (Replaces Gold) */
+  --color-olive: #2F4F3E;
+  --color-olive-light: #3E6B55;
+  --color-olive-dark: #1F372C;
+
+  /* Legacy Gold Compatibility (Mapped to Olive) */
+  --color-gold: var(--color-olive);
+  --color-gold-light: var(--color-olive-light);
+  --color-gold-dark: var(--color-olive-dark);
+  --color-copper: var(--color-olive-dark);
+
+  --color-rich-black: #1A1A1A;
+
+  /* Functional Colors */
+  --color-white: #FFFFFF;
+  --color-border: #D8D2C6;
+  --color-border-light: #E3DED4;
+  --color-success: #3E6B55;
+  --color-error: #9C4F4F;
+  --color-warning: #7A6A3A;
+
+  /* Overlays & Shadows */
+  --color-overlay: rgba(38, 38, 38, 0.55);
+  --shadow-sm: 0 1px 3px rgba(38, 38, 38, 0.08);
+  --shadow-md: 0 4px 12px rgba(38, 38, 38, 0.08);
+  --shadow-lg: 0 12px 32px rgba(38, 38, 38, 0.12);
+
+  /* Olive Glow */
+  --shadow-glow: 0 0 18px rgba(47, 79, 62, 0.25);
+
+  /* ==================== SEMANTIC BADGES ==================== */
+  /* Neutral (Parchment/Charcoal) */
+  --badge-neutral-bg: rgba(38, 38, 38, 0.05);
+  --badge-neutral-text: var(--color-charcoal);
+
+  /* Olive (Brand) */
+  --badge-brand-bg: rgba(47, 79, 62, 0.1);
+  --badge-brand-text: var(--color-olive);
+
+  /* Status: Active/Soon (Olive Light) */
+  --badge-status-bg: rgba(62, 107, 85, 0.1);
+  --badge-status-text: var(--color-olive-light);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  /* Hardcoded to white glass for now */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+  --glass-blur: blur(12px);
+
+  /* ==================== TYPOGRAPHY ==================== */
+
+  /* Font Families */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Font Sizes - Fluid Scale */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.25rem;
+  /* 20px */
+  --text-2xl: 1.5rem;
+  /* 24px */
+  --text-3xl: 1.875rem;
+  /* 30px */
+  --text-4xl: 2.25rem;
+  /* 36px */
+  --text-5xl: 3rem;
+  /* 48px */
+  --text-6xl: 3.75rem;
+  /* 60px */
+
+  /* Font Weights */
+  --weight-light: 300;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
+
+  /* ==================== SPACING ==================== */
+
+  --space-1: 0.25rem;
+  /* 4px */
+  --space-2: 0.5rem;
+  /* 8px */
+  --space-3: 0.75rem;
+  /* 12px */
+  --space-4: 1rem;
+  /* 16px */
+  --space-5: 1.25rem;
+  /* 20px */
+  --space-6: 1.5rem;
+  /* 24px */
+  --space-8: 2rem;
+  /* 32px */
+  --space-10: 2.5rem;
+  /* 40px */
+  --space-12: 3rem;
+  /* 48px */
+  --space-16: 4rem;
+  /* 64px */
+  --space-20: 5rem;
+  /* 80px */
+  --space-24: 6rem;
+  /* 96px */
+  --space-32: 8rem;
+  /* 128px */
+
+  /* Legacy compatibility aliases */
+  --spacing-xs: var(--space-1);
+  --spacing-sm: var(--space-2);
+  --spacing-md: var(--space-4);
+  --spacing-lg: var(--space-6);
+  --spacing-xl: var(--space-8);
+  --color-off-white: var(--color-ivory-dark);
+
+  /* Section Spacing */
+  --section-padding-sm: var(--space-16);
+  --section-padding-md: var(--space-20);
+  --section-padding-lg: var(--space-24);
+
+  /* Semantic Section Spacing – Vertical rhythm tokens */
+  --space-section-xl: 120px;
+  --space-section-lg: 90px;
+  --space-section-md: 70px;
+  --space-section-sm: 40px;
+
+  /* Title/Subtitle hierarchy gaps */
+  --space-title-subtitle: 14px;
+  --space-subtitle-content: 32px;
+
+  /* Readable text width */
+  --text-max-width: 640px;
+  --subtitle-max-width: 620px;
+
+  /* ==================== LAYOUT ==================== */
+
+  /* Container Widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+
+  /* Grid Gaps */
+  --gap-sm: var(--space-4);
+  --gap-md: var(--space-6);
+  --gap-lg: var(--space-8);
+  --gap-xl: var(--space-12);
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* Border Widths */
+  --border-thin: 1px;
+  --border-medium: 2px;
+
+  /* ==================== ANIMATIONS ==================== */
+
+  /* Durations - Slow & Elegant */
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 600ms;
+  --duration-slower: 800ms;
+
+  /* Easing Functions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-elegant: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* ==================== BREAKPOINTS ==================== */
+  /* Used in media queries */
+  /* Mobile: < 640px */
+  /* Tablet: 640px - 1024px */
+  /* Desktop: > 1024px */
+  /* Large Desktop: > 1440px */
+
+  /* ==================== Z-INDEX SCALE ==================== */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  :root {
+    --text-5xl: 3.5rem;
+    /* 56px */
+    --text-6xl: 4.5rem;
+    /* 72px */
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  :root {
+    --section-padding-sm: var(--space-20);
+    --section-padding-md: var(--space-24);
+    --section-padding-lg: var(--space-32);
+  }
+}
+
+/* Mobile – tighter section spacing */
+@media (max-width: 639px) {
+  :root {
+    --space-section-xl: 80px;
+    --space-section-lg: 60px;
+    --space-section-md: 50px;
+    --space-section-sm: 28px;
+    --space-title-subtitle: 10px;
+    --space-subtitle-content: 24px;
+  }
+}
+
+/* ==================== PERFORMANCE & SMOOTH SCROLLING ==================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* GPU-accelerated transitions for interactive elements */
+a,
+button,
+.btn,
+.card,
+.auction-card,
+.lot-card,
+.nav-link {
+  transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+  will-change: auto;
+}
+
+/* Promote cards to their own compositing layer on hover */
+.card:hover,
+.auction-card:hover,
+.lot-card:hover {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Smooth image rendering */
+img {
+  image-rendering: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Content-visibility for off-screen sections (massive paint savings) */
+.section,
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -4,6 +4,7 @@ import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { pool } from '../../config/database';
 import { authenticate, requireAdmin, AuthRequest } from '../../middleware/auth';
+import { notifyAuctionFeatured, notifyNewAuctionCreated } from '../../services/whatsappBridge';
 
 const router = Router();
 
@@ -116,6 +117,16 @@ router.post('/',
                 message: 'Auction created successfully',
                 auction: result.rows[0]
             });
+
+            void notifyNewAuctionCreated(result.rows[0]).catch((error) => {
+                console.error('Automated WhatsApp notification (new auction) failed:', error);
+            });
+
+            if (featured === true || featured === 'true') {
+                void notifyAuctionFeatured(result.rows[0]).catch((error) => {
+                    console.error('Automated WhatsApp notification (featured auction) failed:', error);
+                });
+            }
         } catch (error) {
             console.error('Create auction error:', error);
             res.status(500).json({ error: 'Failed to create auction' });
@@ -164,6 +175,12 @@ router.patch('/:id',
                 message: 'Auction updated successfully',
                 auction: result.rows[0]
             });
+
+            if (Object.prototype.hasOwnProperty.call(updates, 'featured') && (updates.featured === true || updates.featured === 'true')) {
+                void notifyAuctionFeatured(result.rows[0]).catch((error) => {
+                    console.error('Automated WhatsApp notification (featured auction) failed:', error);
+                });
+            }
         } catch (error) {
             console.error('Update auction error:', error);
             res.status(500).json({ error: 'Failed to update auction' });

@@ -9,24 +9,39 @@
     <title>سياسة الخصوصية - تراثيا</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/brand-fonts.css">
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/typography.css">
     <link rel="stylesheet" href="../../css/layout.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/rtl.css?v=5">
     <link rel="stylesheet" href="../../css/components/lang-toggle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/pages/info-pages.css">
 </head>
 
 <body>
     <div id="site-header"></div>
+  <!-- Premium hero — info-pages design system -->
+  <section class="ip-hero">
+    <div class="ip-hero__bg" style="background-image:url('../../assets/images/bg-4-2.png')"></div>
+    <div class="ip-hero__overlay"></div>
+    <div class="ip-hero__content">
+      <div class="ip-hero__title"><h1 class="mb-4" data-i18n="info.privacy.title">Privacy Policy</h1></div>
+      <div class="ip-hero__sub"><p class="text-graphite text-lg mb-12" data-i18n="info.privacy.subtitle">How we collect, use, and protect
+                your information</p></div>
+      <div class="ip-hero__line"></div>
+    </div>
+  </section>
+
+
 
     <main class="section">
-        <div class="container container-md">
-            <h1 class="mb-4" data-i18n="info.privacy.title">Privacy Policy</h1>
-            <p class="text-graphite text-lg mb-12" data-i18n="info.privacy.subtitle">How we collect, use, and protect
-                your information</p>
+        <div class="ip-body">
+            
+            
 
-            <section class="mb-12">
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.privacy.collection.title">1. Information We Collect</h2>
                 <p class="mb-4" data-i18n="info.privacy.collection.intro">We collect information necessary to provide
                     auction services and maintain your account:</p>
@@ -44,7 +59,9 @@
                 </ul>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.privacy.usage.title">2. How We Use Your Information</h2>
                 <p class="mb-4" data-i18n="info.privacy.usage.intro">We use your information to:</p>
                 <ul class="list-disc leading-relaxed mb-4 list-inside">
@@ -60,7 +77,9 @@
                 </ul>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.privacy.storage.title">3. Data Storage</h2>
                 <p class="mb-4" data-i18n="info.privacy.storage.p1">Your account information, bidding history, and
                     preferences are stored locally in your browser using localStorage. This allows the platform to
@@ -72,7 +91,9 @@
                     your account information and bidding history from your device.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.privacy.cookies.title">4. Cookies & Tracking</h2>
                 <p class="mb-4" data-i18n="info.privacy.cookies.p1">We use cookies and similar technologies to enhance
                     your experience and analyze site usage. See our <a href="cookies.html" class="text-accent">Cookie
@@ -81,7 +102,9 @@
                     preferences. Disabling cookies may limit certain features of the platform.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.privacy.sharing.title">5. Information Sharing</h2>
                 <p class="mb-4" data-i18n="info.privacy.sharing.p1">We do not sell or rent your personal information to
                     third parties. We may share information only in the following circumstances:</p>
@@ -99,7 +122,9 @@
                 </ul>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4" data-i18n="info.privacy.security.title">6. Data Security</h2>
                 <p class="mb-4" data-i18n="info.privacy.security.p1">We implement reasonable security measures to
                     protect your information from unauthorized access, alteration, or disclosure. However, no method of
@@ -108,7 +133,9 @@
                     confidentiality of your account password. Do not share your password with others.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4">7. حقوقك</h2>
                 <p class="mb-4">لديك الحق في:</p>
                 <ul class="mb-4" style="margin-left: var(--space-6); margin-bottom: var(--space-4);">
@@ -122,7 +149,9 @@
                         class="text-accent">privacy@turathya.com</a>.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4">8. الاحتفاظ بالبيانات</h2>
                 <p class="mb-4">نحتفظ بمعلوماتك طالما كان حسابك نشطاً أو حسب الحاجة لتقديم الخدمات. بعد حذف الحساب، قد
                     نحتفظ بمعلومات معينة لأغراض قانونية أو ضريبية أو لمنع الاحتيال.</p>
@@ -130,25 +159,33 @@
                     حفظ السجلات المالية.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4">9. خصوصية الأطفال</h2>
                 <p class="mb-4">خدماتنا غير مخصصة للأفراد الذين تقل أعمارهم عن 18 عاماً. نحن لا نجمع معلومات عن عمد من
                     الأطفال. إذا اكتشفنا أن طفلاً قد قدم معلومات شخصية، فسنحذفها على الفور.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4">10. المستخدمون الدوليون</h2>
                 <p class="mb-4">إذا قمت بالوصول إلى منصتنا من خارج الولايات المتحدة، فقد يتم نقل معلوماتك ومعالجتها في
                     الولايات المتحدة. من خلال استخدام خدماتنا، فإنك توافق على هذا النقل.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4">11. التغييرات في هذه السياسة</h2>
                 <p class="mb-4">قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر. سيتم نشر التغييرات على هذه الصفحة مع
                     تاريخ سريان محدث. نحن نشجعك على مراجعة هذه السياسة بشكل دوري.</p>
             </section>
 
-            <section class="mb-12">
+            <div class="ip-divider ip-sr"><div class="ip-divider__line"></div><div class="ip-divider__star">✦</div><div class="ip-divider__line ip-divider__line--r"></div></div>
+
+            <section class="ip-card ip-sr">
                 <h2 class="mb-4">12. اتصل بنا</h2>
                 <p>للأسئلة حول سياسة الخصوصية هذه أو ممارسات البيانات لدينا، اتصل بنا على <a
                         href="mailto:privacy@turathya.com" class="text-accent">privacy@turathya.com</a>.</p>
@@ -164,6 +201,14 @@
     <script src="../../js/data.js"></script>
     <script src="../../js/utils.js"></script>
     <script src="../../js/auth.js"></script>
+
+  <script>
+    /* Info page scroll reveal */
+    const _sr = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); _sr.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    document.querySelectorAll('.ip-sr').forEach(el => _sr.observe(el));
+  </script>
 </body>
 
 </html>
