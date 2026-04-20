@@ -23,25 +23,50 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-// Build allowed origins from FRONTEND_URL env var + localhost defaults
-const allowedOrigins: string[] = [
+function normalizeOrigin(url: string) {
+    return url.replace(/\/+$/, '').trim();
+}
+
+const allowNetlifyPreviews = process.env.ALLOW_NETLIFY_PREVIEWS !== 'false';
+
+// Build allowed origins from FRONTEND_URL/FRONTEND_URLS env vars + localhost defaults
+const allowedOrigins = new Set<string>([
     'http://localhost:5050',
     'http://127.0.0.1:5050',
     'http://localhost:8000',
     'http://127.0.0.1:8000'
-];
+]);
+
 if (process.env.FRONTEND_URL) {
-    // Remove trailing slash if present
-    const frontendUrl = process.env.FRONTEND_URL.replace(/\/+$/, '');
-    allowedOrigins.unshift(frontendUrl);
+    allowedOrigins.add(normalizeOrigin(process.env.FRONTEND_URL));
 }
-console.log('🔒 Allowed CORS origins:', allowedOrigins);
+
+if (process.env.FRONTEND_URLS) {
+    process.env.FRONTEND_URLS
+        .split(',')
+        .map((origin) => normalizeOrigin(origin))
+        .filter(Boolean)
+        .forEach((origin) => allowedOrigins.add(origin));
+}
+
+console.log('🔒 Allowed CORS origins:', Array.from(allowedOrigins));
+console.log('🔒 Netlify preview origins allowed:', allowNetlifyPreviews);
 
 // CORS origin checker function
 const corsOriginCheck = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow requests with no origin (server-to-server, curl, health checks)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    const normalizedOrigin = normalizeOrigin(origin);
+    let isNetlifyPreview = false;
+    if (allowNetlifyPreviews) {
+        try {
+            isNetlifyPreview = /\.netlify\.app$/i.test(new URL(normalizedOrigin).hostname);
+        } catch {
+            isNetlifyPreview = false;
+        }
+    }
+
+    if (allowedOrigins.has(normalizedOrigin) || isNetlifyPreview) {
         return callback(null, true);
     }
     console.warn(`⚠️ Blocked CORS request from origin: ${origin}`);

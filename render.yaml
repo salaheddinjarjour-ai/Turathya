@@ -25,8 +25,16 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://turathya.netlify.app
+        value: https://melodious-parfait-a2944a.netlify.app
+      - key: FRONTEND_URLS
+        value: https://melodious-parfait-a2944a.netlify.app,https://turathya.netlify.app
+      - key: ALLOW_NETLIFY_PREVIEWS
+        value: "true"
+      - key: DB_SSL
+        value: "true"
       - key: WHATSAPP_OTP_ENABLED
         value: "true"
+      - key: WHATSAPP_BRIDGE_URL
+        value: https://YOUR-WHATSAPP-BRIDGE-URL
       - key: WHATSAPP_LIVE_NOTIFICATIONS_ENABLED
         value: "false"
