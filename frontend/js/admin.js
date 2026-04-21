@@ -293,7 +293,7 @@ window.loadDashboardStats = async function () {
     try {
         const { stats } = await adminAPI.getStats();
 
-        document.getElementById('stat-total-auctions').textContent = stats.totalAuctions;
+        document.getElementById('stat-total-auctions').textContent = stats.totalCategories ?? stats.totalAuctions;
         document.getElementById('stat-active-lots').textContent = stats.activeLots;
         document.getElementById('stat-total-users').textContent = stats.totalUsers;
         document.getElementById('stat-pending-users').textContent = stats.pendingApprovals;
@@ -307,11 +307,11 @@ window.loadDashboardStats = async function () {
 
 window.loadAuctions = async function () {
     try {
-        const { auctions } = await adminAPI.auctions.getAll();
+        const { categories } = await adminAPI.categories.getAll();
         const tbody = document.querySelector('#auctions-table tbody');
         if (!tbody) return;
 
-        if (auctions.length === 0) {
+        if (categories.length === 0) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="5" style="padding: 0;">
@@ -325,25 +325,25 @@ window.loadAuctions = async function () {
                     </td>
                 </tr>`;
         } else {
-            tbody.innerHTML = auctions.map(auction => `
+            tbody.innerHTML = categories.map((category) => `
                 <tr>
-                    <td><strong class="text-accent">${auction.title}</strong></td>
-                    <td>${auction.category || 'N/A'}</td>
-                    <td>${auction.lot_count || 0}</td>
-                    <td>${formatDate(auction.end_date)}</td>
+                    <td><strong class="text-accent">${category.title}</strong></td>
+                    <td>${category.category || 'N/A'}</td>
+                    <td>${category.product_count || 0}</td>
+                    <td>${formatDate(category.updated_at || category.end_date)}</td>
                     <td>
-                        <button class="btn btn-ghost btn-sm" onclick="editAuction('${auction.id}')">${t('buttons.edit')}</button>
-                        <button class="btn btn-ghost btn-sm" onclick="confirmDeleteAuction('${auction.id}')">${t('buttons.delete')}</button>
+                        <button class="btn btn-ghost btn-sm" onclick="editAuction('${category.id}')">${t('buttons.edit')}</button>
+                        <button class="btn btn-ghost btn-sm" onclick="confirmDeleteAuction('${category.id}')">${t('buttons.delete')}</button>
                     </td>
                 </tr>
             `).join('');
         }
 
         // Update auction select dropdown for lots form
-        const select = document.getElementById('auction-select');
+        const select = document.getElementById('category-select');
         if (select) {
-            select.innerHTML = auctions.length > 0
-                ? auctions.map(a => `<option value="${a.id}">${a.title}</option>`).join('')
+            select.innerHTML = categories.length > 0
+                ? categories.map((c) => `<option value="${c.id}">${c.title}</option>`).join('')
                 : `<option value="">${t('admin.noAuctionsAvailable')}</option>`;
         }
     } catch (error) {
@@ -358,7 +358,7 @@ async function confirmDeleteAuction(auctionId) {
     }
 
     try {
-        await adminAPI.auctions.delete(auctionId);
+        await adminAPI.categories.delete(auctionId);
         showSuccess(t('notifications.auctionDeleted'));
         await loadAuctions();
         await loadDashboardStats();
@@ -489,19 +489,19 @@ async function handleAuctionForm(event) {
 
         if (editingId) {
             // Update existing auction
-            await adminAPI.auctions.update(editingId, auctionData);
+            await adminAPI.categories.update(editingId, auctionData);
             showSuccess(t('notifications.auctionUpdated'));
         } else {
             // Create new auction
-            const result = await adminAPI.auctions.create(auctionData);
-            auctionId = result.auction.id;
+            const result = await adminAPI.categories.create(auctionData);
+            auctionId = result.category.id;
             showSuccess(t('notifications.auctionCreated'));
         }
 
         // Upload image if provided
         if (imageFile && imageFile.size > 0 && auctionId) {
             try {
-                await adminAPI.auctions.uploadImage(auctionId, imageFile);
+                await adminAPI.categories.uploadImage(auctionId, imageFile);
                 showSuccess(t('notifications.auctionAndImageSaved'));
             } catch (error) {
                 console.error('Image upload error:', error);
@@ -530,9 +530,9 @@ function editAuction(auctionId) {
     // Switch to auctions view so the form is visible and accessible
     if (typeof switchView === 'function') switchView('auctions');
 
-    adminAPI.auctions.getAll().then(({ auctions }) => {
+    adminAPI.categories.getAll().then(({ categories }) => {
         // Use string coercion to handle both numeric and string IDs from the API
-        const auction = auctions.find(a => String(a.id) === String(auctionId));
+        const auction = categories.find((c) => String(c.id) === String(auctionId));
         if (!auction) {
             showError(t('notifications.auctionNotFound'));
             return;
@@ -598,7 +598,7 @@ async function handleLotForm(event) {
     const editingId = form.dataset.editingId;
 
     const lotData = {
-        auction_id: formData.get('auctionId'),
+        category_id: formData.get('categoryId') || formData.get('auctionId'),
         lot_number: parseInt(formData.get('lotNumber')),
         title: formData.get('titleEn') || formData.get('titleAr'),
         title_en: formData.get('titleEn'),
@@ -693,7 +693,7 @@ function editLot(lotId) {
         };
 
         // Pre-fill form
-        setVal('auctionId', lot.auction_id);
+        setVal('categoryId', lot.category_id || lot.auction_id);
         setVal('lotNumber', lot.lot_number);
         setVal('titleEn', lot.title_en || lot.title || '');
         setVal('titleAr', lot.title_ar || '');

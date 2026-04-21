@@ -33,6 +33,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 
         res.json({
             stats: {
+                totalCategories: totalAuctions,
                 totalAuctions,
                 activeLots,
                 totalUsers,

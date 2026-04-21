@@ -149,7 +149,7 @@
                 <div class="quick-actions">
                     <div class="action-card" onclick="switchView('auctions');">
                         <div class="action-icon">+</div>
-                        <div class="action-text" data-i18n="admin.createNewAuction">Create New Auction</div>
+                        <div class="action-text">Create New Category</div>
                     </div>
                     <div class="action-card" onclick="switchView('users');">
                         <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -167,14 +167,14 @@
                 </div>
             </div>
 
-            <!-- AUCTIONS VIEW -->
+            <!-- CATEGORIES VIEW -->
             <div id="view-auctions" class="admin-view">
                 <header class="page-header">
-                    <h1 class="page-title" data-i18n="admin.manageAuctions">Manage Auctions</h1>
+                    <h1 class="page-title">Manage Categories</h1>
                 </header>
 
                 <div class="admin-section mb-8">
-                    <h2 class="mb-6" data-i18n="admin.createEditAuction">Create / Edit Auction</h2>
+                    <h2 class="mb-6">Create / Edit Category</h2>
                     <form id="auction-form" class="admin-form">
                         <div class="form-row">
                             <div class="form-group">
@@ -222,10 +222,9 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" data-i18n="admin.auctionImage">Auction Image</label>
+                                <label class="form-label">Category Image</label>
                                 <input type="file" class="form-input" name="auctionImage" accept="image/*">
-                                <small class="text-muted" data-i18n="admin.auctionImageHelp">Upload an image for the
-                                    auction card (optional)</small>
+                                <small class="text-muted">Upload an image for the category card (optional)</small>
                             </div>
                         </div>
 
@@ -247,21 +246,20 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" data-i18n="admin.createAuction">Create
-                            Auction</button>
+                        <button type="submit" class="btn btn-primary">Create Category</button>
                     </form>
                 </div>
 
                 <div class="admin-section">
-                    <h2 class="mb-6" data-i18n="admin.existingAuctions">Existing Auctions</h2>
+                    <h2 class="mb-6">Existing Categories</h2>
                     <div class="table-container">
                         <table class="table" id="auctions-table">
                             <thead>
                                 <tr>
                                     <th data-i18n="forms.title">Title</th>
                                     <th data-i18n="auction.category">Category</th>
-                                    <th data-i18n="auction.lots">Lots</th>
-                                    <th data-i18n="auction.endDate">End Date</th>
+                                    <th>Products</th>
+                                    <th>Updated</th>
                                     <th data-i18n="admin.actions">Actions</th>
                                 </tr>
                             </thead>
@@ -289,8 +287,8 @@
                                     <legend>General Information</legend>
 
                                     <div class="form-group">
-                                        <label class="form-label" data-i18n="forms.auction">Auction</label>
-                                        <select class="form-select" name="auctionId" id="auction-select" required>
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select" name="categoryId" id="category-select" required>
                                             <!-- Populated by JavaScript -->
                                         </select>
                                     </div>

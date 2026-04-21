@@ -27,10 +27,11 @@ router.use(authenticate, requireAdmin);
 // Get all lots
 router.get('/', async (req: AuthRequest, res: Response) => {
     try {
-        const { auction_id } = req.query;
+        const { auction_id, category_id } = req.query;
 
         let query = `
-      SELECT l.*, a.title as auction_title,
+            SELECT l.*, a.title as auction_title,
+                l.auction_id as category_id, a.title as category_title,
         l.title_en, l.title_ar, l.description_en, l.description_ar,
         l.category_en, l.category_ar, l.condition_en, l.condition_ar,
         (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
@@ -49,8 +50,9 @@ router.get('/', async (req: AuthRequest, res: Response) => {
     `;
         const params: any[] = [];
 
-        if (auction_id) {
-            params.push(auction_id);
+        const resolvedCategoryId = category_id || auction_id;
+        if (resolvedCategoryId) {
+            params.push(resolvedCategoryId);
             query += ` AND l.auction_id = $${params.length}`;
         }
 
@@ -67,7 +69,8 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 // Create lot
 router.post('/',
     [
-        body('auction_id').isUUID(),
+        body('auction_id').optional().isUUID(),
+        body('category_id').optional().isUUID(),
         body('lot_number').isInt({ min: 1 }),
         body('title').trim().notEmpty(),
         body('starting_bid').isFloat({ min: 0 }),
@@ -82,6 +85,7 @@ router.post('/',
 
             const {
                 auction_id,
+                category_id,
                 lot_number,
                 title,
                 description,
@@ -105,10 +109,15 @@ router.post('/',
                 bid_increment = 100
             } = req.body;
 
+            const resolvedCategoryId = category_id || auction_id;
+            if (!resolvedCategoryId) {
+                return res.status(400).json({ error: 'category_id is required' });
+            }
+
             // Check auction exists
             const auctionCheck = await pool.query(
                 'SELECT id, title FROM auctions WHERE id = $1',
-                [auction_id]
+                [resolvedCategoryId]
             );
 
             if (auctionCheck.rows.length === 0) {
@@ -125,7 +134,7 @@ router.post('/',
           bid_increment, status, created_at, updated_at
         ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 'active', NOW(), NOW())
         RETURNING *`,
-                [auction_id, lot_number,
+            [resolvedCategoryId, lot_number,
                     title || title_en || title_ar,
                     description || description_en || description_ar,
                     category || category_en || category_ar,
@@ -151,7 +160,7 @@ router.post('/',
             });
         } catch (error: any) {
             if (error.code === '23505') { // Unique constraint violation
-                return res.status(400).json({ error: 'Lot number already exists in this auction' });
+                return res.status(400).json({ error: 'Lot number already exists in this category' });
             }
             console.error('Create lot error:', error);
             res.status(500).json({ error: 'Failed to create lot' });
@@ -341,7 +350,7 @@ router.get('/:id/bidders', async (req: AuthRequest, res: Response) => {
         const { id } = req.params;
 
         const lotResult = await pool.query(
-            `SELECT l.id, l.title, l.lot_number, a.title as auction_title
+            `SELECT l.id, l.title, l.lot_number, a.title as auction_title, a.title as category_title
        FROM lots l
        JOIN auctions a ON l.auction_id = a.id
        WHERE l.id = $1`,

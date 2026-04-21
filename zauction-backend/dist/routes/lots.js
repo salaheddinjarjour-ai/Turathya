@@ -6,9 +6,10 @@ const router = (0, express_1.Router)();
 // Get all lots (public)
 router.get('/', async (req, res) => {
     try {
-        const { category, status, auction_id } = req.query;
+        const { category, status, auction_id, category_id } = req.query;
         let query = `
             SELECT l.*, a.title as auction_title, a.end_date, a.image_data as auction_image,
+                l.auction_id as category_id, a.title as category_title,
                 l.title_en, l.title_ar, l.description_en, l.description_ar,
                 l.category_en, l.category_ar,
                 (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
@@ -29,8 +30,9 @@ router.get('/', async (req, res) => {
             params.push(status);
             query += ` AND l.status = $${params.length}`;
         }
-        if (auction_id) {
-            params.push(auction_id);
+        const resolvedCategoryId = category_id || auction_id;
+        if (resolvedCategoryId) {
+            params.push(resolvedCategoryId);
             query += ` AND l.auction_id = $${params.length}`;
         }
         query += ' ORDER BY l.created_at DESC';
@@ -49,6 +51,7 @@ router.get('/:id', async (req, res) => {
         // Get lot with auction info
         const lotResult = await database_1.pool.query(`SELECT l.*, a.title as auction_title, a.end_date, a.end_date as auction_end_date,
         a.status as auction_status, a.image_data as auction_image,
+        l.auction_id as category_id, a.title as category_title,
         a.title_en as auction_title_en, a.title_ar as auction_title_ar,
         l.title_en, l.title_ar, l.description_en, l.description_ar,
         l.category_en, l.category_ar, l.condition_en, l.condition_ar,

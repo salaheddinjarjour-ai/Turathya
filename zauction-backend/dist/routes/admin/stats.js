@@ -24,6 +24,7 @@ router.get('/', async (req, res) => {
         const pendingApprovals = parseInt(pendingResult.rows[0].count);
         res.json({
             stats: {
+                totalCategories: totalAuctions,
                 totalAuctions,
                 activeLots,
                 totalUsers,

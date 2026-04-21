@@ -27,9 +27,10 @@ router.use(auth_1.authenticate, auth_1.requireAdmin);
 // Get all lots
 router.get('/', async (req, res) => {
     try {
-        const { auction_id } = req.query;
+        const { auction_id, category_id } = req.query;
         let query = `
-      SELECT l.*, a.title as auction_title,
+            SELECT l.*, a.title as auction_title,
+                l.auction_id as category_id, a.title as category_title,
         l.title_en, l.title_ar, l.description_en, l.description_ar,
         l.category_en, l.category_ar, l.condition_en, l.condition_ar,
         (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
@@ -47,8 +48,9 @@ router.get('/', async (req, res) => {
       WHERE 1=1
     `;
         const params = [];
-        if (auction_id) {
-            params.push(auction_id);
+        const resolvedCategoryId = category_id || auction_id;
+        if (resolvedCategoryId) {
+            params.push(resolvedCategoryId);
             query += ` AND l.auction_id = $${params.length}`;
         }
         query += ' ORDER BY l.created_at DESC';
@@ -62,7 +64,8 @@ router.get('/', async (req, res) => {
 });
 // Create lot
 router.post('/', [
-    (0, express_validator_1.body)('auction_id').isUUID(),
+    (0, express_validator_1.body)('auction_id').optional().isUUID(),
+    (0, express_validator_1.body)('category_id').optional().isUUID(),
     (0, express_validator_1.body)('lot_number').isInt({ min: 1 }),
     (0, express_validator_1.body)('title').trim().notEmpty(),
     (0, express_validator_1.body)('starting_bid').isFloat({ min: 0 }),
@@ -73,9 +76,13 @@ router.post('/', [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { auction_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100 } = req.body;
+        const { auction_id, category_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100 } = req.body;
+        const resolvedCategoryId = category_id || auction_id;
+        if (!resolvedCategoryId) {
+            return res.status(400).json({ error: 'category_id is required' });
+        }
         // Check auction exists
-        const auctionCheck = await database_1.pool.query('SELECT id, title FROM auctions WHERE id = $1', [auction_id]);
+        const auctionCheck = await database_1.pool.query('SELECT id, title FROM auctions WHERE id = $1', [resolvedCategoryId]);
         if (auctionCheck.rows.length === 0) {
             return res.status(404).json({ error: 'Auction not found' });
         }
@@ -87,7 +94,7 @@ router.post('/', [
           estimate_low, estimate_high, starting_bid, reserve_price,
           bid_increment, status, created_at, updated_at
         ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 'active', NOW(), NOW())
-        RETURNING *`, [auction_id, lot_number,
+        RETURNING *`, [resolvedCategoryId, lot_number,
             title || title_en || title_ar,
             description || description_en || description_ar,
             category || category_en || category_ar,
@@ -111,7 +118,7 @@ router.post('/', [
     }
     catch (error) {
         if (error.code === '23505') { // Unique constraint violation
-            return res.status(400).json({ error: 'Lot number already exists in this auction' });
+            return res.status(400).json({ error: 'Lot number already exists in this category' });
         }
         console.error('Create lot error:', error);
         res.status(500).json({ error: 'Failed to create lot' });
@@ -250,7 +257,7 @@ router.delete('/:id', async (req, res) => {
 router.get('/:id/bidders', async (req, res) => {
     try {
         const { id } = req.params;
-        const lotResult = await database_1.pool.query(`SELECT l.id, l.title, l.lot_number, a.title as auction_title
+        const lotResult = await database_1.pool.query(`SELECT l.id, l.title, l.lot_number, a.title as auction_title, a.title as category_title
        FROM lots l
        JOIN auctions a ON l.auction_id = a.id
        WHERE l.id = $1`, [id]);

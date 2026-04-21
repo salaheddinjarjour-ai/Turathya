@@ -158,20 +158,27 @@ if (getToken()) {
     void syncAuthUserStatus();
 }
 
-// Auctions API
-const auctionsAPI = {
+// Categories API
+const categoriesAPI = {
     async getAll(filters = {}) {
         const params = new URLSearchParams(filters);
-        return apiRequest(`/auctions?${params}`);
+        return apiRequest(`/categories?${params}`);
     },
 
     async getById(id) {
-        return apiRequest(`/auctions/${id}`);
+        return apiRequest(`/categories/${id}`);
     },
 
-    async getLots(auctionId) {
-        return apiRequest(`/auctions/${auctionId}/lots`);
+    async getProducts(categoryId) {
+        return apiRequest(`/categories/${categoryId}/products`);
     }
+};
+
+// Legacy alias for old page scripts
+const auctionsAPI = {
+    getAll: categoriesAPI.getAll,
+    getById: categoriesAPI.getById,
+    getLots: categoriesAPI.getProducts
 };
 
 // Lots API
@@ -277,24 +284,24 @@ const adminAPI = {
         }
     },
 
-    auctions: {
+    categories: {
         async getAll() {
-            return apiRequest('/admin/auctions');
+            return apiRequest('/admin/categories');
         },
 
-        async create(auctionData) {
-            return apiRequest('/admin/auctions', {
+        async create(categoryData) {
+            return apiRequest('/admin/categories', {
                 method: 'POST',
-                body: JSON.stringify(auctionData)
+                body: JSON.stringify(categoryData)
             });
         },
 
-        async uploadImage(auctionId, imageFile) {
+        async uploadImage(categoryId, imageFile) {
             const formData = new FormData();
             formData.append('image', imageFile);
 
             const token = getToken();
-            const response = await fetch(`${API_BASE_URL}/admin/auctions/${auctionId}/image`, {
+            const response = await fetch(`${API_BASE_URL}/admin/categories/${categoryId}/image`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -309,23 +316,32 @@ const adminAPI = {
             return data;
         },
 
-        async update(auctionId, updates) {
-            return apiRequest(`/admin/auctions/${auctionId}`, {
+        async update(categoryId, updates) {
+            return apiRequest(`/admin/categories/${categoryId}`, {
                 method: 'PATCH',
                 body: JSON.stringify(updates)
             });
         },
 
-        async delete(auctionId) {
-            return apiRequest(`/admin/auctions/${auctionId}`, {
+        async delete(categoryId) {
+            return apiRequest(`/admin/categories/${categoryId}`, {
                 method: 'DELETE'
             });
         }
     },
 
+    // Legacy alias used by existing admin pages/scripts
+    auctions: {
+        getAll: () => adminAPI.categories.getAll(),
+        create: (auctionData) => adminAPI.categories.create(auctionData),
+        uploadImage: (auctionId, imageFile) => adminAPI.categories.uploadImage(auctionId, imageFile),
+        update: (auctionId, updates) => adminAPI.categories.update(auctionId, updates),
+        delete: (auctionId) => adminAPI.categories.delete(auctionId)
+    },
+
     lots: {
-        async getAll(auctionId = null) {
-            const params = auctionId ? `?auction_id=${auctionId}` : '';
+        async getAll(categoryId = null) {
+            const params = categoryId ? `?category_id=${categoryId}` : '';
             return apiRequest(`/admin/lots${params}`);
         },
 
