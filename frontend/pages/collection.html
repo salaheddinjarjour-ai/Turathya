@@ -222,13 +222,14 @@
 
         function applyFilters() {
             filteredLots = allLots.filter(lot => {
-                // Determine if lot is closed based on auction end date
                 const now = new Date();
+                const startDate = lot.start_date ? new Date(lot.start_date) : null;
                 const endDate = lot.end_date ? new Date(lot.end_date) : null;
+                const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
                 const isClosed = endDate && endDate < now;
 
                 // Status Filter
-                if (filters.status === 'active' && isClosed) return false;
+                if (filters.status === 'active' && (!isLiveWindow || lot.status !== 'active')) return false;
                 if (filters.status === 'closed' && !isClosed) return false;
 
                 // Category Group Filter
@@ -254,9 +255,10 @@
 
             filteredLots.forEach(lot => {
                 const category = allCategories.find((a) => a.id === (lot.category_id || lot.auction_id));
-                // Determine if lot is closed based on auction end date
                 const now = new Date();
+                const startDate = lot.start_date ? new Date(lot.start_date) : null;
                 const endDate = lot.end_date ? new Date(lot.end_date) : null;
+                const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
                 const isClosed = endDate && endDate < now;
                 const cardClass = isClosed ? 'card card-archive' : 'card';
 
@@ -287,7 +289,7 @@
                 card.innerHTML =
                     '<div class="relative">' +
                     '<img loading="lazy" src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
-                    (!isClosed ? '<div class="absolute top-2 right-2"><span class="badge badge-accent bg-white">Live</span></div>' : '') +
+                    (isLiveWindow ? '<div class="absolute top-2 right-2"><span class="badge badge-accent bg-white">Live</span></div>' : '') +
                     '</div>' +
                     '<div class="card-content">' +
                     '<div class="text-xs text-muted mb-1">' + (category ? category.title : '') + '</div>' +

@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
         const { category, status, auction_id, category_id } = req.query;
 
         let query = `
-            SELECT l.*, a.title as auction_title, a.end_date, a.image_data as auction_image,
+            SELECT l.*, a.title as auction_title, a.start_date, a.end_date, a.image_data as auction_image,
                 l.auction_id as category_id, a.title as category_title,
                 l.title_en, l.title_ar, l.description_en, l.description_ar,
                 l.category_en, l.category_ar,

@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description"
-        content="Browse all categories at TURATHYA and explore curated products.">
-    <title>All Categories - TURATHYA</title>
+        content="Browse live auction products at TURATHYA and place bids on active lots.">
+    <title>Live Auctions - TURATHYA</title>
 
     <script>
         (function () {
@@ -104,8 +104,8 @@
         <div class="auc-hero__bg"></div>
         <div class="auc-hero__overlay"></div>
         <div class="auc-hero__content">
-            <h1 class="auc-hero__title">Categories</h1>
-            <p class="auc-hero__sub">Explore curated product categories from around the world</p>
+            <h1 class="auc-hero__title">Live Auctions</h1>
+            <p class="auc-hero__sub">Products currently being auctioned in real time</p>
             <div class="auc-hero__line"></div>
         </div>
     </section>
@@ -113,30 +113,30 @@
     <main class="section">
         <div class="container">
 
-            <!-- Featured Categories Section -->
+            <!-- Featured Products Section -->
             <section class="section-spacing" id="featured-section">
                 <div class="section-header">
-                    <h2>Featured Categories</h2>
-                    <p class="text-graphite">Carefully curated highlights</p>
+                    <h2>Featured Products</h2>
+                    <p class="text-graphite">Top bidding activity right now</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
                     <!-- Populated by JavaScript -->
                 </div>
             </section>
 
-            <!-- Active Categories Section -->
+            <!-- Live Products Section -->
             <section class="section-spacing" id="ongoing-section">
                 <div class="section-header">
-                    <h2>Active Categories</h2>
-                    <p class="text-graphite">Currently active categories</p>
+                    <h2>Live Products</h2>
+                    <p class="text-graphite">Only products currently in auction windows</p>
                 </div>
 
                 <!-- Search & Filter Toolbar -->
                 <div class="auctions-toolbar">
                     <div style="flex: 1; max-width: 420px;">
-                        <label class="form-label" for="auction-search">Search categories</label>
+                        <label class="form-label" for="auction-search">Search products</label>
                         <input type="search" class="form-input search-input" id="auction-search"
-                            placeholder="Search by title, category, location">
+                            placeholder="Search by title, lot number, category">
                     </div>
                     <div style="width: 100%; max-width: 280px;">
                         <label class="form-label" for="category-filter" data-i18n="auction.filterByCategory">Filter by
@@ -153,11 +153,11 @@
                 </div>
             </section>
 
-            <!-- Archived Categories Section -->
+            <!-- Recently Ended Products Section -->
             <section class="section-spacing" id="past-section">
                 <div class="section-header">
-                    <h2>Archived Categories</h2>
-                    <p class="text-graphite">View completed category archives</p>
+                    <h2>Recently Ended Products</h2>
+                    <p class="text-graphite">Products that recently finished auction</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="past-auctions">
                     <!-- Populated by JavaScript -->
@@ -176,204 +176,185 @@
     <script>
         let selectedCategory = null;
         let searchQuery = '';
+        let allLots = [];
 
-        // Render auction card
-        function renderAuctionCard(auction, isPast = false) {
-            const cardClass = isPast ? 'card card-archive' : (auction.featured ? 'card card-featured' : 'card');
+        function isLiveLot(lot) {
             const now = new Date();
-            const startDate = new Date(auction.start_date);
-            const hasNotStarted = startDate > now;
-            const startsSoon = hasNotStarted && (startDate.getTime() - now.getTime()) <= (48 * 60 * 60 * 1000);
+            const startDate = lot.start_date ? new Date(lot.start_date) : null;
+            const endDate = lot.end_date ? new Date(lot.end_date) : null;
+            if (!endDate || Number.isNaN(endDate.getTime())) return false;
+            if (startDate && !Number.isNaN(startDate.getTime()) && startDate > now) return false;
+            return endDate > now && lot.status === 'active';
+        }
 
+        function isEndedLot(lot) {
+            const endDate = lot.end_date ? new Date(lot.end_date) : null;
+            return !!endDate && !Number.isNaN(endDate.getTime()) && endDate < new Date();
+        }
+
+        function renderAuctionCard(lot, isPast = false) {
+            const cardClass = isPast ? 'card card-archive' : (isEndingSoon(lot.end_date) ? 'card card-featured' : 'card');
+            const title = localizedField(lot, 'title');
+            const productType = localizedField(lot, 'category') || 'Product';
+            const categoryGroup = lot.category_title || lot.auction_title || 'General';
+            const image = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
+            const amount = lot.current_bid && Number(lot.current_bid) > 0 ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
+            const amountLabel = lot.current_bid && Number(lot.current_bid) > 0 ? 'Current Bid' : 'Starting Bid';
             const badge = isPast
                 ? '<span class="badge badge-ended">Ended</span>'
-                : hasNotStarted
-                    ? (startsSoon
-                        ? '<span class="badge badge-info">Starts Soon</span>'
-                        : '<span class="badge badge-info">Didn\'t Start</span>')
-                    : (isEndingSoon(auction.end_date) ? '<span class="badge badge-accent">Ending Soon</span>' : '');
-
-            const endDateText = isPast
-                ? `Ended ${formatDate(auction.end_date)}`
-                : hasNotStarted
-                    ? `Starts ${formatDate(auction.start_date)}`
-                    : `Ends ${formatDate(auction.end_date)}`;
-
+                : (isEndingSoon(lot.end_date) ? '<span class="badge badge-accent">Ending Soon</span>' : '<span class="badge badge-success">Live</span>');
+            const timeText = isPast ? `Ended ${formatDate(lot.end_date)}` : `Ends ${formatDate(lot.end_date)}`;
             const archiveParam = isPast ? '&archive=true' : '';
-            const aTitle = localizedField(auction, 'title');
-            const aCat = localizedField(auction, 'category');
-            const aLoc = localizedField(auction, 'location');
-            const baseHref = getAuctionHref(auction);
 
             return `
-                <a href="${baseHref}${archiveParam}" class="${cardClass}">
-                    <img loading="lazy" src="${auction.image_data || auction.image_url || '../assets/images/placeholder.jpg'}" alt="${aTitle}" class="card-image">
+                <a href="lot.html?id=${lot.id}${archiveParam}" class="${cardClass}">
+                    <img loading="lazy" src="${image}" alt="${title}" class="card-image">
                     <div class="card-content">
-                        <div class="label mb-2">${aCat || 'Category'}</div>
-                        <h3 class="card-title">${aTitle}</h3>
-                        <p class="card-subtitle">${auction.product_count || auction.lot_count || 0} products • ${aLoc || 'TBA'}</p>
+                        <div class="label mb-2">${productType}</div>
+                        <h3 class="card-title">${title}</h3>
+                        <p class="card-subtitle">Lot #${lot.lot_number} • ${categoryGroup}</p>
+                    </div>
+                    <div class="card-footer" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                        <span class="text-sm text-muted">${amountLabel}: ${formatCurrency(amount)}</span>
+                        ${badge}
                     </div>
                     <div class="card-footer">
-                        <span class="text-sm text-muted">${endDateText}</span>
-                        ${badge}
+                        <span class="text-sm text-muted">${timeText}</span>
                     </div>
                 </a>
             `;
         }
 
-        // Load Featured Auctions from API
+        async function loadAllLots() {
+            const { lots } = await lotsAPI.getAll({});
+            allLots = lots || [];
+            return allLots;
+        }
+
+        function getFilteredLiveLots() {
+            let lots = allLots.filter((lot) => isLiveLot(lot));
+
+            if (selectedCategory) {
+                lots = lots.filter((lot) => (lot.category || '').toLowerCase() === selectedCategory.toLowerCase());
+            }
+
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                lots = lots.filter((lot) =>
+                    (lot.title || '').toLowerCase().includes(q) ||
+                    (lot.description || '').toLowerCase().includes(q) ||
+                    (lot.category || '').toLowerCase().includes(q) ||
+                    String(lot.lot_number || '').includes(q) ||
+                    (lot.category_title || lot.auction_title || '').toLowerCase().includes(q)
+                );
+            }
+
+            return lots;
+        }
+
         async function loadFeaturedAuctions() {
             try {
-                // Get recently viewed/searched auctions from localStorage
-                const recentAuctionIds = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
+                await loadAllLots();
+                const recentLotIds = JSON.parse(localStorage.getItem('recentLots') || '[]');
+                const liveLots = allLots.filter((lot) => isLiveLot(lot));
 
-                // Get auctions with most bidders
-                const { auctions: mostBiddedAuctions } = await auctionsAPI.getAll({ featured: 'true' });
+                const ranked = [...liveLots].sort((a, b) => {
+                    const aBid = Number(a.current_bid || 0);
+                    const bBid = Number(b.current_bid || 0);
+                    const aCount = Number(a.bid_count || 0);
+                    const bCount = Number(b.bid_count || 0);
+                    if (bCount !== aCount) return bCount - aCount;
+                    return bBid - aBid;
+                });
 
-                const now = new Date();
-                const activeMostBiddedAuctions = mostBiddedAuctions.filter(a => new Date(a.end_date) > now);
+                const recentFirst = recentLotIds
+                    .map((id) => liveLots.find((lot) => lot.id === id))
+                    .filter(Boolean);
 
-                let featuredAuctions = [];
+                const combined = [...recentFirst];
+                ranked.forEach((lot) => {
+                    if (!combined.find((item) => item.id === lot.id)) {
+                        combined.push(lot);
+                    }
+                });
 
-                // If user has recent searches/views, prioritize those
-                if (recentAuctionIds.length > 0) {
-                    const { auctions: allAuctions } = await auctionsAPI.getAll({});
-
-                    // Get recent auctions that are still active (not ended)
-                    const recentAuctions = allAuctions.filter(a => {
-                        const endDate = new Date(a.end_date);
-                        return recentAuctionIds.includes(a.id) && endDate > now;
-                    });
-
-                    // Combine: recent first, then most bidded (avoiding duplicates)
-                    featuredAuctions = recentAuctions;
-
-                    activeMostBiddedAuctions.forEach(auction => {
-                        if (!featuredAuctions.find(a => a.id === auction.id)) {
-                            featuredAuctions.push(auction);
-                        }
-                    });
-
-                    // Limit to 6 total
-                    featuredAuctions = featuredAuctions.slice(0, 6);
-                } else {
-                    // No recent activity, just show most bidded
-                    featuredAuctions = activeMostBiddedAuctions;
-                }
-
+                const featuredLots = combined.slice(0, 6);
                 const container = document.getElementById('featured-auctions');
                 const section = document.getElementById('featured-section');
 
-                if (featuredAuctions.length === 0) {
+                if (featuredLots.length === 0) {
                     section.style.display = 'none';
                     return;
                 }
 
-                container.innerHTML = featuredAuctions.map(auction => renderAuctionCard(auction, false)).join('');
+                container.innerHTML = featuredLots.map((lot) => renderAuctionCard(lot, false)).join('');
             } catch (error) {
-                console.error('Failed to load featured auctions:', error);
+                console.error('Failed to load featured products:', error);
                 document.getElementById('featured-section').style.display = 'none';
             }
         }
 
-        // Track auction views for featured section
-        function trackAuctionView(auctionId) {
-            const recentAuctions = JSON.parse(localStorage.getItem('recentAuctions') || '[]');
-
-            // Remove if already exists (to update position)
-            const filtered = recentAuctions.filter(id => id !== auctionId);
-
-            // Add to beginning
-            filtered.unshift(auctionId);
-
-            // Keep only last 5
-            const updated = filtered.slice(0, 5);
-
-            localStorage.setItem('recentAuctions', JSON.stringify(updated));
-        }
-
-        // Load Ongoing Auctions from API
         async function loadOngoingAuctions() {
             try {
-                const filters = {};
-                if (selectedCategory) {
-                    filters.category = selectedCategory;
+                if (allLots.length === 0) {
+                    await loadAllLots();
                 }
 
-                // Get all auctions, then filter for active and upcoming based on end_date
-                const { auctions: allAuctions } = await auctionsAPI.getAll(filters);
-                const now = new Date();
-
-                // Filter auctions that haven't ended yet
-                const auctions = allAuctions.filter(a => {
-                    const endDate = new Date(a.end_date);
-                    return endDate > now; // Not ended yet = ongoing
-                });
-
-                let filteredAuctions = auctions;
-
-                // Apply client-side search filter
-                if (searchQuery) {
-                    const q = searchQuery.toLowerCase();
-                    filteredAuctions = auctions.filter(a =>
-                        a.title.toLowerCase().includes(q) ||
-                        (a.description && a.description.toLowerCase().includes(q)) ||
-                        (a.category && a.category.toLowerCase().includes(q)) ||
-                        (a.location && a.location.toLowerCase().includes(q))
-                    );
-                }
-
+                const liveLots = getFilteredLiveLots();
                 const container = document.getElementById('ongoing-auctions');
 
-                if (filteredAuctions.length === 0) {
-                    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No active categories found</p>';
+                if (liveLots.length === 0) {
+                    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No live products found</p>';
                     return;
                 }
 
-                container.innerHTML = filteredAuctions.map(auction => renderAuctionCard(auction, false)).join('');
+                container.innerHTML = liveLots
+                    .sort((a, b) => new Date(a.end_date) - new Date(b.end_date))
+                    .map((lot) => renderAuctionCard(lot, false))
+                    .join('');
             } catch (error) {
-                console.error('Failed to load ongoing auctions:', error);
+                console.error('Failed to load live products:', error);
                 document.getElementById('ongoing-auctions').innerHTML =
-                    '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load categories</p>';
+                    '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load live products</p>';
             }
         }
 
-        // Load Past Auctions from API
         async function loadPastAuctions() {
             try {
-                // Get all auctions, then filter for ended ones based on end_date
-                const { auctions: allAuctions } = await auctionsAPI.getAll({});
-                const now = new Date();
+                if (allLots.length === 0) {
+                    await loadAllLots();
+                }
 
-                // Filter auctions that have already ended
-                const auctions = allAuctions.filter(a => {
-                    const endDate = new Date(a.end_date);
-                    return endDate < now; // Already ended = past
-                });
+                const endedLots = allLots
+                    .filter((lot) => isEndedLot(lot))
+                    .sort((a, b) => new Date(b.end_date) - new Date(a.end_date))
+                    .slice(0, 12);
 
                 const container = document.getElementById('past-auctions');
                 const section = document.getElementById('past-section');
 
-                if (auctions.length === 0) {
+                if (endedLots.length === 0) {
                     section.style.display = 'none';
                     return;
                 }
 
-                container.innerHTML = auctions.map(auction => renderAuctionCard(auction, true)).join('');
+                container.innerHTML = endedLots.map((lot) => renderAuctionCard(lot, true)).join('');
             } catch (error) {
-                console.error('Failed to load past auctions:', error);
+                console.error('Failed to load ended products:', error);
                 document.getElementById('past-section').style.display = 'none';
             }
         }
 
-        // Load category filter options from API
         async function loadCategoryFilter() {
             try {
-                const { auctions } = await auctionsAPI.getAll();
-                const categories = [...new Set(auctions.map(a => a.category).filter(Boolean))].sort();
+                if (allLots.length === 0) {
+                    await loadAllLots();
+                }
+
+                const categories = [...new Set(allLots.map((lot) => lot.category).filter(Boolean))].sort();
                 const select = document.getElementById('category-filter');
 
-                categories.forEach(cat => {
+                categories.forEach((cat) => {
                     const option = document.createElement('option');
                     option.value = cat;
                     option.textContent = cat;
@@ -385,7 +366,7 @@
                     loadOngoingAuctions();
                 });
             } catch (error) {
-                console.error('Failed to load categories:', error);
+                console.error('Failed to load product categories:', error);
             }
         }
 
