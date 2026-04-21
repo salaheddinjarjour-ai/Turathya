@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description"
-        content="Browse all current auctions at TURATHYA - Premium timed auctions for antiques and rare objects.">
-    <title>All Auctions - TURATHYA</title>
+        content="Browse all categories at TURATHYA and explore curated products.">
+    <title>All Categories - TURATHYA</title>
 
     <script>
         (function () {
@@ -104,8 +104,8 @@
         <div class="auc-hero__bg"></div>
         <div class="auc-hero__overlay"></div>
         <div class="auc-hero__content">
-            <h1 class="auc-hero__title" data-i18n="nav.auctions">Auctions</h1>
-            <p class="auc-hero__sub" data-i18n="auction.curatedCollections">Curated collections from around the world</p>
+            <h1 class="auc-hero__title">Categories</h1>
+            <p class="auc-hero__sub">Explore curated product categories from around the world</p>
             <div class="auc-hero__line"></div>
         </div>
     </section>
@@ -113,31 +113,29 @@
     <main class="section">
         <div class="container">
 
-            <!-- Featured Auctions Section -->
+            <!-- Featured Categories Section -->
             <section class="section-spacing" id="featured-section">
                 <div class="section-header">
-                    <h2 data-i18n="auction.featured">Featured Auctions</h2>
-                    <p class="text-graphite" data-i18n="auction.curatedHighlights">Carefully curated highlights</p>
+                    <h2>Featured Categories</h2>
+                    <p class="text-graphite">Carefully curated highlights</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
                     <!-- Populated by JavaScript -->
                 </div>
             </section>
 
-            <!-- Ongoing Auctions Section -->
+            <!-- Active Categories Section -->
             <section class="section-spacing" id="ongoing-section">
                 <div class="section-header">
-                    <h2 data-i18n="auction.ongoing">Ongoing Auctions</h2>
-                    <p class="text-graphite" data-i18n="auction.acceptingBids">Currently accepting bids</p>
+                    <h2>Active Categories</h2>
+                    <p class="text-graphite">Currently active categories</p>
                 </div>
 
                 <!-- Search & Filter Toolbar -->
                 <div class="auctions-toolbar">
                     <div style="flex: 1; max-width: 420px;">
-                        <label class="form-label" for="auction-search" data-i18n="auction.searchAuctions">Search
-                            auctions</label>
+                        <label class="form-label" for="auction-search">Search categories</label>
                         <input type="search" class="form-input search-input" id="auction-search"
-                            data-i18n-placeholder="auction.searchPlaceholder"
                             placeholder="Search by title, category, location">
                     </div>
                     <div style="width: 100%; max-width: 280px;">
@@ -155,11 +153,11 @@
                 </div>
             </section>
 
-            <!-- Past Auctions Section -->
+            <!-- Archived Categories Section -->
             <section class="section-spacing" id="past-section">
                 <div class="section-header">
-                    <h2 data-i18n="auction.past">Past Auctions</h2>
-                    <p class="text-graphite" data-i18n="auction.viewResults">View results from completed auctions</p>
+                    <h2>Archived Categories</h2>
+                    <p class="text-graphite">View completed category archives</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="past-auctions">
                     <!-- Populated by JavaScript -->
@@ -211,9 +209,9 @@
                 <a href="${baseHref}${archiveParam}" class="${cardClass}">
                     <img loading="lazy" src="${auction.image_data || auction.image_url || '../assets/images/placeholder.jpg'}" alt="${aTitle}" class="card-image">
                     <div class="card-content">
-                        <div class="label mb-2">${aCat || 'Auction'}</div>
+                        <div class="label mb-2">${aCat || 'Category'}</div>
                         <h3 class="card-title">${aTitle}</h3>
-                        <p class="card-subtitle">${auction.lot_count || 0} lots • ${aLoc || 'TBA'}</p>
+                        <p class="card-subtitle">${auction.product_count || auction.lot_count || 0} products • ${aLoc || 'TBA'}</p>
                     </div>
                     <div class="card-footer">
                         <span class="text-sm text-muted">${endDateText}</span>
@@ -328,7 +326,7 @@
                 const container = document.getElementById('ongoing-auctions');
 
                 if (filteredAuctions.length === 0) {
-                    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No ongoing auctions found</p>';
+                    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No active categories found</p>';
                     return;
                 }
 
@@ -336,7 +334,7 @@
             } catch (error) {
                 console.error('Failed to load ongoing auctions:', error);
                 document.getElementById('ongoing-auctions').innerHTML =
-                    '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load auctions</p>';
+                    '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load categories</p>';
             }
         }
 

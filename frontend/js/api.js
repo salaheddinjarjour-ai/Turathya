@@ -176,9 +176,20 @@ const categoriesAPI = {
 
 // Legacy alias for old page scripts
 const auctionsAPI = {
-    getAll: categoriesAPI.getAll,
-    getById: categoriesAPI.getById,
-    getLots: categoriesAPI.getProducts
+    async getAll(filters = {}) {
+        const data = await categoriesAPI.getAll(filters);
+        return { auctions: data.categories || [] };
+    },
+
+    async getById(id) {
+        const data = await categoriesAPI.getById(id);
+        return { auction: data.category };
+    },
+
+    async getLots(categoryId) {
+        const data = await categoriesAPI.getProducts(categoryId);
+        return { lots: data.products || [] };
+    }
 };
 
 // Lots API
@@ -332,10 +343,19 @@ const adminAPI = {
 
     // Legacy alias used by existing admin pages/scripts
     auctions: {
-        getAll: () => adminAPI.categories.getAll(),
-        create: (auctionData) => adminAPI.categories.create(auctionData),
+        async getAll() {
+            const data = await adminAPI.categories.getAll();
+            return { auctions: data.categories || [] };
+        },
+        async create(auctionData) {
+            const data = await adminAPI.categories.create(auctionData);
+            return { auction: data.category };
+        },
         uploadImage: (auctionId, imageFile) => adminAPI.categories.uploadImage(auctionId, imageFile),
-        update: (auctionId, updates) => adminAPI.categories.update(auctionId, updates),
+        async update(auctionId, updates) {
+            const data = await adminAPI.categories.update(auctionId, updates);
+            return { auction: data.category };
+        },
         delete: (auctionId) => adminAPI.categories.delete(auctionId)
     },
 
@@ -513,7 +533,7 @@ function getSocketServerUrl() {
     } catch {
         return (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
             ? 'http://localhost:3000'
-            : 'https://turathya-backend.onrender.com';
+            : 'https://turathya.onrender.com';
     }
 }
 

@@ -319,8 +319,8 @@ window.loadAuctions = async function () {
                             <div class="empty-state-icon">
                                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="m14.47 13.77-1.41 1.41L5 7.12 6.41 5.7l8.06 8.07zm-3.84-9.94L9.2 5.25l1.42 1.42 1.41-1.42-1.4-1.42zm9.2 9.2-1.42 1.42 1.42 1.41 1.41-1.41-1.41-1.42zm-3.54 3.53 2.12 2.13 1.41-1.41-2.12-2.13-1.41 1.41zM10 3L3 10l7 7 7-7-7-7zm0 12.59L5.41 11 10 6.41 14.59 11 10 15.59z"/></svg>
                             </div>
-                            <h3 class="empty-state-title" data-i18n="admin.noAuctions">No Auctions Found</h3>
-                            <p class="empty-state-text" data-i18n="admin.noAuctionsDesc">Create your first auction to get started.</p>
+                            <h3 class="empty-state-title">No Categories Found</h3>
+                            <p class="empty-state-text">Create your first category to get started.</p>
                         </div>
                     </td>
                 </tr>`;
@@ -339,16 +339,16 @@ window.loadAuctions = async function () {
             `).join('');
         }
 
-        // Update auction select dropdown for lots form
+        // Update category select dropdown for products form
         const select = document.getElementById('category-select');
         if (select) {
             select.innerHTML = categories.length > 0
                 ? categories.map((c) => `<option value="${c.id}">${c.title}</option>`).join('')
-                : `<option value="">${t('admin.noAuctionsAvailable')}</option>`;
+                : '<option value="">No Categories Available</option>';
         }
     } catch (error) {
-        console.error('Failed to load auctions:', error);
-        showError(t('notifications.failedLoadAuctions'));
+        console.error('Failed to load categories:', error);
+        showError('Failed to load categories');
     }
 }
 
