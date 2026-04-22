@@ -74,7 +74,9 @@ router.post('/',
         body('lot_number').isInt({ min: 1 }),
         body('title').trim().notEmpty(),
         body('starting_bid').isFloat({ min: 0 }),
-        body('bid_increment').optional().isFloat({ min: 0 })
+        body('bid_increment').optional().isFloat({ min: 0 }),
+        body('start_date').optional().isISO8601(),
+        body('end_date').optional().isISO8601()
     ],
     async (req: AuthRequest, res: Response) => {
         try {
@@ -106,7 +108,9 @@ router.post('/',
                 estimate_high,
                 starting_bid,
                 reserve_price,
-                bid_increment = 100
+                bid_increment = 100,
+                start_date,
+                end_date
             } = req.body;
 
             const resolvedCategoryId = category_id || auction_id;
@@ -131,8 +135,8 @@ router.post('/',
           category_en, category_ar, condition_en, condition_ar,
           provenance_en, provenance_ar,
           estimate_low, estimate_high, starting_bid, reserve_price,
-          bid_increment, status, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 'active', NOW(), NOW())
+          bid_increment, start_date, end_date, status, created_at, updated_at
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, 'active', NOW(), NOW())
         RETURNING *`,
             [resolvedCategoryId, lot_number,
                     title || title_en || title_ar,
@@ -144,7 +148,7 @@ router.post('/',
                     category_en, category_ar, condition_en, condition_ar,
                     provenance_en, provenance_ar,
                     estimate_low, estimate_high, starting_bid, reserve_price,
-                    bid_increment]
+                    bid_increment, start_date || null, end_date || null]
             );
 
             res.status(201).json({

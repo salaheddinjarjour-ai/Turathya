@@ -78,7 +78,8 @@
         "premiumAdded": "ستضاف إلى سعر المطرقة",
         "starts": ":يبدأ",
         "ends": ":ينتهي",
-        "startsSoon": "يبدأ قريباً"
+        "startsSoon": "يبدأ قريباً",
+        "totalLots": "إجمالي القطع"
     },
     "time": {
         "days": "أيام",
@@ -185,7 +186,9 @@
         "registerHere": "سجل هنا",
         "loginHere": "سجل الدخول هنا",
         "demoCredentials": "بيانات تجريبية:",
-        "user": "مستخدم"
+        "user": "مستخدم",
+        "loginGoogle": "تسجيل الدخول بجوجل",
+        "registerGoogle": "المتابعة بجوجل"
     },
     "cta": {
         "eyebrow": "ابدأ المزاد",
@@ -233,6 +236,12 @@
     "collection": {
         "subtitle": "جميع القطع، الماضية والحالية.",
         "allAuctions": "جميع المزادات"
+    },
+    "stats": {
+        "auctions": "المزادات",
+        "lots": "القطع",
+        "liveNow": "مباشر الآن",
+        "bids": "العروض النشطة"
     },
     "admin": {
         "dashboard": "لوحة التحكم",
@@ -507,7 +516,8 @@
         "yourBid": "عرضك",
         "current": "الحالي",
         "ends": "ينتهي",
-        "toggleBidsWidget": "تبديل ويدجت العروض"
+        "toggleBidsWidget": "تبديل ويدجت العروض",
+        "date": "التاريخ"
     },
     "info": {
         "about": {

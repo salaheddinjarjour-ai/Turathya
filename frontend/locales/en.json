@@ -78,7 +78,8 @@
         "premiumAdded": "will be added to the hammer price",
         "starts": "Starts:",
         "ends": "Ends:",
-        "startsSoon": "Starts Soon"
+        "startsSoon": "Starts Soon",
+        "totalLots": "Total Lots"
     },
     "time": {
         "days": "days",
@@ -181,7 +182,9 @@
         "loginError": "Invalid email or password",
         "registerSuccess": "Registration successful",
         "registerError": "Registration failed",
-        "logoutSuccess": "Logged out successfully"
+        "logoutSuccess": "Logged out successfully",
+        "loginGoogle": "Login With Google",
+        "registerGoogle": "Continue With Google"
     },
     "cta": {
         "eyebrow": "Start Bidding",
@@ -229,6 +232,12 @@
     "collection": {
         "subtitle": "All lots, past and present.",
         "allAuctions": "All Auctions"
+    },
+    "stats": {
+        "auctions": "Auctions",
+        "lots": "Lots",
+        "liveNow": "Live Now",
+        "bids": "Active Bids"
     },
     "admin": {
         "dashboard": "Dashboard",

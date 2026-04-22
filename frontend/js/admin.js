@@ -455,15 +455,6 @@ async function handleAuctionForm(event) {
     const formData = new FormData(form);
     const editingId = form.dataset.editingId;
 
-    // Convert datetime-local values to ISO 8601 strings with timezone
-    const startDateLocal = formData.get('startDate');
-    const endDateLocal = formData.get('endDate');
-
-    // Create Date objects which will be in local timezone
-    // Then convert to ISO string for proper UTC storage
-    const startDate = new Date(startDateLocal);
-    const endDate = new Date(endDateLocal);
-
     const auctionData = {
         title: formData.get('titleEn') || formData.get('titleAr'),
         title_en: formData.get('titleEn'),
@@ -477,9 +468,8 @@ async function handleAuctionForm(event) {
         location: formData.get('locationEn') || formData.get('locationAr'),
         location_en: formData.get('locationEn'),
         location_ar: formData.get('locationAr'),
-        start_date: startDate.toISOString(),
-        end_date: endDate.toISOString(),
         featured: formData.get('featured') === 'true'
+        // Note: start_date/end_date now live on individual products (lots), not categories
     };
 
     const imageFile = formData.get('auctionImage');
@@ -557,21 +547,19 @@ function editAuction(auctionId) {
         setVal('locationEn', auction.location_en || auction.location || '');
         setVal('locationAr', auction.location_ar || '');
 
-        // Convert UTC dates to local datetime-local format
-        const startDate = new Date(auction.start_date);
-        const endDate = new Date(auction.end_date);
-
-        const formatForInput = (date) => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
-        };
-
-        setVal('startDate', formatForInput(startDate));
-        setVal('endDate', formatForInput(endDate));
+        // Auction dates are now optional (timing lives on products/lots)
+        if (auction.start_date) {
+            const formatForInput = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            };
+            setVal('startDate', formatForInput(new Date(auction.start_date)));
+            if (auction.end_date) setVal('endDate', formatForInput(new Date(auction.end_date)));
+        }
         const featuredCheckbox = form.querySelector('[name="featured"]');
         if (featuredCheckbox) {
             featuredCheckbox.checked = !!auction.featured;
@@ -597,6 +585,10 @@ async function handleLotForm(event) {
     const formData = new FormData(form);
     const editingId = form.dataset.editingId;
 
+    // Extract and convert lot-level dates (optional)
+    const startDateLocal = formData.get('startDate');
+    const endDateLocal = formData.get('endDate');
+
     const lotData = {
         category_id: formData.get('categoryId') || formData.get('auctionId'),
         lot_number: parseInt(formData.get('lotNumber')),
@@ -619,7 +611,9 @@ async function handleLotForm(event) {
         estimate_high: parseFloat(formData.get('estimateMax')),
         starting_bid: parseFloat(formData.get('startingBid')),
         reserve_price: parseFloat(formData.get('reserve')) || 0,
-        bid_increment: 100
+        bid_increment: 100,
+        start_date: startDateLocal ? new Date(startDateLocal).toISOString() : null,
+        end_date: endDateLocal ? new Date(endDateLocal).toISOString() : null
     };
 
     try {
@@ -709,6 +703,21 @@ function editLot(lotId) {
         setVal('estimateMax', lot.estimate_high || '');
         setVal('startingBid', lot.starting_bid || '');
         setVal('reserve', lot.reserve_price ?? 0);
+
+        // Pre-fill lot-level auction dates if they exist
+        if (lot.start_date || lot.end_date) {
+            const formatForInput = (date) => {
+                const d = new Date(date);
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            };
+            if (lot.start_date) setVal('startDate', formatForInput(lot.start_date));
+            if (lot.end_date) setVal('endDate', formatForInput(lot.end_date));
+        }
 
         // Set editing mode
         form.dataset.editingId = lotId;

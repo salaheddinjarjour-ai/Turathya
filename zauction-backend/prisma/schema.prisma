@@ -41,8 +41,8 @@ model Auction {
   categoryAr     String?       @map("category_ar") @db.VarChar(100)
   locationEn     String?       @map("location_en") @db.VarChar(255)
   locationAr     String?       @map("location_ar") @db.VarChar(255)
-  startDate      DateTime      @map("start_date") @db.Timestamptz(6)
-  endDate        DateTime      @map("end_date") @db.Timestamptz(6)
+  startDate      DateTime?     @map("start_date") @db.Timestamptz(6)
+  endDate        DateTime?     @map("end_date")   @db.Timestamptz(6)
   buyersPremium  Decimal       @default(0) @map("buyers_premium") @db.Decimal(5, 2)
   imageUrl       String?       @map("image_url") @db.VarChar(500)
   featured       Boolean       @default(false)
@@ -87,6 +87,8 @@ model Lot {
   bidIncrement  Decimal     @default(100.00) @map("bid_increment") @db.Decimal(10, 2)
   bidCount      Int         @default(0) @map("bid_count")
   status        LotStatus   @default(active)
+  startDate     DateTime?   @map("start_date") @db.Timestamptz(6)
+  endDate       DateTime?   @map("end_date")   @db.Timestamptz(6)
   createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
   image_data    String?
@@ -99,6 +101,8 @@ model Lot {
   @@index([auctionId])
   @@index([status])
   @@index([currentBid])
+  @@index([endDate])
+  @@index([startDate])
   @@map("lots")
 }
 
