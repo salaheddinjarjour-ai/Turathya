@@ -74,10 +74,18 @@ function formatEstimate(min, max, currency = 'USD') {
 /**
  * Returns the localized value for a bilingual field.
  * Usage: localizedField(lot, 'title') → lot.title_ar or lot.title_en based on current lang
+ *
+ * Priority (Arabic mode):  title_ar → title_en → title
+ * Priority (English mode): title_en → title     → title_ar
+ * This prevents English mode from ever showing Arabic as a fallback.
  */
 function localizedField(obj, field) {
     const lang = localStorage.getItem('lang') || 'ar';
-    return obj[field + '_' + lang] || obj[field + '_en'] || obj[field + '_ar'] || obj[field] || '';
+    if (lang === 'ar') {
+        return obj[field + '_ar'] || obj[field + '_en'] || obj[field] || '';
+    }
+    // English (or any non-Arabic lang)
+    return obj[field + '_en'] || obj[field] || obj[field + '_ar'] || '';
 }
 
 // ==================== TIERED BID INCREMENT ====================

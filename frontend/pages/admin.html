@@ -64,7 +64,7 @@
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="m14.47 13.77-1.41 1.41L5 7.12 6.41 5.7l8.06 8.07zm-3.84-9.94L9.2 5.25l1.42 1.42 1.41-1.42-1.4-1.42zm9.2 9.2-1.42 1.42 1.42 1.41 1.41-1.41-1.41-1.42zm-3.54 3.53 2.12 2.13 1.41-1.41-2.12-2.13-1.41 1.41zM10 3L3 10l7 7 7-7-7-7zm0 12.59L5.41 11 10 6.41 14.59 11 10 15.59z" />
-                    </svg> <span>Categories</span>
+                    </svg> <span data-i18n="admin.auctions">Auctions</span>
                 </a>
                 <a href="#" class="nav-item" data-view="lots">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -128,7 +128,7 @@
 
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <span class="stat-label">Total Categories</span>
+                        <span class="stat-label" data-i18n="admin.totalAuctions">Total Auctions</span>
                         <div class="stat-value" id="stat-total-auctions">0</div>
                     </div>
                     <div class="stat-card">
@@ -149,7 +149,7 @@
                 <div class="quick-actions">
                     <div class="action-card" onclick="switchView('auctions');">
                         <div class="action-icon">+</div>
-                        <div class="action-text">Create New Category</div>
+                        <div class="action-text" data-i18n="admin.createNewAuction">Create New Auction</div>
                     </div>
                     <div class="action-card" onclick="switchView('users');">
                         <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -167,14 +167,14 @@
                 </div>
             </div>
 
-            <!-- CATEGORIES VIEW -->
+            <!-- AUCTIONS VIEW -->
             <div id="view-auctions" class="admin-view">
                 <header class="page-header">
-                    <h1 class="page-title">Manage Categories</h1>
+                    <h1 class="page-title" data-i18n="admin.manageAuctions">Manage Auctions</h1>
                 </header>
 
                 <div class="admin-section mb-8">
-                    <h2 class="mb-6">Create / Edit Category</h2>
+                    <h2 class="mb-6" data-i18n="admin.createEditAuction">Create / Edit Auction</h2>
                     <form id="auction-form" class="admin-form">
                         <div class="form-row">
                             <div class="form-group">
@@ -222,19 +222,19 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Category Image</label>
+                                <label class="form-label" data-i18n="admin.auctionImage">Auction Cover Image</label>
                                 <input type="file" class="form-input" name="auctionImage" accept="image/*">
-                                <small class="text-muted">Upload an image for the category card (optional)</small>
+                                <small class="text-muted" data-i18n="admin.auctionImageHelp">Upload a cover image for this auction (optional)</small>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" data-i18n="auction.startDate">Start Date</label>
+                                <label class="form-label" data-i18n="auction.startDate">Auction Starts</label>
                                 <input type="datetime-local" class="form-input" name="startDate" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" data-i18n="auction.endDate">End Date</label>
+                                <label class="form-label" data-i18n="auction.endDate">Auction Ends</label>
                                 <input type="datetime-local" class="form-input" name="endDate" required>
                             </div>
                         </div>
@@ -246,12 +246,12 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Create Category</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="admin.createAuction">Create Auction</button>
                     </form>
                 </div>
 
                 <div class="admin-section">
-                    <h2 class="mb-6">Existing Categories</h2>
+                    <h2 class="mb-6" data-i18n="admin.existingAuctions">Existing Auctions</h2>
                     <div class="table-container">
                         <table class="table" id="auctions-table">
                             <thead>

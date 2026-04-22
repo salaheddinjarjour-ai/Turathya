@@ -458,24 +458,37 @@
        These breakpoints only fine-tune padding and edge cases.
    ════════════════════════════════════════════════════════════════ */
 
-/*
-  Mobile (< 480px)
-  ─────────────────
-  clamp hits its 480px floor around 800px viewport ÷ 0.6 = 800px,
-  so on true mobile (< 480px screen) we override to 96vw to prevent
-  any horizontal scroll. Padding-top reduced for smaller navbar.
-*/
-/* Mobile (< 540px) */
+/* ════════════════════════════════════════════════════════════════
+   Mobile (≤ 540px)
+   ──────────────────────────────────────────────────────────────
+   Root problem: clamp(700px, 85vw, 1400px) has a 700 px floor
+   that is wider than any phone screen → forces horizontal scroll.
+   Override completely; use a tight vw value + max-width cap.
+   ════════════════════════════════════════════════════════════════ */
 @media (max-width: 540px) {
   .hero {
     padding-top: 70px;
     padding-bottom: 30px;
     min-height: 100svh;
+
+    /* Explicit column-flex so frame centers vertically */
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* Breathing room top/bottom */
+    margin-top: 20px;
+    margin-bottom: 40px;
   }
 
   .frame-container {
-    /* 98vw so the large frame doesn't cause horizontal scroll */
-    width: 98vw;
+    /* 88 vw → slight horizontal padding so frame never touches edges */
+    width: 88vw;
+    max-width: 360px;      /* portrait-friendly cap */
+
+    /* Generous vertical breathing space */
+    margin: 0 auto;
   }
 
   .hero-dots {
@@ -488,6 +501,14 @@
 
   .slide-title {
     font-size: 0.78rem;
+  }
+}
+
+/* Very small screens (≤ 480px) — extra tight */
+@media (max-width: 480px) {
+  .frame-container {
+    width: 92vw;
+    max-width: 320px;
   }
 }
 

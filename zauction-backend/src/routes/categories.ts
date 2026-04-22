@@ -90,9 +90,9 @@ router.get('/:id/products', async (req, res) => {
         const { id } = req.params;
 
         const result = await pool.query(
-            `SELECT l.*, a.title as category_title, a.image_data as category_image,
-        a.start_date as category_start_date, a.end_date as category_end_date,
-        a.start_date as start_date, a.end_date as end_date,
+            `SELECT l.*,
+        a.title as category_title, a.image_data as category_image,
+        a.start_date, a.end_date,
         l.title_en, l.title_ar, l.description_en, l.description_ar,
         l.category_en, l.category_ar,
         l.auction_id as category_id,
