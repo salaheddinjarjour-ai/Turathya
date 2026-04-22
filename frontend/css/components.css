@@ -489,9 +489,18 @@
 .footer-bottom {
     padding-top: var(--space-8);
     border-top: var(--border-thin) solid var(--theme-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: var(--text-sm);
-    color: var(--theme-text-muted);
+    color: #ffffff;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #ffffff;
+    text-align: center;
 }
 
 /* ==================== MODAL ==================== */

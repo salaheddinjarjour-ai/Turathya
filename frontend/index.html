@@ -184,13 +184,13 @@
   })();
   </script>
 
-  <!-- Featured Auctions -->
+  <!-- Featured Products -->
   <section class="section section--featured-bg"
     style="background-image: url('assets/images/bg-1.png'); background-size: cover; background-position: center;">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
-        <h2 class="text-light" data-i18n="auction.featured">Featured Auctions</h2>
-        <p class="text-light" style="opacity:0.75" data-i18n="auction.featuredDesc">Carefully curated collections from around the world
+        <h2 class="text-light">Featured Products</h2>
+        <p class="text-light" style="opacity:0.75">Top live lots with the strongest bidding activity
         </p>
       </div>
 
@@ -301,51 +301,54 @@
   <script src="js/countdown.js"></script>
   <script src="js/watchlist.js"></script>
   <script>
-    // Load featured auctions from API
+    // Load featured products from API
     async function loadFeaturedAuctions() {
       try {
-        const { auctions } = await auctionsAPI.getAll({ featured: 'true' });
+        const { lots } = await lotsAPI.getAll();
         const now = new Date();
-        const activeFeatured = auctions.filter(auction => new Date(auction.end_date) > now);
+        const activeFeatured = (lots || []).filter((lot) => {
+          const startDate = lot.start_date ? new Date(lot.start_date) : null;
+          const endDate = lot.end_date ? new Date(lot.end_date) : null;
+          const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
+          return isLiveWindow && lot.status === 'active';
+        });
+
+        activeFeatured.sort((a, b) => {
+          const aCount = Number(a.bid_count || 0);
+          const bCount = Number(b.bid_count || 0);
+          if (bCount !== aCount) return bCount - aCount;
+          return Number(b.current_bid || 0) - Number(a.current_bid || 0);
+        });
+
         const container = document.getElementById('featured-auctions');
 
         if (activeFeatured.length === 0) {
-          container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;" data-i18n="auction.noFeaturedAuctions">No featured auctions available</p>';
+          container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No featured products available</p>';
           if (window.i18n) window.i18n.translatePage();
           return;
         }
 
-        container.innerHTML = activeFeatured.slice(0, 3).map(auction => {
-          const now = new Date();
-          const startDate = new Date(auction.start_date);
-          const hasNotStarted = startDate > now;
-          const startsSoon = hasNotStarted && (startDate.getTime() - now.getTime()) <= (48 * 60 * 60 * 1000);
-
-          const statusText = hasNotStarted
-            ? `${i18n.t('auction.starts')} ${formatDate(auction.start_date)}`
-            : `${i18n.t('auction.ends')} ${formatDate(auction.end_date)}`;
-
-          const badge = hasNotStarted
-            ? (startsSoon
-              ? `<span class="badge badge-info">${i18n.t('auction.startsSoon')}</span>`
-              : `<span class="badge badge-info">${i18n.t('auction.upcoming')}</span>`)
-            : (isEndingSoon(auction.end_date) ? `<span class="badge badge-accent">${i18n.t('auction.endingSoon')}</span>` : '');
-
-          const aTitle = localizedField(auction, 'title');
-          const aCat = localizedField(auction, 'category');
-          const aLoc = localizedField(auction, 'location');
-          const aHref = getAuctionHref(auction, 'pages/');
+        container.innerHTML = activeFeatured.slice(0, 3).map((lot) => {
+          const lTitle = localizedField(lot, 'title');
+          const lCat = localizedField(lot, 'category');
+          const categoryGroup = lot.category_title || lot.auction_title || '';
+          const image = lot.primary_image || lot.image_data || lot.auction_image || 'assets/images/placeholder.jpg';
+          const amount = lot.current_bid && Number(lot.current_bid) > 0 ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
+          const amountLabel = lot.current_bid && Number(lot.current_bid) > 0 ? 'Current Bid' : 'Starting Bid';
+          const badge = isEndingSoon(lot.end_date)
+            ? `<span class="badge badge-accent">${i18n.t('auction.endingSoon')}</span>`
+            : `<span class="badge badge-success">${i18n.t('auction.live')}</span>`;
 
           return `
-          <a href="${aHref}" class="card">
-            <img loading="lazy" src="${auction.image_data || auction.image_url || 'assets/images/placeholder.jpg'}" alt="${aTitle}" class="card-image">
+          <a href="pages/lot.html?id=${lot.id}" class="card">
+            <img loading="lazy" src="${image}" alt="${lTitle}" class="card-image">
             <div class="card-content">
-              <div class="label mb-2">${aCat || i18n.t('auction.category')}</div>
-              <h3 class="card-title">${aTitle}</h3>
-              <p class="card-subtitle">${auction.lot_count || 0} ${i18n.t('auction.lots')} • ${aLoc || ''}</p>
+              <div class="label mb-2">${lCat || 'Product'}</div>
+              <h3 class="card-title">${lTitle}</h3>
+              <p class="card-subtitle">Lot #${lot.lot_number}${categoryGroup ? ` • ${categoryGroup}` : ''}</p>
             </div>
             <div class="card-footer">
-              <span class="text-sm text-muted">${statusText}</span>
+              <span class="text-sm text-muted">${amountLabel}: ${formatCurrency(amount)}</span>
               ${badge}
             </div>
           </a>
@@ -355,9 +358,9 @@
         // Translate the newly added dynamic content
         if (window.i18n) window.i18n.translatePage();
       } catch (error) {
-        console.error('Failed to load featured auctions:', error);
+        console.error('Failed to load featured products:', error);
         document.getElementById('featured-auctions').innerHTML =
-          '<p class="text-center text-muted" style="grid-column: 1 / -1;" data-i18n="errors.loadAuctions">Failed to load auctions</p>';
+          '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load featured products</p>';
         if (window.i18n) window.i18n.translatePage();
       }
     }
