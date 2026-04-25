@@ -1,0 +1,57 @@
+/* ============================================
+   TURATHYA - AUCTIONS PAGE STYLES
+   Filters sidebar and grid layout
+   ============================================ */
+
+/* Keep centered in RTL mode */
+body.rtl .page-header {
+    text-align: center;
+}
+
+.page-header h1 {
+    margin-bottom: var(--space-title-subtitle);
+}
+
+.auctions-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-12);
+}
+
+.filters-sidebar {
+    position: sticky;
+    top: calc(var(--space-24) + 60px);
+    height: fit-content;
+}
+
+.auctions-content {
+    min-width: 0;
+}
+
+.auctions-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: var(--border-thin) solid var(--color-border-light);
+}
+
+/* Mobile responsive */
+@media (max-width: 1023px) {
+    .auctions-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-sidebar {
+        position: static;
+        margin-bottom: var(--space-8);
+    }
+
+    .auctions-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-4);
+    }
+}

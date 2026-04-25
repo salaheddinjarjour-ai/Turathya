@@ -115,11 +115,9 @@
 
             <!-- Featured Products Section -->
             <section class="section-spacing" id="featured-section">
-                <div class="lot-section-header">
-                    <div class="lot-section-label">TURATHYA</div>
-                    <h2 class="lot-section-title" data-i18n="auctionsPage.featuredTitle">Featured Products</h2>
-                    <p class="lot-section-sub" data-i18n="auctionsPage.featuredSub">Top bidding activity right now</p>
-                    <div class="lot-section-divider"></div>
+                <div class="section-header">
+                    <h2 data-i18n="auctionsPage.featuredTitle">Featured Products</h2>
+                    <p class="text-graphite" data-i18n="auctionsPage.featuredSub">Top bidding activity right now</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
                     <!-- Populated by JavaScript -->
@@ -128,11 +126,9 @@
 
             <!-- Live Products Section -->
             <section class="section-spacing" id="ongoing-section">
-                <div class="lot-section-header">
-                    <div class="lot-section-label">TURATHYA</div>
-                    <h2 class="lot-section-title" data-i18n="auctionsPage.liveTitle">Live Products</h2>
-                    <p class="lot-section-sub" data-i18n="auctionsPage.liveSub">Only products currently in auction windows</p>
-                    <div class="lot-section-divider"></div>
+                <div class="section-header">
+                    <h2 data-i18n="auctionsPage.liveTitle">Live Products</h2>
+                    <p class="text-graphite" data-i18n="auctionsPage.liveSub">Only products currently in auction windows</p>
                 </div>
 
                 <!-- Search & Filter Toolbar -->
@@ -160,11 +156,9 @@
 
             <!-- Recently Ended Products Section -->
             <section class="section-spacing" id="past-section">
-                <div class="lot-section-header">
-                    <div class="lot-section-label">TURATHYA</div>
-                    <h2 class="lot-section-title" data-i18n="auctionsPage.endedTitle">Recently Ended Products</h2>
-                    <p class="lot-section-sub" data-i18n="auctionsPage.endedSub">Products that recently finished auction</p>
-                    <div class="lot-section-divider"></div>
+                <div class="section-header">
+                    <h2 data-i18n="auctionsPage.endedTitle">Recently Ended Products</h2>
+                    <p class="text-graphite" data-i18n="auctionsPage.endedSub">Products that recently finished auction</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="past-auctions">
                     <!-- Populated by JavaScript -->
@@ -202,90 +196,46 @@
             return !!endDate && !Number.isNaN(endDate.getTime()) && endDate < new Date();
         }
 
-        // ── Premium lot card renderer ──────────────────────────────
         function renderAuctionCard(lot, isPast = false) {
-            const title       = localizedField(lot, 'title');
+            const cardClass = isPast ? 'card card-archive' : (isEndingSoon(lot.end_date) ? 'card card-featured' : 'card');
+            const title = localizedField(lot, 'title');
             const productType = localizedField(lot, 'category') || T('auction.lot');
-            const catGroup    = lot.category_title || lot.auction_title || '';
-            const image       = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
-            const amount      = lot.current_bid && Number(lot.current_bid) > 0
-                ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
+            const categoryGroup = lot.category_title || lot.auction_title || '';
+            const image = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
+            const amount = lot.current_bid && Number(lot.current_bid) > 0 ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
             const amountLabel = lot.current_bid && Number(lot.current_bid) > 0
-                ? T('auction.currentBid') : T('auction.startingBid');
-
-            // Badge
-            let badgeHTML;
-            if (isPast) {
-                badgeHTML = `<span class="badge-ended-neutral">${T('auction.ended')}</span>`;
-            } else if (isEndingSoon(lot.end_date)) {
-                badgeHTML = `<span class="badge-ending-gold"><span class="badge-pulse-dot"></span>${T('auction.endingSoon')}</span>`;
-            } else {
-                badgeHTML = `<span class="badge-live-gold"><span class="badge-pulse-dot"></span>${T('auction.live')}</span>`;
-            }
-
-            // Lot # label (RTL: reversed via CSS)
-            const lotTag = `LOT ${lot.lot_number}`;
-
-            // Timer cell
-            const timerCell = isPast
-                ? `<span class="lot-timer">${T('time.ended')} ${formatDate(lot.end_date)}</span>`
-                : `<span class="lot-timer" data-lot-end="${lot.end_date || ''}">—</span>`;
-
-            const cardClass = isPast ? 'lot-card is-past' : 'lot-card';
+                ? T('auction.currentBid')
+                : T('auction.startingBid');
+            const badge = isPast
+                ? `<span class="badge badge-ended">${T('auction.ended')}</span>`
+                : (isEndingSoon(lot.end_date)
+                    ? `<span class="badge badge-accent">${T('auction.endingSoon')}</span>`
+                    : `<span class="badge badge-success">${T('auction.live')}</span>`);
+            const timeEnded = T('time.ended');
+            const timeEnds  = T('auction.ends');
+            const timeText = isPast
+                ? `${timeEnded} ${formatDate(lot.end_date)}`
+                : `${timeEnds} ${formatDate(lot.end_date)}`;
+            const lotLabel = T('auctionsPage.lotNum');
             const archiveParam = isPast ? '&archive=true' : '';
 
             return `
                 <a href="lot.html?id=${lot.id}${archiveParam}" class="${cardClass}">
-                    <div class="lot-img-wrap">
-                        <img loading="lazy" src="${image}" alt="${title}">
-                        <div class="lot-num-tag">${lotTag}</div>
-                        <div class="lot-badge-wrap">${badgeHTML}</div>
+                    <img loading="lazy" src="${image}" alt="${title}" class="card-image">
+                    <div class="card-content">
+                        <div class="label mb-2">${productType}</div>
+                        <h3 class="card-title">${title}</h3>
+                        <p class="card-subtitle">${lotLabel} ${lot.lot_number}${categoryGroup ? ' • ' + categoryGroup : ''}</p>
                     </div>
-                    <div class="lot-body">
-                        <div class="lot-cat">${productType}</div>
-                        <h3 class="lot-title">${title}</h3>
-                        ${catGroup ? `<p class="lot-sub">${catGroup}</p>` : ''}
-                        <div class="lot-divider"></div>
-                        <div class="lot-price-row">
-                            <div>
-                                <div class="lot-price-label">${amountLabel}</div>
-                                <div class="lot-price-value">${formatCurrency(amount)}</div>
-                            </div>
-                            ${timerCell}
-                        </div>
+                    <div class="card-footer" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                        <span class="text-sm text-muted">${amountLabel}: ${formatCurrency(amount)}</span>
+                        ${badge}
+                    </div>
+                    <div class="card-footer">
+                        <span class="text-sm text-muted">${timeText}</span>
                     </div>
                 </a>
             `;
-        }
-
-        // ── Live countdown engine ──────────────────────────────────
-        function updateLotTimer(el) {
-            const end = el.dataset.lotEnd;
-            if (!end) return;
-            const diff = new Date(end) - new Date();
-            if (diff <= 0) {
-                el.textContent = T('time.ended');
-                el.classList.remove('ending-soon-timer');
-                return;
-            }
-            const s  = Math.floor(diff / 1000);
-            const d  = Math.floor(s / 86400);
-            const h  = Math.floor((s % 86400) / 3600);
-            const m  = Math.floor((s % 3600) / 60);
-            const sc = s % 60;
-            let text;
-            if (d > 0)      { text = `${d}d ${h}h`; }
-            else if (h > 0) { text = `${h}h ${m}m`; }
-            else            { text = `${m}m ${String(sc).padStart(2,'0')}s`; el.classList.add('ending-soon-timer'); }
-            el.textContent = text;
-        }
-
-        function startLotCountdowns() {
-            document.querySelectorAll('[data-lot-end]').forEach(updateLotTimer);
-            clearInterval(window._lotCountdownInterval);
-            window._lotCountdownInterval = setInterval(() => {
-                document.querySelectorAll('[data-lot-end]').forEach(updateLotTimer);
-            }, 1000);
         }
 
         async function loadAllLots() {
@@ -351,7 +301,6 @@
                 }
 
                 container.innerHTML = featuredLots.map((lot) => renderAuctionCard(lot, false)).join('');
-                startLotCountdowns();
             } catch (error) {
                 console.error('Failed to load featured products:', error);
                 document.getElementById('featured-section').style.display = 'none';
@@ -376,7 +325,6 @@
                     .sort((a, b) => new Date(a.end_date) - new Date(b.end_date))
                     .map((lot) => renderAuctionCard(lot, false))
                     .join('');
-                startLotCountdowns();
             } catch (error) {
                 console.error('Failed to load live products:', error);
                 document.getElementById('ongoing-auctions').innerHTML =
@@ -404,7 +352,6 @@
                 }
 
                 container.innerHTML = endedLots.map((lot) => renderAuctionCard(lot, true)).join('');
-                startLotCountdowns();
             } catch (error) {
                 console.error('Failed to load ended products:', error);
                 document.getElementById('past-section').style.display = 'none';
