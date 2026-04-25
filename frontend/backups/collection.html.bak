@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/images/Beigelogo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="TURATHYA Collection - A comprehensive index of all lots, past and present.">
+    <title>Collection - TURATHYA</title>
+
+    <script>
+        (function () {
+            const lang = localStorage.getItem('lang') || 'ar';
+            const isAr = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.documentElement.classList.add('i18n-pending');
+            if (isAr) document.documentElement.classList.add('rtl');
+        })();
+    </script>
+    <style>
+        html.i18n-pending body {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ── Full-bleed hero — matches Contact / About Us / Auctions ── */
+        .col-hero {
+            position: relative;
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 120px 24px 96px;
+        }
+        .col-hero__bg {
+            position: absolute; inset: 0;
+            background-image: url('../assets/images/fill-bg-1.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        .col-hero__overlay {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.18) 0%, transparent 55%),
+                linear-gradient(175deg, rgba(10,8,4,.62) 0%, rgba(5,4,2,.80) 100%);
+            z-index: 1;
+        }
+        .col-hero__content {
+            position: relative; z-index: 2;
+            max-width: 680px;
+            text-align: center !important;
+            width: 100%;
+        }
+        .col-hero__title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            font-weight: 400;
+            color: #fff;
+            line-height: 1.10;
+            margin-bottom: 16px;
+            text-align: center !important;
+        }
+        .col-hero__sub {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 300;
+            color: rgba(255,255,255,.72);
+            line-height: 1.70;
+            text-align: center !important;
+        }
+        .col-hero__line {
+            width: 52px; height: 1px;
+            background: linear-gradient(90deg, transparent, #c9a96e, transparent);
+            margin: 18px auto 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/brand-fonts.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/typography.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/collection.css">
+    <link rel="stylesheet" href="../css/rtl.css?v=5">
+    <link rel="stylesheet" href="../css/components/lang-toggle.css">
+</head>
+
+<body>
+    <div id="site-header"></div>
+
+    <!-- Full-bleed hero — same shape as Contact / About Us / Auctions -->
+    <section class="col-hero">
+        <div class="col-hero__bg"></div>
+        <div class="col-hero__overlay"></div>
+        <div class="col-hero__content">
+            <h1 class="col-hero__title" data-i18n="nav.collection">Collection</h1>
+            <p class="col-hero__sub" data-i18n="collection.subtitle">All lots, past and present.</p>
+            <div class="col-hero__line"></div>
+        </div>
+    </section>
+
+    <main class="section">
+        <div class="container">
+
+            <!-- Minimal Filters -->
+            <div class="collection-filters mb-12">
+                <div class="filter-group">
+                    <label class="form-label" data-i18n="admin.status">Status</label>
+                    <div class="status-toggles">
+                        <button class="status-btn active" data-status="all" data-i18n="common.all">All</button>
+                        <button class="status-btn" data-status="active" data-i18n="auction.live">Live</button>
+                        <button class="status-btn" data-status="closed" data-i18n="auction.ended">Closed</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="form-label" for="group-select">Category Group</label>
+                    <select id="group-select" class="form-select">
+                        <option value="">All Category Groups</option>
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="form-label" for="category-select">Product Type</label>
+                    <select id="category-select" class="form-select">
+                        <option value="">All Product Types</option>
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Items Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg" id="collection-grid">
+                <!-- Populated via JS -->
+            </div>
+
+            <!-- Pagination (if needed, simplified for now) -->
+            <div class="pagination" id="pagination">
+                <!-- JS will handle simple load more or pages if list is huge, 
+                     but requirement said pagination preferred. for demo data, single page is fine, 
+                     but I'll add placeholder pagination structure -->
+                <button class="pagination-btn" disabled>&larr;</button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn" disabled>&rarr;</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="site-footer"></div>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/countdown.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script>
+        // CLIENT - SIDE LOGIC FOR COLLECTION
+
+        let allLots = [];
+        let filteredLots = [];
+        let allCategories = [];
+
+        // Filter state
+        const filters = {
+            status: 'all',
+            categoryId: '',
+            productType: ''
+        };
+
+        async function initCollection() {
+            try {
+                // Fetch all lots from API
+                const lotsResponse = await lotsAPI.getAll();
+                allLots = lotsResponse.lots || [];
+
+                // Fetch all categories for filter dropdown
+                const categoriesResponse = await categoriesAPI.getAll();
+                allCategories = categoriesResponse.categories || [];
+
+                populateFilters();
+                applyFilters();
+            } catch (error) {
+                console.error('Failed to load collection:', error);
+                document.getElementById('collection-grid').innerHTML =
+                    '<p class="text-muted col-span-full text-center py-12" data-i18n="errors.loadCollection">Failed to load collection</p>';
+                if (window.i18n) window.i18n.translatePage();
+            }
+        }
+
+        function populateFilters() {
+            // Category groups dropdown
+            const groupSelect = document.getElementById('group-select');
+            groupSelect.innerHTML = '<option value="">All Category Groups</option>';
+            allCategories.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
+            allCategories.forEach((auction) => {
+                const option = document.createElement('option');
+                option.value = auction.id;
+                option.textContent = auction.title;
+                groupSelect.appendChild(option);
+            });
+
+            // Categories (Unique across all lots)
+            const categories = [...new Set(allLots.map(lot => lot.category).filter(Boolean))].sort();
+            const categorySelect = document.getElementById('category-select');
+            categorySelect.innerHTML = '<option value="">All Product Types</option>';
+
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+
+            // Translate newly added filter options
+            if (window.i18n) window.i18n.translatePage();
+        }
+
+        function applyFilters() {
+            filteredLots = allLots.filter(lot => {
+                const now = new Date();
+                const startDate = lot.start_date ? new Date(lot.start_date) : null;
+                const endDate = lot.end_date ? new Date(lot.end_date) : null;
+                const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
+                const isClosed = endDate && endDate < now;
+
+                // Status Filter
+                if (filters.status === 'active' && (!isLiveWindow || lot.status !== 'active')) return false;
+                if (filters.status === 'closed' && !isClosed) return false;
+
+                // Category Group Filter
+                if (filters.categoryId && (lot.category_id || lot.auction_id) !== filters.categoryId) return false;
+
+                // Product Type Filter
+                if (filters.productType && lot.category !== filters.productType) return false;
+
+                return true;
+            });
+
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('collection-grid');
+            container.innerHTML = '';
+
+            if (filteredLots.length === 0) {
+                container.innerHTML = '<p class="text-muted col-span-full text-center py-12">No lots found matching your criteria.</p>';
+                return;
+            }
+
+            filteredLots.forEach(lot => {
+                const category = allCategories.find((a) => a.id === (lot.category_id || lot.auction_id));
+                const now = new Date();
+                const startDate = lot.start_date ? new Date(lot.start_date) : null;
+                const endDate = lot.end_date ? new Date(lot.end_date) : null;
+                const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
+                const isClosed = endDate && endDate < now;
+                const cardClass = isClosed ? 'card card-archive' : 'card';
+
+                let priceLabel = '';
+                let priceValue = '';
+
+                if (isClosed) {
+                    if (lot.status === 'sold') {
+                        priceLabel = 'Hammer Price';
+                        priceValue = formatCurrency(lot.final_price || lot.current_bid || 0);
+                    } else {
+                        priceValue = 'Unsold';
+                        priceLabel = lot.estimate_low && lot.estimate_high
+                            ? 'Est. ' + formatCurrency(lot.estimate_low) + ' - ' + formatCurrency(lot.estimate_high)
+                            : '';
+                    }
+                } else {
+                    priceLabel = lot.current_bid && lot.current_bid > 0 ? 'Current Bid' : 'Starting Bid';
+                    priceValue = lot.current_bid && lot.current_bid > 0 ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid);
+                }
+
+                const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
+                const countdownHtml = isClosed ? '' : '<span class="text-xs font-medium" data-countdown="' + lot.end_date + '" data-compact></span>';
+
+                const card = document.createElement('a');
+                card.href = 'lot.html?id=' + lot.id + (isClosed ? '&archive=true' : '');
+                card.className = cardClass;
+                card.innerHTML =
+                    '<div class="relative">' +
+                    '<img loading="lazy" src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
+                    (isLiveWindow ? '<div class="absolute top-2 right-2"><span class="badge badge-accent bg-white">Live</span></div>' : '') +
+                    '</div>' +
+                    '<div class="card-content">' +
+                    '<div class="text-xs text-muted mb-1">' + (category ? category.title : '') + '</div>' +
+                    '<h4 class="card-title text-base">' + lot.title + '</h4>' +
+                    '<div class="flex justify-between items-end mt-4">' +
+                    '<div>' +
+                    '<p class="price text-sm">' + priceValue + '</p>' +
+                    '<p class="text-xs text-muted">' + priceLabel + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="card-footer text-xs text-muted">' +
+                    'Product ' + lot.lot_number +
+                    (isClosed ? '' : ' • ' + countdownHtml) +
+                    '</div>';
+
+                container.appendChild(card);
+            });
+
+            if (!filters.status.includes('closed')) {
+                initCountdowns();
+            }
+
+            // Translate newly rendered lot cards
+            if (window.i18n) window.i18n.translatePage();
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initCollection();
+
+            // Status Buttons
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Toggle active class
+                    document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    filters.status = e.target.dataset.status;
+                    applyFilters();
+                });
+            });
+
+            // Dropdowns
+            document.getElementById('group-select').addEventListener('change', (e) => {
+                filters.categoryId = e.target.value;
+                applyFilters();
+            });
+
+            document.getElementById('category-select').addEventListener('change', (e) => {
+                filters.productType = e.target.value;
+                applyFilters();
+            });
+        });
+    </script>
+</body>
+
+</html>

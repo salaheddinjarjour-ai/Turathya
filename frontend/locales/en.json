@@ -231,7 +231,19 @@
     },
     "collection": {
         "subtitle": "All lots, past and present.",
-        "allAuctions": "All Auctions"
+        "allAuctions": "All Auctions",
+        "introLabel": "COLLECTION",
+        "introTitle": "Curated Pieces",
+        "introDesc": "Explore a refined selection of rare and exceptional items currently available for bidding.",
+        "viewLot": "View Lot",
+        "noLots": "No lots found matching your criteria.",
+        "filterStatus": "Status",
+        "filterGroup": "Category Group",
+        "filterType": "Product Type",
+        "allGroups": "All Category Groups",
+        "allTypes": "All Product Types",
+        "hammerPrice": "Hammer Price",
+        "unsold": "Unsold"
     },
     "stats": {
         "auctions": "Auctions",

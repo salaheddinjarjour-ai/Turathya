@@ -5,7 +5,7 @@
     <link rel="icon" type="image/png" href="../assets/images/Beigelogo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="TURATHYA Collection - A comprehensive index of all lots, past and present.">
+    <meta name="description" content="TURATHYA Collection - A curated archive of rare and exceptional auction lots.">
     <title>Collection - TURATHYA</title>
 
     <script>
@@ -79,11 +79,12 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/variables.css">
-  <link rel="stylesheet" href="../css/brand-fonts.css">
+    <link rel="stylesheet" href="../css/brand-fonts.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/typography.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/auctions.css">
     <link rel="stylesheet" href="../css/pages/collection.css">
     <link rel="stylesheet" href="../css/rtl.css?v=5">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
@@ -92,7 +93,7 @@
 <body>
     <div id="site-header"></div>
 
-    <!-- Full-bleed hero — same shape as Contact / About Us / Auctions -->
+    <!-- Full-bleed hero -->
     <section class="col-hero">
         <div class="col-hero__bg"></div>
         <div class="col-hero__overlay"></div>
@@ -106,32 +107,38 @@
     <main class="section">
         <div class="container">
 
-            <!-- Minimal Filters -->
+            <!-- Premium Filter Bar -->
             <div class="collection-filters mb-12">
                 <div class="filter-group">
-                    <label class="form-label" data-i18n="admin.status">Status</label>
+                    <label class="form-label" data-i18n="collection.filterStatus">Status</label>
                     <div class="status-toggles">
                         <button class="status-btn active" data-status="all" data-i18n="common.all">All</button>
                         <button class="status-btn" data-status="active" data-i18n="auction.live">Live</button>
-                        <button class="status-btn" data-status="closed" data-i18n="auction.ended">Closed</button>
+                        <button class="status-btn" data-status="closed" data-i18n="auction.ended">Ended</button>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <label class="form-label" for="group-select">Category Group</label>
+                    <label class="form-label" for="group-select" data-i18n="collection.filterGroup">Category Group</label>
                     <select id="group-select" class="form-select">
-                        <option value="">All Category Groups</option>
-                        <!-- Populated via JS -->
+                        <option value="" data-i18n="collection.allGroups">All Category Groups</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
-                    <label class="form-label" for="category-select">Product Type</label>
+                    <label class="form-label" for="category-select" data-i18n="collection.filterType">Product Type</label>
                     <select id="category-select" class="form-select">
-                        <option value="">All Product Types</option>
-                        <!-- Populated via JS -->
+                        <option value="" data-i18n="collection.allTypes">All Product Types</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- Collection Intro -->
+            <div class="col-intro">
+                <span class="col-intro-label" data-i18n="collection.introLabel">COLLECTION</span>
+                <h2 class="col-intro-title" data-i18n="collection.introTitle">Curated Pieces</h2>
+                <p class="col-intro-desc" data-i18n="collection.introDesc">Explore a refined selection of rare and exceptional items currently available for bidding.</p>
+                <div class="col-intro-divider"></div>
             </div>
 
             <!-- Items Grid -->
@@ -139,11 +146,8 @@
                 <!-- Populated via JS -->
             </div>
 
-            <!-- Pagination (if needed, simplified for now) -->
+            <!-- Pagination -->
             <div class="pagination" id="pagination">
-                <!-- JS will handle simple load more or pages if list is huge, 
-                     but requirement said pagination preferred. for demo data, single page is fine, 
-                     but I'll add placeholder pagination structure -->
                 <button class="pagination-btn" disabled>&larr;</button>
                 <button class="pagination-btn active">1</button>
                 <button class="pagination-btn" disabled>&rarr;</button>
@@ -158,89 +162,203 @@
     <script src="../js/countdown.js"></script>
     <script src="../js/i18n.js"></script>
     <script>
-        // CLIENT - SIDE LOGIC FOR COLLECTION
+        // ── i18n helper ────────────────────────────────────────────
+        const T = (k) => (window.i18n && window.i18n.t) ? window.i18n.t(k) : k;
 
-        let allLots = [];
-        let filteredLots = [];
+        let allLots       = [];
+        let filteredLots  = [];
         let allCategories = [];
 
-        // Filter state
-        const filters = {
-            status: 'all',
-            categoryId: '',
-            productType: ''
-        };
+        const filters = { status: 'all', categoryId: '', productType: '' };
 
+        // ── Live countdown engine (same as auctions page) ──────────
+        function updateLotTimer(el) {
+            const end = el.dataset.lotEnd;
+            if (!end) return;
+            const diff = new Date(end) - new Date();
+            if (diff <= 0) {
+                el.textContent = T('time.ended');
+                el.classList.remove('ending-soon-timer');
+                return;
+            }
+            const s  = Math.floor(diff / 1000);
+            const d  = Math.floor(s / 86400);
+            const h  = Math.floor((s % 86400) / 3600);
+            const m  = Math.floor((s % 3600) / 60);
+            const sc = s % 60;
+            let text;
+            if (d > 0)      { text = `${d}d ${h}h`; }
+            else if (h > 0) { text = `${h}h ${m}m`; }
+            else            { text = `${m}m ${String(sc).padStart(2,'0')}s`; el.classList.add('ending-soon-timer'); }
+            el.textContent = text;
+        }
+
+        function startLotCountdowns() {
+            document.querySelectorAll('[data-lot-end]').forEach(updateLotTimer);
+            clearInterval(window._colCountdownInterval);
+            window._colCountdownInterval = setInterval(() => {
+                document.querySelectorAll('[data-lot-end]').forEach(updateLotTimer);
+            }, 1000);
+        }
+
+        // ── Scroll reveal (IntersectionObserver) ──────────────────
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, i) => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const idx = parseInt(el.dataset.revealIdx || '0', 10);
+                        setTimeout(() => el.classList.add('in-view'), idx * 65);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.08 });
+
+            document.querySelectorAll('.lot-card-fade').forEach((el, i) => {
+                el.dataset.revealIdx = i;
+                observer.observe(el);
+            });
+        }
+
+        // ── Render card (premium lot card, reuses auctions system) ─
+        function renderCard(lot, isClosed) {
+            const now       = new Date();
+            const startDate = lot.start_date ? new Date(lot.start_date) : null;
+            const endDate   = lot.end_date   ? new Date(lot.end_date)   : null;
+            const isLive    = (!startDate || startDate <= now) && endDate && endDate > now && lot.status === 'active';
+            const endingSoon = isLive && endDate && (endDate - now) < 86400000 * 2; // < 2 days
+
+            const title     = localizedField(lot, 'title') || lot.title || '';
+            const category  = localizedField(lot, 'category') || T('auction.lot');
+            const catGroup  = lot.category_title || lot.auction_title || '';
+            const image     = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
+
+            // Price
+            let priceLabel, priceValue;
+            if (isClosed) {
+                if (lot.status === 'sold') {
+                    priceLabel = T('collection.hammerPrice');
+                    priceValue = formatCurrency(lot.final_price || lot.current_bid || 0);
+                } else {
+                    priceLabel = lot.estimate_low && lot.estimate_high
+                        ? `Est. ${formatCurrency(lot.estimate_low)} – ${formatCurrency(lot.estimate_high)}`
+                        : '';
+                    priceValue = T('collection.unsold');
+                }
+            } else {
+                priceLabel = lot.current_bid && lot.current_bid > 0
+                    ? T('auction.currentBid') : T('auction.startingBid');
+                priceValue = lot.current_bid && lot.current_bid > 0
+                    ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid);
+            }
+
+            // Badge
+            let badgeHTML;
+            if (isClosed) {
+                badgeHTML = `<span class="badge-ended-neutral">${T('auction.ended')}</span>`;
+            } else if (endingSoon) {
+                badgeHTML = `<span class="badge-ending-gold"><span class="badge-pulse-dot"></span>${T('auction.endingSoon')}</span>`;
+            } else if (isLive) {
+                badgeHTML = `<span class="badge-live-gold"><span class="badge-pulse-dot"></span>${T('auction.live')}</span>`;
+            } else {
+                badgeHTML = '';
+            }
+
+            // Timer cell
+            const timerCell = isClosed
+                ? `<span class="lot-timer">${T('time.ended')} ${formatDate(lot.end_date)}</span>`
+                : (endDate ? `<span class="lot-timer" data-lot-end="${lot.end_date}">—</span>` : '');
+
+            // Hover CTA
+            const ctaText = T('collection.viewLot');
+
+            const cardClass = isClosed ? 'lot-card is-past lot-card-fade' : 'lot-card lot-card-fade';
+            const archiveParam = isClosed ? '&archive=true' : '';
+            const lotTag = `LOT ${lot.lot_number}`;
+
+            return `
+                <a href="lot.html?id=${lot.id}${archiveParam}" class="${cardClass}">
+                    <div class="lot-img-wrap">
+                        <img loading="lazy" src="${image}" alt="${title}">
+                        <div class="lot-num-tag">${lotTag}</div>
+                        ${badgeHTML ? `<div class="lot-badge-wrap">${badgeHTML}</div>` : ''}
+                        <div class="col-cta-overlay"><span>${ctaText} →</span></div>
+                    </div>
+                    <div class="lot-body">
+                        <div class="lot-cat">${category}</div>
+                        <h3 class="lot-title">${title}</h3>
+                        ${catGroup ? `<p class="lot-sub">${catGroup}</p>` : ''}
+                        <div class="lot-divider"></div>
+                        <div class="lot-price-row">
+                            <div>
+                                <div class="lot-price-label">${priceLabel}</div>
+                                <div class="lot-price-value">${priceValue}</div>
+                            </div>
+                            ${timerCell}
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
+        // ── Filter logic ──────────────────────────────────────────
         async function initCollection() {
             try {
-                // Fetch all lots from API
-                const lotsResponse = await lotsAPI.getAll();
-                allLots = lotsResponse.lots || [];
-
-                // Fetch all categories for filter dropdown
-                const categoriesResponse = await categoriesAPI.getAll();
-                allCategories = categoriesResponse.categories || [];
-
+                const [lotsRes, catsRes] = await Promise.all([
+                    lotsAPI.getAll(),
+                    categoriesAPI.getAll()
+                ]);
+                allLots       = lotsRes.lots       || [];
+                allCategories = catsRes.categories || [];
                 populateFilters();
                 applyFilters();
-            } catch (error) {
-                console.error('Failed to load collection:', error);
+            } catch (err) {
+                console.error('Failed to load collection:', err);
                 document.getElementById('collection-grid').innerHTML =
-                    '<p class="text-muted col-span-full text-center py-12" data-i18n="errors.loadCollection">Failed to load collection</p>';
+                    `<p class="text-muted col-span-full text-center py-12">${T('errors.loadCollection')}</p>`;
                 if (window.i18n) window.i18n.translatePage();
             }
         }
 
         function populateFilters() {
-            // Category groups dropdown
             const groupSelect = document.getElementById('group-select');
-            groupSelect.innerHTML = '<option value="">All Category Groups</option>';
-            allCategories.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+            groupSelect.innerHTML = `<option value="">${T('collection.allGroups')}</option>`;
+            allCategories
+                .sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
+                .forEach(cat => {
+                    const o = document.createElement('option');
+                    o.value = cat.id;
+                    o.textContent = localizedField(cat, 'title') || cat.title;
+                    groupSelect.appendChild(o);
+                });
 
-            allCategories.forEach((auction) => {
-                const option = document.createElement('option');
-                option.value = auction.id;
-                option.textContent = auction.title;
-                groupSelect.appendChild(option);
+            const cats = [...new Set(allLots.map(l => l.category).filter(Boolean))].sort();
+            const catSelect = document.getElementById('category-select');
+            catSelect.innerHTML = `<option value="">${T('collection.allTypes')}</option>`;
+            cats.forEach(c => {
+                const o = document.createElement('option');
+                o.value = c;
+                o.textContent = c;
+                catSelect.appendChild(o);
             });
 
-            // Categories (Unique across all lots)
-            const categories = [...new Set(allLots.map(lot => lot.category).filter(Boolean))].sort();
-            const categorySelect = document.getElementById('category-select');
-            categorySelect.innerHTML = '<option value="">All Product Types</option>';
-
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                categorySelect.appendChild(option);
-            });
-
-            // Translate newly added filter options
             if (window.i18n) window.i18n.translatePage();
         }
 
         function applyFilters() {
+            const now = new Date();
             filteredLots = allLots.filter(lot => {
-                const now = new Date();
                 const startDate = lot.start_date ? new Date(lot.start_date) : null;
-                const endDate = lot.end_date ? new Date(lot.end_date) : null;
+                const endDate   = lot.end_date   ? new Date(lot.end_date)   : null;
                 const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
                 const isClosed = endDate && endDate < now;
 
-                // Status Filter
                 if (filters.status === 'active' && (!isLiveWindow || lot.status !== 'active')) return false;
                 if (filters.status === 'closed' && !isClosed) return false;
-
-                // Category Group Filter
                 if (filters.categoryId && (lot.category_id || lot.auction_id) !== filters.categoryId) return false;
-
-                // Product Type Filter
                 if (filters.productType && lot.category !== filters.productType) return false;
-
                 return true;
             });
-
             renderGrid();
         }
 
@@ -249,97 +367,42 @@
             container.innerHTML = '';
 
             if (filteredLots.length === 0) {
-                container.innerHTML = '<p class="text-muted col-span-full text-center py-12">No lots found matching your criteria.</p>';
+                container.innerHTML = `<p class="text-muted col-span-full text-center py-12">${T('collection.noLots')}</p>`;
                 return;
             }
 
-            filteredLots.forEach(lot => {
-                const category = allCategories.find((a) => a.id === (lot.category_id || lot.auction_id));
-                const now = new Date();
-                const startDate = lot.start_date ? new Date(lot.start_date) : null;
+            const now = new Date();
+            container.innerHTML = filteredLots.map(lot => {
                 const endDate = lot.end_date ? new Date(lot.end_date) : null;
-                const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
                 const isClosed = endDate && endDate < now;
-                const cardClass = isClosed ? 'card card-archive' : 'card';
+                return renderCard(lot, isClosed);
+            }).join('');
 
-                let priceLabel = '';
-                let priceValue = '';
+            startLotCountdowns();
+            initScrollReveal();
 
-                if (isClosed) {
-                    if (lot.status === 'sold') {
-                        priceLabel = 'Hammer Price';
-                        priceValue = formatCurrency(lot.final_price || lot.current_bid || 0);
-                    } else {
-                        priceValue = 'Unsold';
-                        priceLabel = lot.estimate_low && lot.estimate_high
-                            ? 'Est. ' + formatCurrency(lot.estimate_low) + ' - ' + formatCurrency(lot.estimate_high)
-                            : '';
-                    }
-                } else {
-                    priceLabel = lot.current_bid && lot.current_bid > 0 ? 'Current Bid' : 'Starting Bid';
-                    priceValue = lot.current_bid && lot.current_bid > 0 ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid);
-                }
-
-                const imageUrl = lot.primary_image || lot.image_data || '../assets/images/placeholder.jpg';
-                const countdownHtml = isClosed ? '' : '<span class="text-xs font-medium" data-countdown="' + lot.end_date + '" data-compact></span>';
-
-                const card = document.createElement('a');
-                card.href = 'lot.html?id=' + lot.id + (isClosed ? '&archive=true' : '');
-                card.className = cardClass;
-                card.innerHTML =
-                    '<div class="relative">' +
-                    '<img loading="lazy" src="' + imageUrl + '" alt="' + lot.title + '" class="card-image">' +
-                    (isLiveWindow ? '<div class="absolute top-2 right-2"><span class="badge badge-accent bg-white">Live</span></div>' : '') +
-                    '</div>' +
-                    '<div class="card-content">' +
-                    '<div class="text-xs text-muted mb-1">' + (category ? category.title : '') + '</div>' +
-                    '<h4 class="card-title text-base">' + lot.title + '</h4>' +
-                    '<div class="flex justify-between items-end mt-4">' +
-                    '<div>' +
-                    '<p class="price text-sm">' + priceValue + '</p>' +
-                    '<p class="text-xs text-muted">' + priceLabel + '</p>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="card-footer text-xs text-muted">' +
-                    'Product ' + lot.lot_number +
-                    (isClosed ? '' : ' • ' + countdownHtml) +
-                    '</div>';
-
-                container.appendChild(card);
-            });
-
-            if (!filters.status.includes('closed')) {
-                initCountdowns();
-            }
-
-            // Translate newly rendered lot cards
             if (window.i18n) window.i18n.translatePage();
         }
 
-        // Event Listeners
+        // ── Event Listeners ───────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             initCollection();
 
-            // Status Buttons
             document.querySelectorAll('.status-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    // Toggle active class
+                btn.addEventListener('click', e => {
                     document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-
-                    filters.status = e.target.dataset.status;
+                    e.currentTarget.classList.add('active');
+                    filters.status = e.currentTarget.dataset.status;
                     applyFilters();
                 });
             });
 
-            // Dropdowns
-            document.getElementById('group-select').addEventListener('change', (e) => {
+            document.getElementById('group-select').addEventListener('change', e => {
                 filters.categoryId = e.target.value;
                 applyFilters();
             });
 
-            document.getElementById('category-select').addEventListener('change', (e) => {
+            document.getElementById('category-select').addEventListener('change', e => {
                 filters.productType = e.target.value;
                 applyFilters();
             });

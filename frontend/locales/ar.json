@@ -235,7 +235,19 @@
     },
     "collection": {
         "subtitle": "جميع القطع، الماضية والحالية.",
-        "allAuctions": "جميع المزادات"
+        "allAuctions": "جميع المزادات",
+        "introLabel": "المجموعة",
+        "introTitle": "قطع مختارة",
+        "introDesc": "استكشف مجموعة مختارة من القطع النادرة والاستثنائية المتاحة للمزايدة",
+        "viewLot": "عرض القطعة",
+        "noLots": "لم يتم العثور على قطع مطابقة",
+        "filterStatus": "الحالة",
+        "filterGroup": "المجموعة",
+        "filterType": "نوع المنتج",
+        "allGroups": "كل المجموعات",
+        "allTypes": "كل الأنواع",
+        "hammerPrice": "سعر المطرقة",
+        "unsold": "غير مباع"
     },
     "stats": {
         "auctions": "المزادات",

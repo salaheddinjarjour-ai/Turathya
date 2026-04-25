@@ -1,0 +1,69 @@
+/* ============================================
+   TURATHYA - COLLECTION PAGE STYLES
+   Minimal styling for the index/archive page
+   ============================================ */
+
+.collection-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--gap-lg);
+    padding-bottom: var(--space-8);
+    border-bottom: var(--border-thin) solid var(--color-border-light);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-toggles {
+    display: flex;
+    background-color: var(--color-parchment);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    min-height: 42px;
+}
+
+.status-btn {
+    flex: 1;
+    padding: var(--space-2) var(--space-4);
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-graphite);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast);
+}
+
+.status-btn:hover {
+    color: var(--color-charcoal);
+}
+
+.status-btn.active {
+    background-color: var(--color-white);
+    color: var(--color-charcoal);
+    font-weight: var(--weight-medium);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Card refinements for denser academic list */
+.card-title {
+    font-size: var(--text-base);
+    /* Slightly smaller than main auction titles for density */
+}
+
+/* Archive card specifics if not already covered */
+.card-archive .price {
+    font-weight: var(--weight-medium);
+    color: var(--color-graphite);
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+    .collection-filters {
+        grid-template-columns: 1fr;
+        gap: var(--gap-md);
+    }
+}
