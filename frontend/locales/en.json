@@ -239,6 +239,21 @@
         "liveNow": "Live Now",
         "bids": "Active Bids"
     },
+    "auctionsPage": {
+        "heroTitle": "Live Auctions",
+        "heroSub": "Products currently being auctioned in real time",
+        "featuredTitle": "Featured Products",
+        "featuredSub": "Top bidding activity right now",
+        "liveTitle": "Live Products",
+        "liveSub": "Only products currently in auction windows",
+        "searchLabel": "Search products",
+        "searchPlaceholder": "Search by title, lot number, category",
+        "endedTitle": "Recently Ended Products",
+        "endedSub": "Products that recently finished auction",
+        "noLiveProducts": "No live products found",
+        "failedLoad": "Failed to load products",
+        "lotNum": "Lot #"
+    },
     "admin": {
         "dashboard": "Dashboard",
         "auctions": "Auctions",

@@ -104,8 +104,8 @@
         <div class="auc-hero__bg"></div>
         <div class="auc-hero__overlay"></div>
         <div class="auc-hero__content">
-            <h1 class="auc-hero__title">Live Auctions</h1>
-            <p class="auc-hero__sub">Products currently being auctioned in real time</p>
+            <h1 class="auc-hero__title" data-i18n="auctionsPage.heroTitle">Live Auctions</h1>
+            <p class="auc-hero__sub" data-i18n="auctionsPage.heroSub">Products currently being auctioned in real time</p>
             <div class="auc-hero__line"></div>
         </div>
     </section>
@@ -116,8 +116,8 @@
             <!-- Featured Products Section -->
             <section class="section-spacing" id="featured-section">
                 <div class="section-header">
-                    <h2>Featured Products</h2>
-                    <p class="text-graphite">Top bidding activity right now</p>
+                    <h2 data-i18n="auctionsPage.featuredTitle">Featured Products</h2>
+                    <p class="text-graphite" data-i18n="auctionsPage.featuredSub">Top bidding activity right now</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
                     <!-- Populated by JavaScript -->
@@ -127,15 +127,16 @@
             <!-- Live Products Section -->
             <section class="section-spacing" id="ongoing-section">
                 <div class="section-header">
-                    <h2>Live Products</h2>
-                    <p class="text-graphite">Only products currently in auction windows</p>
+                    <h2 data-i18n="auctionsPage.liveTitle">Live Products</h2>
+                    <p class="text-graphite" data-i18n="auctionsPage.liveSub">Only products currently in auction windows</p>
                 </div>
 
                 <!-- Search & Filter Toolbar -->
                 <div class="auctions-toolbar">
                     <div style="flex: 1; max-width: 420px;">
-                        <label class="form-label" for="auction-search">Search products</label>
+                        <label class="form-label" for="auction-search" data-i18n="auctionsPage.searchLabel">Search products</label>
                         <input type="search" class="form-input search-input" id="auction-search"
+                            data-i18n-placeholder="auctionsPage.searchPlaceholder"
                             placeholder="Search by title, lot number, category">
                     </div>
                     <div style="width: 100%; max-width: 280px;">
@@ -156,8 +157,8 @@
             <!-- Recently Ended Products Section -->
             <section class="section-spacing" id="past-section">
                 <div class="section-header">
-                    <h2>Recently Ended Products</h2>
-                    <p class="text-graphite">Products that recently finished auction</p>
+                    <h2 data-i18n="auctionsPage.endedTitle">Recently Ended Products</h2>
+                    <p class="text-graphite" data-i18n="auctionsPage.endedSub">Products that recently finished auction</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="past-auctions">
                     <!-- Populated by JavaScript -->
@@ -174,6 +175,9 @@
     <script src="../js/countdown.js"></script>
     <script src="../js/i18n.js"></script>
     <script>
+        // i18n helper — safe to call before or after i18n fully loads
+        const T = (k) => (window.i18n && window.i18n.t) ? window.i18n.t(k) : k;
+
         let selectedCategory = null;
         let searchQuery = '';
         let allLots = [];
@@ -195,15 +199,24 @@
         function renderAuctionCard(lot, isPast = false) {
             const cardClass = isPast ? 'card card-archive' : (isEndingSoon(lot.end_date) ? 'card card-featured' : 'card');
             const title = localizedField(lot, 'title');
-            const productType = localizedField(lot, 'category') || 'Product';
-            const categoryGroup = lot.category_title || lot.auction_title || 'General';
+            const productType = localizedField(lot, 'category') || T('auction.lot');
+            const categoryGroup = lot.category_title || lot.auction_title || '';
             const image = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
             const amount = lot.current_bid && Number(lot.current_bid) > 0 ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
-            const amountLabel = lot.current_bid && Number(lot.current_bid) > 0 ? 'Current Bid' : 'Starting Bid';
+            const amountLabel = lot.current_bid && Number(lot.current_bid) > 0
+                ? T('auction.currentBid')
+                : T('auction.startingBid');
             const badge = isPast
-                ? '<span class="badge badge-ended">Ended</span>'
-                : (isEndingSoon(lot.end_date) ? '<span class="badge badge-accent">Ending Soon</span>' : '<span class="badge badge-success">Live</span>');
-            const timeText = isPast ? `Ended ${formatDate(lot.end_date)}` : `Ends ${formatDate(lot.end_date)}`;
+                ? `<span class="badge badge-ended">${T('auction.ended')}</span>`
+                : (isEndingSoon(lot.end_date)
+                    ? `<span class="badge badge-accent">${T('auction.endingSoon')}</span>`
+                    : `<span class="badge badge-success">${T('auction.live')}</span>`);
+            const timeEnded = T('time.ended');
+            const timeEnds  = T('auction.ends');
+            const timeText = isPast
+                ? `${timeEnded} ${formatDate(lot.end_date)}`
+                : `${timeEnds} ${formatDate(lot.end_date)}`;
+            const lotLabel = T('auctionsPage.lotNum');
             const archiveParam = isPast ? '&archive=true' : '';
 
             return `
@@ -212,7 +225,7 @@
                     <div class="card-content">
                         <div class="label mb-2">${productType}</div>
                         <h3 class="card-title">${title}</h3>
-                        <p class="card-subtitle">Lot #${lot.lot_number} • ${categoryGroup}</p>
+                        <p class="card-subtitle">${lotLabel} ${lot.lot_number}${categoryGroup ? ' • ' + categoryGroup : ''}</p>
                     </div>
                     <div class="card-footer" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span class="text-sm text-muted">${amountLabel}: ${formatCurrency(amount)}</span>
@@ -304,7 +317,7 @@
                 const container = document.getElementById('ongoing-auctions');
 
                 if (liveLots.length === 0) {
-                    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No live products found</p>';
+                    container.innerHTML = `<p class="text-center text-muted" style="grid-column: 1 / -1;">${T('auctionsPage.noLiveProducts')}</p>`;
                     return;
                 }
 
@@ -315,7 +328,7 @@
             } catch (error) {
                 console.error('Failed to load live products:', error);
                 document.getElementById('ongoing-auctions').innerHTML =
-                    '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load live products</p>';
+                    `<p class="text-center text-muted" style="grid-column: 1 / -1;">${T('auctionsPage.failedLoad')}</p>`;
             }
         }
 
