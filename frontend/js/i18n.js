@@ -183,11 +183,10 @@ class I18n {
             const isLandingPath = !isInSubdir && (path.endsWith('index.html') || path.endsWith('/') || path.endsWith('TURATHYA/'));
 
             if (isLandingPath) {
-                logoImg.src = `${rootPath}assets/images/Beigelogo.png`;
-                // Optional: Add a class to help with styling if dimensions differ
+                logoImg.src = `${rootPath}assets/images/logo_beige.png`;
                 logoImg.classList.add('landing-logo');
             } else {
-                logoImg.src = `${rootPath}assets/images/zauction-logo-new.png`;
+                logoImg.src = `${rootPath}assets/images/logo_burgundy.png`;
                 logoImg.classList.remove('landing-logo');
             }
         }
