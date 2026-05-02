@@ -50,8 +50,15 @@
 }
 
 #landing-page .header .logo {
-    /* Image logo doesn't need text styles */
     display: flex;
+    background: transparent !important;
+    padding: 0;
+}
+
+#landing-page .header .logo img {
+    background: transparent !important;
+    /* Slightly stronger shadow for dark hero background */
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.40));
 }
 
 #landing-page .header .nav-link {

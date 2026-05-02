@@ -339,17 +339,38 @@
     position: relative;
 }
 
+/* ══════════════════════════════════════════
+   LOGO — Clean, transparent, responsive
+   ══════════════════════════════════════════ */
 .logo {
     display: flex;
     align-items: center;
-    color: var(--theme-text);
     text-decoration: none;
+    background: transparent !important;
+    padding: 0;
+    border: none;
+    box-shadow: none;
 }
 
-.logo img {
+.logo img,
+.logo svg {
+    display: block;
     height: 48px;
     width: auto;
+    background: transparent !important;
     object-fit: contain;
+    /* Step 3 — anti-aliasing / edge smoothing */
+    image-rendering: -webkit-optimize-contrast;
+    /* Step 5 — premium drop shadow (logo mark only, not a box) */
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.20));
+}
+
+/* Step 6 — Responsive: shrink on mobile */
+@media (max-width: 768px) {
+    .logo img,
+    .logo svg {
+        height: 36px;
+    }
 }
 
 
