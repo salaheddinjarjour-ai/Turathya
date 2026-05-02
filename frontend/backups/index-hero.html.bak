@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="icon" type="image/png" href="assets/images/Beigelogo.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description"
+    content="TURATHYA - Curated timed auctions for antiques and rare objects. Premium European-style auction house featuring fine art, furniture, ceramics, and collectibles.">
+  <title>TURATHYA - Premium Timed Auctions for Antiques & Rare Objects</title>
+
+  <!-- Stylesheets -->
+  <script>
+    (function () {
+      const lang = localStorage.getItem('lang') || 'ar';
+      const isAr = lang === 'ar';
+      document.documentElement.lang = lang;
+      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+      document.documentElement.classList.add('i18n-pending');
+      if (isAr) document.documentElement.classList.add('rtl');
+    })();
+  </script>
+  <style>
+    html.i18n-pending body {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+  <!-- Preconnect to external origins -->
+  <link rel="preconnect" href="https://turathya-backend.onrender.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+
+  <!-- Critical CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/brand-fonts.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/components/lang-toggle.css">
+  <link rel="stylesheet" href="css/pages/landing.css">
+  <!-- Framed hero showcase — overrides default hero styles -->
+  <link rel="stylesheet" href="css/hero-frame.css">
+  <!-- Fonts — same as all other pages -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- AOS loaded async — not render-critical -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" media="print" onload="this.media='all'">
+</head>
+
+<body id="landing-page">
+  <!-- Header -->
+  <div id="site-header"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       HERO  —  Premium Framed Showcase
+       Assets: bg-2.png (background) + h-frame.png (ornate frame)
+       Slider images + frame transparency handled by hero-slider.js
+       ══════════════════════════════════════════════════════════ -->
+  <section class="hero" id="hero-section" aria-label="Premium auction showcase">
+
+    <!-- Layer 1: Islamic geometric background (BG 2.png) -->
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <!-- Layer 2: Atmospheric dark overlay -->
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <!-- Layer 3: Edge vignette -->
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <!-- Layer 4: Ornate frame + slider inside its transparent opening -->
+    <div class="frame-container">
+
+      <!-- Slider sits BEHIND the frame image.
+           The frame's transparent inner area (removebg) reveals it. -->
+      <div class="frame-inner">
+        <div
+          class="hero-slider"
+          id="heroFrameSlider"
+          role="region"
+          aria-label="Featured auction items"
+        >
+          <!-- Slides injected by hero-slider.js -->
+        </div>
+        <div class="frame-shadow" aria-hidden="true"></div>
+      </div>
+
+      <!-- Frame image on top — transparent inner area shows slider -->
+      <img
+        class="frame-image"
+        id="heroFrameImage"
+        src="assets/images/ornate-frame-new.png"
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      >
+
+    </div>
+
+    <!-- Slide indicator dots -->
+    <div
+      class="hero-dots"
+      id="heroSliderDots"
+      role="tablist"
+      aria-label="Slide navigation"
+    ></div>
+
+  </section>
+
+
+
+
+  <!-- Section Divider -->
+  <hr class="section-divider">
+
+  <!-- ── Live Stats Bar ── -->
+  <section id="stats-bar" style="background:linear-gradient(135deg,#1a1208 0%,#2c1e0a 50%,#1a1208 100%);border-bottom:1px solid rgba(201,169,110,.18);padding:36px 0;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div style="display:flex;justify-content:center;align-items:center;gap:clamp(24px,5vw,80px);flex-wrap:wrap;">
+
+        <div style="text-align:center;min-width:90px;">
+          <div id="stat-auctions" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
+          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.auctions">Auctions</div>
+        </div>
+
+        <div style="width:1px;height:44px;background:rgba(201,169,110,.22);"></div>
+
+        <div style="text-align:center;min-width:90px;">
+          <div id="stat-lots" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
+          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.lots">Lots</div>
+        </div>
+
+        <div style="width:1px;height:44px;background:rgba(201,169,110,.22);"></div>
+
+        <div style="text-align:center;min-width:90px;">
+          <div id="stat-live" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
+          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.liveNow">Live Now</div>
+        </div>
+
+        <div style="width:1px;height:44px;background:rgba(201,169,110,.22);"></div>
+
+        <div style="text-align:center;min-width:90px;">
+          <div id="stat-bids" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
+          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.bids">Active Bids</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+  (function(){
+    var API=(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')
+      ?'http://localhost:3000/api':'https://turathya-backend.onrender.com/api';
+    function countUp(el,target,dur){
+      if(isNaN(target)){el.textContent='0';return;}
+      var s=performance.now();
+      (function step(now){
+        var p=Math.min((now-s)/dur,1),e=1-Math.pow(1-p,3);
+        el.textContent=Math.round(e*target);
+        if(p<1)requestAnimationFrame(step);
+      })(s);
+    }
+    Promise.all([
+      fetch(API+'/auctions').catch(()=>null),
+      fetch(API+'/lots').catch(()=>null)
+    ]).then(function(r){return Promise.all(r.map(function(x){return x&&x.ok?x.json():null;}));})
+    .then(function(d){
+      var aData=d[0]||{},lData=d[1]||{};
+      var auctions=aData.auctions||[];var lots=lData.lots||[];
+      var live=auctions.filter(function(a){return a.status==='live'||a.status==='active';}).length;
+      var bids=lots.reduce(function(s,l){return s+((l.current_bid||l.currentBid)>0?1:0);},0);
+      countUp(document.getElementById('stat-auctions'),auctions.length||aData.total||0,1200);
+      countUp(document.getElementById('stat-lots'),lots.length||lData.total||0,1200);
+      countUp(document.getElementById('stat-live'),live,900);
+      countUp(document.getElementById('stat-bids'),bids,1000);
+    }).catch(function(){
+      ['stat-auctions','stat-lots','stat-live','stat-bids'].forEach(function(id){
+        var el=document.getElementById(id);if(el)el.textContent='0';
+      });
+    });
+  })();
+  </script>
+
+  <!-- Featured Products -->
+  <section class="section section--featured-bg"
+    style="background-image: url('assets/images/bg-1.png'); background-size: cover; background-position: center;">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2 class="text-light">Featured Products</h2>
+        <p class="text-light" style="opacity:0.75">Top live lots with the strongest bidding activity
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Divider -->
+  <hr class="section-divider">
+
+  <!-- Ending Soon -->
+  <section class="section section--featured-bg"
+    style="background-image: url('assets/images/bg-2.png'); background-size: cover; background-position: center;">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2 class="text-light" data-i18n="auction.endingSoon">Ending Soon</h2>
+        <p class="text-light" style="opacity:0.75" data-i18n="auction.endingSoonDesc">Last chance to bid on these exceptional items</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg" id="ending-soon">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Divider -->
+  <hr class="section-divider">
+
+  <!-- Premium CTA Band -->
+  <section class="cta-band">
+    <!-- Heritage Ornaments -->
+    <span class="cta-ornament cta-ornament--tl"></span>
+    <span class="cta-ornament cta-ornament--tr"></span>
+    <span class="cta-ornament cta-ornament--bl"></span>
+    <span class="cta-ornament cta-ornament--br"></span>
+
+    <div class="cta-band__inner">
+      <span class="cta-band__eyebrow" data-i18n="cta.eyebrow">ابدأ المزاد</span>
+      <h2 class="cta-band__title" data-i18n="cta.title">انضم إلى مزاداتنا واكتشف القطع النادرة</h2>
+      <p class="cta-band__desc" data-i18n="cta.desc">
+        تصفّح المزادات الحالية، أنشئ حسابًا، وابدأ بالمزايدة على قطع مختارة بعناية.
+      </p>
+
+      <div class="cta-band__actions">
+        <a href="pages/auctions.html" class="btn btn-cta-band-primary" data-i18n="cta.browseAuctions">تصفح المزادات</a>
+        <a href="pages/register.html" class="btn btn-cta-band-secondary" data-i18n="cta.createAccount">إنشاء حساب</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4 data-i18n="nav.about">About</h4>
+          <ul class="footer-links">
+            <li><a href="pages/info/about-us.html" data-i18n="footer.aboutUs">About TURATHYA</a></li>
+            <li><a href="pages/info/team.html" data-i18n="footer.ourTeam">Our Team</a></li>
+            <li><a href="pages/info/contact.html" data-i18n="footer.contactUs">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4 data-i18n="footer.biddingProcess">Bidding</h4>
+          <ul class="footer-links">
+            <li><a href="pages/info/how-bidding-works.html" data-i18n="footer.howItWorks">How Bidding Works</a></li>
+            <li><a href="pages/info/buyers-guide.html" data-i18n="footer.buyersGuide">Buyer's Guide</a></li>
+            <li><a href="pages/info/condition-reports.html" data-i18n="footer.conditionReports">Condition Reports</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4 data-i18n="footer.services">Services</h4>
+          <ul class="footer-links">
+            <li><a href="pages/info/fees-payments.html" data-i18n="footer.feesPayments">Fees & Payments</a></li>
+            <li><a href="pages/info/shipping-pickup.html" data-i18n="footer.shippingPickup">Shipping & Pickup</a></li>
+            <li><a href="pages/info/authentication.html" data-i18n="footer.authentication">Authentication</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4 data-i18n="footer.legal">Legal</h4>
+          <ul class="footer-links">
+            <li><a href="pages/info/terms.html" data-i18n="footer.termsOfService">Terms of Service</a></li>
+            <li><a href="pages/info/privacy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a></li>
+            <li><a href="pages/info/cookies.html" data-i18n="footer.cookiePolicy">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p data-i18n="footer.copyright">&copy; 2026 TURATHYA. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/utils.js?v=2"></script>
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/watchlist.js"></script>
+  <script>
+    // Load featured products from API
+    async function loadFeaturedAuctions() {
+      try {
+        const { lots } = await lotsAPI.getAll();
+        const now = new Date();
+        const activeFeatured = (lots || []).filter((lot) => {
+          const startDate = lot.start_date ? new Date(lot.start_date) : null;
+          const endDate = lot.end_date ? new Date(lot.end_date) : null;
+          const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
+          return isLiveWindow && lot.status === 'active';
+        });
+
+        activeFeatured.sort((a, b) => {
+          const aCount = Number(a.bid_count || 0);
+          const bCount = Number(b.bid_count || 0);
+          if (bCount !== aCount) return bCount - aCount;
+          return Number(b.current_bid || 0) - Number(a.current_bid || 0);
+        });
+
+        const container = document.getElementById('featured-auctions');
+
+        if (activeFeatured.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No featured products available</p>';
+          if (window.i18n) window.i18n.translatePage();
+          return;
+        }
+
+        container.innerHTML = activeFeatured.slice(0, 3).map((lot) => {
+          const lTitle = localizedField(lot, 'title');
+          const lCat = localizedField(lot, 'category');
+          const categoryGroup = lot.category_title || lot.auction_title || '';
+          const image = lot.primary_image || lot.image_data || lot.auction_image || 'assets/images/placeholder.jpg';
+          const amount = lot.current_bid && Number(lot.current_bid) > 0 ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
+          const amountLabel = lot.current_bid && Number(lot.current_bid) > 0 ? 'Current Bid' : 'Starting Bid';
+          const badge = isEndingSoon(lot.end_date)
+            ? `<span class="badge badge-accent">${i18n.t('auction.endingSoon')}</span>`
+            : `<span class="badge badge-success">${i18n.t('auction.live')}</span>`;
+
+          return `
+          <a href="pages/lot.html?id=${lot.id}" class="card">
+            <img loading="lazy" src="${image}" alt="${lTitle}" class="card-image">
+            <div class="card-content">
+              <div class="label mb-2">${lCat || 'Product'}</div>
+              <h3 class="card-title">${lTitle}</h3>
+              <p class="card-subtitle">Lot #${lot.lot_number}${categoryGroup ? ` • ${categoryGroup}` : ''}</p>
+            </div>
+            <div class="card-footer">
+              <span class="text-sm text-muted">${amountLabel}: ${formatCurrency(amount)}</span>
+              ${badge}
+            </div>
+          </a>
+        `;
+        }).join('');
+
+        // Translate the newly added dynamic content
+        if (window.i18n) window.i18n.translatePage();
+      } catch (error) {
+        console.error('Failed to load featured products:', error);
+        document.getElementById('featured-auctions').innerHTML =
+          '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load featured products</p>';
+        if (window.i18n) window.i18n.translatePage();
+      }
+    }
+
+    // Load ending soon auctions (ending within 48 hours)
+    async function loadEndingSoon() {
+      const container = document.getElementById('ending-soon');
+
+      try {
+        const { auctions } = await auctionsAPI.getAll({ status: 'active' });
+
+        // Filter auctions ending within next 48 hours
+        const now = new Date();
+        const fortyEightHoursFromNow = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+
+        const endingSoon = auctions.filter(auction => {
+          const endDate = new Date(auction.end_date);
+          return endDate > now && endDate <= fortyEightHoursFromNow;
+        });
+
+        // Sort by end date (soonest first)
+        endingSoon.sort((a, b) => new Date(a.end_date) - new Date(b.end_date));
+
+        // Take top 4
+        const topEndingSoon = endingSoon.slice(0, 4);
+
+        if (topEndingSoon.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;" data-i18n="auction.noEndingSoon">No auctions ending soon</p>';
+          if (window.i18n) window.i18n.translatePage();
+          return;
+        }
+
+        container.innerHTML = topEndingSoon.map(auction => {
+          const imageUrl = auction.image_data || auction.image_url || 'assets/images/placeholder.jpg';
+          const lotCount = auction.lot_count || 0;
+          const aTitle = localizedField(auction, 'title');
+          const aCat = localizedField(auction, 'category');
+          const aHref = getAuctionHref(auction, 'pages/');
+
+          return `
+            <a href="${aHref}" class="card">
+              <img loading="lazy" src="${imageUrl}" alt="${aTitle}" class="card-image">
+              <div class="card-content">
+                <div class="label mb-2">${aCat || i18n.t('auction.category')}</div>
+                <h4 class="card-title">${aTitle}</h4>
+                <p class="text-sm text-graphite mb-4">${lotCount} ${i18n.t('auction.lots')}</p>
+                <div class="flex-between-center">
+                  <span class="badge badge-accent" data-i18n="auction.endingSoon">Ending Soon</span>
+                  <span class="text-xs font-medium" data-countdown="${auction.end_date}"></span>
+                </div>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+        if (window.i18n) window.i18n.translatePage();
+        initCountdowns();
+      } catch (error) {
+        console.error('Failed to load ending soon auctions:', error);
+        container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">Failed to load ending soon auctions</p>';
+      }
+    }
+
+    // Search functionality (hero search bar removed — guard against missing elements)
+    const searchInput = document.getElementById('hero-search');
+    const suggestionsContainer = document.getElementById('search-suggestions');
+
+    if (searchInput && suggestionsContainer) {
+      let searchTimeout;
+
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        clearTimeout(searchTimeout);
+
+        if (query.length < 2) {
+          suggestionsContainer.style.display = 'none';
+          return;
+        }
+
+        searchTimeout = setTimeout(async () => {
+          try {
+            const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            displaySearchSuggestions(data.auctions || [], data.lots || []);
+          } catch (error) {
+            console.error('Search error:', error);
+            suggestionsContainer.style.display = 'none';
+          }
+        }, 300);
+      });
+
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const query = e.target.value.trim();
+          if (query.length > 1) {
+            window.location.href = `pages/auctions.html?search=${encodeURIComponent(query)}`;
+          }
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+          suggestionsContainer.style.display = 'none';
+        }
+      });
+    }
+
+    function displaySearchSuggestions(auctions, lots) {
+      if (!suggestionsContainer) return;
+      if (auctions.length === 0 && lots.length === 0) {
+        suggestionsContainer.innerHTML = `<div class="no-results" style="padding: var(--space-4); text-align: center; color: rgba(255, 255, 255, 0.7);">${i18n.t('empty.noResults')}</div>`;
+        suggestionsContainer.style.display = 'block';
+        return;
+      }
+
+      let html = '';
+
+      if (auctions.length > 0) {
+        html += `
+          <div class="search-suggestions-section">
+            <div class="search-suggestions-title">${i18n.t('nav.auctions')}</div>
+            ${auctions.map(auction => {
+              const now = new Date();
+              const endDate = auction.end_date ? new Date(auction.end_date) : null;
+              const startDate = auction.start_date ? new Date(auction.start_date) : null;
+              const isLiveNow = !!endDate && endDate > now && (!startDate || startDate <= now);
+              const aTitle = localizedField(auction, 'title');
+              const aHref = getAuctionHref(auction, 'pages/');
+              return `
+                <a href="${aHref}" class="suggestion-card suggestion-card-auction">
+                  <img loading="lazy" src="${auction.image_data || 'assets/images/placeholder.jpg'}" alt="${aTitle}" class="suggestion-card-image">
+                  <div class="suggestion-card-content">
+                    <div class="suggestion-card-title">${aTitle}</div>
+                    <div class="suggestion-card-meta">
+                      <span>${auction.lot_count || 0} ${i18n.t('auction.lots')}</span>
+                      ${isLiveNow ? `<span style="color: var(--color-success);">• ${i18n.t('auction.live')}</span>` : ''}
+                    </div>
+                  </div>
+                </a>`;
+            }).join('')}
+          </div>`;
+      }
+
+      if (lots.length > 0) {
+        html += `
+          <div class="search-suggestions-section">
+            <div class="search-suggestions-title">${i18n.t('auction.lots')}</div>
+            ${lots.map(lot => {
+              const lTitle = localizedField(lot, 'title');
+              const lCat = localizedField(lot, 'category');
+              return `
+                <a href="pages/lot.html?id=${lot.id}" class="suggestion-card">
+                  <img loading="lazy" src="${lot.primary_image || 'assets/images/placeholder.jpg'}" alt="${lTitle}" class="suggestion-card-image">
+                  <div class="suggestion-card-content">
+                    <div class="suggestion-card-title">${lTitle}</div>
+                    <div class="suggestion-card-meta">
+                      <span>${i18n.t('auction.lot')} ${lot.lot_number}</span>
+                      ${lCat ? `<span>• ${lCat}</span>` : ''}
+                    </div>
+                    <div class="suggestion-card-price">${lot.current_bid && lot.current_bid > 0 ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid)}</div>
+                  </div>
+                </a>`;
+            }).join('')}
+          </div>`;
+      }
+
+      suggestionsContainer.innerHTML = html;
+      suggestionsContainer.style.display = 'block';
+    }
+
+    // Load data after i18n is ready (so i18n.t() works in card templates)
+    function initPageData() {
+      loadFeaturedAuctions();
+      loadEndingSoon();
+    }
+
+    if (window.i18n && window.i18n.isInitialized) {
+      initPageData();
+    } else {
+      window.addEventListener('i18nReady', initPageData, { once: true });
+      // Fallback: also try on DOMContentLoaded in case i18n fires before listener
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          if (!document.getElementById('featured-auctions').innerHTML.trim()) {
+            initPageData();
+          }
+        }, 500);
+      });
+    }
+  </script>
+  <!-- Hero frame slider — loads after main scripts -->
+  <script defer src="js/hero-slider.js"></script>
+  <!-- Initialize AOS -->
+  <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"
+    onload="AOS.init({once:true,offset:100,duration:800,easing:'ease-out-cubic'})"></script>
+</body>
+
+</html>
