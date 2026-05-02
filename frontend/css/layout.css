@@ -366,12 +366,14 @@
 /* ==================== SECTION DIVIDER ==================== */
 
 .section-divider {
-    width: 60px;
-    height: 2px;
-    background-color: #49110C;
-    opacity: 0.5;
-    margin: var(--space-section-sm) auto;
+    display: block;
+    width: 100%;
+    height: 10px;
+    background-color: #C4B5A5; /* warm sandy beige — matches Fill BG 3 */
     border: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
 }
 
 /* ==================== READABLE TEXT WIDTH ==================== */
