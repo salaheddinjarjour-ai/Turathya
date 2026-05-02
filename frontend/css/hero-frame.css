@@ -176,21 +176,24 @@
   z-index: 3;
 
   /*
-    FRAME WIDTH — clamp keeps it proportional across all viewports.
-    700px floor → usable minimum on very small screens
-    85vw        → fills most of the viewport so the frame dominates
-    1400px cap  → prevents over-stretching on ultra-wide monitors
+    FRAME WIDTH — large enough that the full slider sits inside the
+    frame's inner opening.
+
+    clamp(700px, 85vw, 1400px)
+      700px floor → usable minimum on very small screens
+      85vw        → fills most of the viewport so the frame dominates
+      1400px cap  → prevents over-stretching on ultra-wide monitors
+
+    The frame's aspect ratio is preserved (width:100%; height:auto)
+    so the inner opening scales proportionally with the frame width.
   */
   width: clamp(700px, 85vw, 1400px);
 
-  /* Bulletproof horizontal centering */
+  /* Bulletproof horizontal centering — no transforms, no hacks */
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-
-  /* Premium depth */
-  filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.40));
 }
 
 
@@ -247,27 +250,30 @@
   position: absolute;
 
   /*
-    CSS PERCENTAGE FALLBACK — matches BORDER constants in hero-slider.js:
-      top:    14%  (ornate-frame-new.png top border)
-      bottom: 18%  (bottom border is taller — ornamental)
-      left:   12%
-      right:  12%
+    CENTER + SIZE METHOD
+    ────────────────────────────────────────────────
+    top: 50% + left: 50%     → anchors the element at the container center
+    translate(-50%, -50%)    → shifts it back so its OWN center aligns
+                               with the container center
+    width / height           → set the visible opening size
 
-    hero-slider.js positionSlider() overrides these with exact pixel
-    values once the frame image has rendered — giving sub-pixel accuracy
-    at every viewport width.
+    WHY NOT scale():
+      scale() transforms visually but the LAYOUT BOX stays at the
+      pre-scale size. This means overflow:hidden clips at 80% while
+      the visual is at 60% — creating invisible dead zones and broken
+      click areas. Direct width/height is exact and predictable.
 
-    TUNING: Change BORDER values in hero-slider.js — they are the
-    single source of truth.  Update the CSS numbers to match.
+    TUNING: only change width and height.
+      72% × 68% = current (frame border ≈ 14% left/right, 16% top/bottom)
+      Larger opening → increase both values by 1–2%
+      Smaller opening → decrease both values by 1–2%
   */
-  top:    14%;
-  left:   12%;
-  right:  12%;
-  bottom: 18%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-  /* DO NOT set width/height — derived from inset above */
-  width: auto;
-  height: auto;
+  width:  72%;   /* frame opening width  (100 − 14 − 14) */
+  height: 68%;   /* frame opening height (100 − 16 − 16) */
 
   z-index: 1;        /* BEHIND frame-image at z-index:3 */
   overflow: hidden;
@@ -465,25 +471,24 @@
     padding-bottom: 30px;
     min-height: 100svh;
 
+    /* Explicit column-flex so frame centers vertically */
     display: flex !important;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    /* Breathing room top/bottom */
+    margin-top: 20px;
+    margin-bottom: 40px;
   }
 
   .frame-container {
-    /* 92vw — slight horizontal padding so frame never touches edges */
-    width: 92vw;
-    max-width: 380px;
-    margin: 0 auto;
-  }
+    /* 88 vw → slight horizontal padding so frame never touches edges */
+    width: 88vw;
+    max-width: 360px;      /* portrait-friendly cap */
 
-  /* Mobile inner: slightly more inset to stay inside small frame opening */
-  .frame-inner {
-    top:    16%;
-    left:   10%;
-    right:  10%;
-    bottom: 20%;
+    /* Generous vertical breathing space */
+    margin: 0 auto;
   }
 
   .hero-dots {
@@ -515,12 +520,6 @@
   }
   .frame-container {
     width: 94vw;
-  }
-  .frame-inner {
-    top:    14%;
-    left:   12%;
-    right:  12%;
-    bottom: 18%;
   }
 }
 

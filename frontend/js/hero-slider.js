@@ -118,10 +118,10 @@
      Adjust these four numbers if the alignment drifts.
    ══════════════════════════════════════════════════════════════ */
   var BORDER = {
-    top:    0.14,   /* 14% inset → matches ornate-frame-new.png top border   */
-    bottom: 0.18,   /* 18% inset → bottom border slightly taller (ornamental) */
-    left:   0.12,   /* 12% inset → left border                                */
-    right:  0.12    /* 12% inset → right border                               */
+    top:    0.25,   /* 25% inset → slider height = 50% of frame */
+    bottom: 0.25,
+    left:   0.25,   /* 25% inset → slider width  = 50% of frame */
+    right:  0.25
   };
 
   function positionSlider() {
@@ -143,9 +143,7 @@
     inner.style.left      = left   + 'px';
     inner.style.width     = width  + 'px';
     inner.style.height    = height + 'px';
-    inner.style.right     = 'auto';   /* clear CSS inset — avoid conflict with width  */
-    inner.style.bottom    = 'auto';   /* clear CSS inset — avoid conflict with height */
-    inner.style.transform = 'none';   /* override any residual CSS centring           */
+    inner.style.transform = 'none';  /* override CSS centring   */
   }
 
   /* Re-measure on every resize (frame width is fluid / clamp) */
