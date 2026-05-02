@@ -75,56 +75,32 @@ class I18n {
                 updateHeaderAuthState();
             }
 
-            // ── Mobile Menu Overlay ──────────────────────────────────
-            const mobileToggle  = document.querySelector('.mobile-menu-toggle');
-            const mobileOverlay = document.getElementById('mobile-menu-overlay');
-            const mobileClose   = document.querySelector('.mobile-menu-close');
+            // Mobile Menu Toggle Logic
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            const mainNav = document.getElementById('main-nav');
 
-            function openMobileMenu() {
-                if (!mobileOverlay) return;
-                mobileOverlay.classList.add('open');
-                document.body.classList.add('menu-open');
-                if (mobileToggle) {
-                    mobileToggle.classList.add('is-active');
-                    mobileToggle.setAttribute('aria-expanded', 'true');
-                }
-            }
-
-            function closeMobileMenu() {
-                if (!mobileOverlay) return;
-                mobileOverlay.classList.remove('open');
-                document.body.classList.remove('menu-open');
-                if (mobileToggle) {
-                    mobileToggle.classList.remove('is-active');
-                    mobileToggle.setAttribute('aria-expanded', 'false');
-                }
-            }
-
-            if (mobileToggle) {
+            if (mobileToggle && mainNav) {
                 mobileToggle.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    mobileOverlay && mobileOverlay.classList.contains('open')
-                        ? closeMobileMenu()
-                        : openMobileMenu();
-                });
-            }
-
-            if (mobileClose) {
-                mobileClose.addEventListener('click', closeMobileMenu);
-            }
-
-            // Close when any mobile nav link is clicked
-            if (mobileOverlay) {
-                mobileOverlay.querySelectorAll('.mobile-nav-link').forEach(link => {
-                    link.addEventListener('click', closeMobileMenu);
+                    mainNav.classList.toggle('active');
                 });
 
-                // Close on Escape key
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') closeMobileMenu();
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (mainNav.classList.contains('active') &&
+                        !mainNav.contains(e.target) &&
+                        !mobileToggle.contains(e.target)) {
+                        mainNav.classList.remove('active');
+                    }
+                });
+
+                // Close menu when clicking a link
+                mainNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mainNav.classList.remove('active');
+                    });
                 });
             }
-            // ────────────────────────────────────────────────────────
         } catch (error) {
             console.error('Failed to load header:', error);
         }
@@ -148,16 +124,7 @@ class I18n {
             'account-link':  `${pagesPath}account.html`,
             'admin-link':    `${pagesPath}admin.html`,
             'login-link':    `${pagesPath}login.html`,
-            'register-link': `${pagesPath}register.html`,
-            // Mobile overlay mirrors
-            'm-auctions-link':   `${pagesPath}auctions.html`,
-            'm-collection-link': `${pagesPath}collection.html`,
-            'm-about-link':      `${pagesPath}info/about-us.html`,
-            'm-contact-link':    `${pagesPath}info/contact.html`,
-            'm-account-link':    `${pagesPath}account.html`,
-            'm-admin-link':      `${pagesPath}admin.html`,
-            'm-login-link':      `${pagesPath}login.html`,
-            'm-register-link':   `${pagesPath}register.html`
+            'register-link': `${pagesPath}register.html`
         };
 
         Object.entries(links).forEach(([id, href]) => {
