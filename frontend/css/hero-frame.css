@@ -1,158 +1,95 @@
 /* =================================================================
-   TURATHYA — HERO: Premium Framed Showcase  (v5)
-   Background : assets/images/bg-2.png          (Islamic geometric pattern)
-   Frame      : assets/images/ornate-frame-new.png (baroque ornate frame, transparent bg)
-   Slider     : hero-slider.js
+   TURATHYA — HERO: SVG Framed Showcase  (v6)
+   Background : assets/images/bg-2.png
+   Frame      : assets/images/ornate-frame.svg  (SVG — scales perfectly)
+   Slider     : hero-slider.js  (UNCHANGED)
 
-   ── FRAME SCALING LOGIC ──────────────────────────────────────────
-   clamp(480px, 60vw, 960px)
-     480px → minimum — never collapses on small screens
-     60vw  → fluid — proportional and elegant at all widths
-     960px → hard cap — prevents over-scaling on large desktops
+   ── STRUCTURE ────────────────────────────────────────────────────
+   .frame-container.frame-wrapper   position:relative  (JS targets .frame-container)
+     ├─ .frame-inner                position:absolute  (JS targets .frame-inner)
+     │    └─ .hero-slider           position:absolute inset:0
+     │         └─ .hero-slide(s)
+     └─ .frame-svg  #heroFrameImage position:relative z-index:3  (JS targets #heroFrameImage)
 
-   The frame keeps its natural aspect ratio (width: 100%; height: auto)
-   so it never distorts. Smaller than before for a more proportional feel.
-
-   ── BLACK BACKGROUND FIX ─────────────────────────────────────────
-   .frame-inner previously had background: #0d0302 as a load-state
-   fallback. This created a black rectangle visible before slides loaded
-   and through any frame-image transparency gaps.
-
-   Solution: background: transparent — the hero background image (BG 2.png)
-   shows through instead, which is intentional and looks premium.
-   The inset box-shadow is kept very subtle — just a light edge vignette,
-   not a blackout.
-
-   ── SPACING / VERTICAL COMPOSITION ──────────────────────────────
-   The hero uses a flex column with align-items: center.
-   `margin-top` on .frame-container pushes it slightly above true
-   center — a "golden ratio" trick common in luxury editorial layouts.
-   `padding-bottom` on .hero gives 80px of breathing room between the
-   frame bottom edge and the viewport floor.
-
-   ── INNER POSITIONING ────────────────────────────────────────────
-   --fi-top / left / width / height are % of the frame-container.
-   Open DevTools → inspect .frame-inner, drag it to align with the
-   frame opening, then read the offset/size percentages.
-   These are the only four values you should ever need to tweak.
+   ── POSITIONING LOGIC ────────────────────────────────────────────
+   .frame-inner uses CSS inset percentages (top/left/right/bottom)
+   matching the SVG frame's transparent opening.
+   hero-slider.js positionSlider() overrides with exact px values.
+   BORDER constants in hero-slider.js must match these CSS values.
    ================================================================= */
 
 
 /* ════════════════════════════════════════════════════════════════
    1. HERO SHELL
    ════════════════════════════════════════════════════════════════ */
-
-/*
-  ── NAVBAR SPACING LOGIC ─────────────────────────────────────────
-  On the landing page, #landing-page .header uses position: absolute
-  (not sticky/fixed) — it floats over the hero at top: 0.
-  The header's actual rendered height is:
-    padding-top + padding-bottom = 1.5rem × 2 = 48px
-    logo img height               = 48px
-    total                         ≈ 80px
-
-  We give the hero padding-top: 100px — 80px of header + 20px of
-  breathing room — so the frame always clears the navbar.
-
-  ── CENTERING FIX ────────────────────────────────────────────────
-  landing.css sets  display: grid; place-items: center; text-align: center
-  hero-frame.css must forcefully reset ALL of those to take control.
-  We set display: flex + flex-direction: column + align-items: center
-  so the auto margins on .frame-container can do the horizontal work.
-  ─────────────────────────────────────────────────────────────────
-*/
 .hero {
-  /* Full-screen — hero fills entire viewport */
   position: relative;
   width: 100%;
   min-height: 100vh;
   height: 100vh;
   box-sizing: border-box;
 
-  /*
-    padding-top: 90px  → clears the absolute-positioned navbar (~80px)
-                         plus a small breathing gap.
-    padding-bottom: 40px → keeps the oversized frame from clipping at bottom.
-  */
   padding-top: 90px;
   padding-bottom: 40px;
-
-  /* No horizontal padding — frame container controls its own width */
   padding-left: 0;
   padding-right: 0;
 
-  /* Overflow hidden so scale(1.04) bg doesn't bleed outside */
   overflow: hidden;
 
-  /*
-    Flex column — items stack vertically, .frame-container is the
-    only child that matters so it naturally centres when we add
-    margin: auto to it.
-    justify-content: center splits the remaining vertical space
-    (100vh − padding-top − padding-bottom) between top and bottom.
-  */
   display: flex !important;
   flex-direction: column;
-  align-items: center;        /* horizontal centering of block children */
-  justify-content: center;    /* vertical centering within the padded area */
+  align-items: center;
+  justify-content: center;
 
-  /* Reset ALL landing.css grid/text-align properties */
+  /* Reset landing.css grid */
   grid-template-columns: unset;
   grid-template-rows: unset;
   place-items: unset;
   place-content: unset;
   text-align: unset;
 
-  /* Prevent content-visibility:auto from fighting the height */
   content-visibility: visible;
   contain: none;
 
-  /* Always LTR — RTL layout must not shift the centered frame */
+  /* Always LTR — centered frame must not shift in RTL */
   direction: ltr;
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   2. LAYER 1 — Islamic Geometric Background  (BG 2.png)
+   2. HERO BACKGROUND
    ════════════════════════════════════════════════════════════════ */
 .hero-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
-
   background-image: url('../assets/images/bg-2.png');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-
-  /* Subtle parallax feeling via slight overscan */
   transform: scale(1.04);
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   3. LAYER 2 — Dark Atmospheric Overlay
+   3. ATMOSPHERIC OVERLAY
    ════════════════════════════════════════════════════════════════ */
 .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-
-  /* Light overlay — keeps contrast at edges but lets the red bg
-     show through the frame's transparent inner opening clearly */
   background: rgba(0, 0, 0, 0.12);
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   4. LAYER 3 — Edge Vignette
+   4. EDGE VIGNETTE
    ════════════════════════════════════════════════════════════════ */
 .hero-vignette {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-
   background: radial-gradient(
     ellipse at center,
     transparent 50%,
@@ -162,136 +99,83 @@
 
 
 /* ════════════════════════════════════════════════════════════════
-   5. FRAME CONTAINER
-   ════════════════════════════════════════════════════════════════
-
-   .frame-image (the PNG) dictates container height via height:auto.
-   .frame-inner uses inset:0 — it fills the entire container.
-   The Canvas-processed frame (white → transparent) sits on top at
-   z-index:3, so only the transparent inner opening shows the slider.
-   No manual percentage positioning required.
+   5. FRAME WRAPPER  (the container for SVG frame + slider)
    ════════════════════════════════════════════════════════════════ */
-.frame-container {
+.frame-container,
+.frame-wrapper {
   position: relative;
   z-index: 3;
 
-  /*
-    FRAME WIDTH — large enough that the full slider sits inside the
-    frame's inner opening.
+  /* Desktop: fluid width — SVG keeps natural aspect ratio */
+  width: clamp(600px, 80vw, 1200px);
 
-    clamp(700px, 85vw, 1400px)
-      700px floor → usable minimum on very small screens
-      85vw        → fills most of the viewport so the frame dominates
-      1400px cap  → prevents over-stretching on ultra-wide monitors
-
-    The frame's aspect ratio is preserved (width:100%; height:auto)
-    so the inner opening scales proportionally with the frame width.
-  */
-  width: clamp(700px, 85vw, 1400px);
-
-  /* Bulletproof horizontal centering — no transforms, no hacks */
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
+
+  /* Premium depth from SVG transparency */
+  filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.35));
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   6. FRAME IMAGE — sits ON TOP of the slider (z-index:3)
-      The PNG has a transparent inner opening from removebg,
-      so the slider at z-index:1 shows through naturally.
-      The opaque gold border cleanly overlaps the slider edges.
+   6. SVG FRAME IMAGE  (sits ON TOP of slider — z-index:3)
+      SVG transparent center reveals slider below (z-index:1)
    ════════════════════════════════════════════════════════════════ */
+.frame-svg,
 .frame-image {
   display: block;
   width: 100%;
-  height: auto;          /* natural aspect ratio — never set fixed height */
+  height: auto;        /* preserves viewBox aspect ratio — never distort */
   position: relative;
-  z-index: 3;            /* ON TOP of.frame-inner (z-index:1) */
+  z-index: 3;
   pointer-events: none;
   user-select: none;
-
-  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.50));
   transition: opacity 0.4s ease;
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   7. FRAME INNER — slider window, BEHIND the frame image
+   7. FRAME INNER — slider window (BEHIND svg, z-index:1)
    ──────────────────────────────────────────────────────────────
-   WHY inset INSTEAD OF top/left/width/height:
-     `inset` defines all four edges simultaneously. The browser
-     derives width and height automatically from the remaining
-     space — no separate width/height declarations needed.
+   Inset percentages calibrated to ornate-frame.svg transparent opening.
+   hero-slider.js BORDER constants must match these values.
 
-     inset: 14% 12%;
-       = top:14%  right:12%  bottom:14%  left:12%
-       → slider width  = 100 − 12 − 12 = 76%  of container
-       → slider height = 100 − 14 − 14 = 72%  of container
-
-     These percentages scale perfectly as the frame resizes from
-     700 px to 1400 px — always matches the transparent opening.
-
-   CALIBRATION:
-     border thickness (ornate-frame-new.png):
-       top / bottom ≈ 14 %   left / right ≈ 12 %
-
-   DEVTOOLS TWEAK:
-     Add background:red to .frame-inner → nudge the four inset
-     values until the red box sits exactly inside the gold liner.
-     Typical micro-adjustments: ± 1–2 % per side.
-
-   LAYER ORDER (back → front inside .frame-container):
-     z-index:1  .frame-inner  ← slider, BEHIND the frame
-     z-index:3  .frame-image  ← transparent-opening PNG ON TOP
+   SVG viewBox: 0 0 1532 1196
+   Approximate transparent opening (measured from SVG structure):
+     top    ≈ 14%  of frame height
+     bottom ≈ 18%  of frame height
+     left   ≈ 12%  of frame width
+     right  ≈ 12%  of frame width
    ════════════════════════════════════════════════════════════════ */
 .frame-inner {
   position: absolute;
 
-  /*
-    CENTER + SIZE METHOD
-    ────────────────────────────────────────────────
-    top: 50% + left: 50%     → anchors the element at the container center
-    translate(-50%, -50%)    → shifts it back so its OWN center aligns
-                               with the container center
-    width / height           → set the visible opening size
+  top:    14%;
+  left:   12%;
+  right:  12%;
+  bottom: 18%;
 
-    WHY NOT scale():
-      scale() transforms visually but the LAYOUT BOX stays at the
-      pre-scale size. This means overflow:hidden clips at 80% while
-      the visual is at 60% — creating invisible dead zones and broken
-      click areas. Direct width/height is exact and predictable.
+  /* width/height derived from inset — do not set explicitly */
+  width: auto;
+  height: auto;
 
-    TUNING: only change width and height.
-      72% × 68% = current (frame border ≈ 14% left/right, 16% top/bottom)
-      Larger opening → increase both values by 1–2%
-      Smaller opening → decrease both values by 1–2%
-  */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  width:  72%;   /* frame opening width  (100 − 14 − 14) */
-  height: 68%;   /* frame opening height (100 − 16 − 16) */
-
-  z-index: 1;        /* BEHIND frame-image at z-index:3 */
+  z-index: 1;        /* BEHIND frame-svg (z-index:3) */
   overflow: hidden;
   background: transparent;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   8. FRAME SHADOW — subtle inner-edge depth on the slider
+   8. FRAME SHADOW — inner edge depth on slider
    ════════════════════════════════════════════════════════════════ */
 .frame-shadow {
   position: absolute;
   inset: 0;
-  z-index: 2;       /* above slider image, still inside frame-inner */
+  z-index: 2;
   pointer-events: none;
-
-  /* Very light corner vignette — depth without darkness */
   background: radial-gradient(
     ellipse at center,
     transparent 60%,
@@ -302,12 +186,7 @@
 
 /* ════════════════════════════════════════════════════════════════
    9. HERO SLIDER
-      Injected into .hero-slider by hero-slider.js.
-      Slides fade in/out — opacity transition only, no translate.
    ════════════════════════════════════════════════════════════════ */
-
-/* ── To change images: edit the SLIDES array in hero-slider.js ── */
-
 .hero-slider {
   position: absolute;
   inset: 0;
@@ -327,52 +206,41 @@
   opacity: 1;
 }
 
-/* Slide image — subtle Ken Burns zoom  (1.05 → 1.0) */
+/* Slide image — Ken Burns subtle zoom */
 .hero-slide-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-
-  /* Inactive: slightly zoomed in */
   transform: scale(1.05);
   transition: transform 6s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* Active slide: gently zoom out to 1.0 for cinematic pull-back */
 .hero-slide.is-active .hero-slide-img {
   transform: scale(1);
 }
 
 
 /* ════════════════════════════════════════════════════════════════
-   10. SLIDE OVERLAY — auction metadata (title + bid)
-       Position: bottom-left of the frame opening.
-       Minimal, typographic — luxury gallery label aesthetic.
+   10. SLIDE OVERLAY — auction metadata
    ════════════════════════════════════════════════════════════════ */
 .slide-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 4;   /* above img, below frame-shadow */
-
+  z-index: 4;
   padding: 2.2rem 1.6rem 1.4rem;
-
-  /* Gradient scrim — dark at bottom, fades to transparent */
   background: linear-gradient(
     to top,
     rgba(8, 4, 2, 0.82) 0%,
     rgba(8, 4, 2, 0.50) 50%,
     transparent        100%
   );
-
-  /* Smooth in/out with the slide */
   transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
-/* Lot / category eyebrow */
 .slide-label {
   display: block;
   font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
@@ -380,11 +248,10 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 210, 130, 0.85);   /* warm gold */
+  color: rgba(255, 210, 130, 0.85);
   margin-bottom: 0.35rem;
 }
 
-/* Auction title */
 .slide-title {
   display: block;
   font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
@@ -394,15 +261,12 @@
   line-height: 1.3;
   letter-spacing: 0.02em;
   margin: 0 0 0.45rem;
-
-  /* Prevent very long titles from blowing the layout */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 90%;
 }
 
-/* Current bid / estimate */
 .slide-bid {
   display: inline-block;
   font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
@@ -414,7 +278,7 @@
 
 
 /* ════════════════════════════════════════════════════════════════
-   11. SLIDE INDICATOR DOTS
+   11. SLIDE DOTS
    ════════════════════════════════════════════════════════════════ */
 .hero-dots {
   position: absolute;
@@ -422,7 +286,6 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-
   display: flex;
   align-items: center;
   gap: 0.55rem;
@@ -453,46 +316,36 @@
 
 
 /* ════════════════════════════════════════════════════════════════
-   12. RESPONSIVENESS
-       clamp(480px, 60vw, 960px) handles the fluid range.
-       These breakpoints only fine-tune padding and edge cases.
+   12. RESPONSIVE BREAKPOINTS
    ════════════════════════════════════════════════════════════════ */
 
-/* ════════════════════════════════════════════════════════════════
-   Mobile (≤ 540px)
-   ──────────────────────────────────────────────────────────────
-   Root problem: clamp(700px, 85vw, 1400px) has a 700 px floor
-   that is wider than any phone screen → forces horizontal scroll.
-   Override completely; use a tight vw value + max-width cap.
-   ════════════════════════════════════════════════════════════════ */
-@media (max-width: 540px) {
+/* ── Mobile  ≤ 768px ─────────────────────────────────────────── */
+@media (max-width: 768px) {
   .hero {
-    padding-top: 70px;
-    padding-bottom: 30px;
+    padding-top: 72px;
+    padding-bottom: 24px;
     min-height: 100svh;
-
-    /* Explicit column-flex so frame centers vertically */
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-
-    /* Breathing room top/bottom */
-    margin-top: 20px;
-    margin-bottom: 40px;
   }
 
-  .frame-container {
-    /* 88 vw → slight horizontal padding so frame never touches edges */
-    width: 88vw;
-    max-width: 360px;      /* portrait-friendly cap */
+  /* Frame wrapper: dominant, centered, portrait feel */
+  .frame-container,
+  .frame-wrapper {
+    width: 92%;
+    max-width: 420px;
+    margin: 40px auto;
+  }
 
-    /* Generous vertical breathing space */
-    margin: 0 auto;
+  /* Inner opening — more generous inset on mobile to stay inside frame */
+  .frame-inner {
+    top:    20%;
+    left:   10%;
+    right:  10%;
+    bottom: 22%;
   }
 
   .hero-dots {
-    bottom: 0.6rem;
+    bottom: 0.5rem;
   }
 
   .slide-overlay {
@@ -504,26 +357,42 @@
   }
 }
 
-/* Very small screens (≤ 480px) — extra tight */
+/* ── Small mobile  ≤ 480px ───────────────────────────────────── */
 @media (max-width: 480px) {
-  .frame-container {
-    width: 92vw;
-    max-width: 320px;
+  .frame-container,
+  .frame-wrapper {
+    width: 95%;
+    max-width: 360px;
+    margin: 28px auto;
+  }
+
+  .frame-inner {
+    top:    20%;
+    left:   10%;
+    right:  10%;
+    bottom: 22%;
   }
 }
 
-/* Tablet (541px – 1023px) */
+/* ── Tablet  541px – 1023px ──────────────────────────────────── */
 @media (min-width: 541px) and (max-width: 1023px) {
   .hero {
     padding-top: 85px;
     padding-bottom: 35px;
   }
-  .frame-container {
-    width: 94vw;
+  .frame-container,
+  .frame-wrapper {
+    width: 88vw;
+  }
+  .frame-inner {
+    top:    14%;
+    left:   12%;
+    right:  12%;
+    bottom: 18%;
   }
 }
 
-/* Standard desktop (1024px – 1439px) */
+/* ── Standard desktop  1024px – 1439px ──────────────────────── */
 @media (min-width: 1024px) and (max-width: 1439px) {
   .hero {
     padding-top: 90px;
@@ -531,13 +400,12 @@
   }
 }
 
-/* Large desktop (≥ 1440px) */
+/* ── Large desktop  ≥ 1440px ─────────────────────────────────── */
 @media (min-width: 1440px) {
   .hero {
     padding-top: 100px;
     padding-bottom: 50px;
   }
-
   .hero-dots {
     bottom: 2rem;
   }

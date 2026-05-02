@@ -70,7 +70,7 @@
     <div class="hero-vignette" aria-hidden="true"></div>
 
     <!-- Layer 4: Ornate frame + slider inside its transparent opening -->
-    <div class="frame-container frame-wrapper">
+    <div class="frame-container">
 
       <!-- Slider sits BEHIND the frame image.
            The frame's transparent inner area (removebg) reveals it. -->
@@ -88,7 +88,7 @@
 
       <!-- Frame image on top — transparent inner area shows slider -->
       <img
-        class="frame-svg"
+        class="frame-image"
         id="heroFrameImage"
         src="assets/images/ornate-frame.svg"
         alt=""
