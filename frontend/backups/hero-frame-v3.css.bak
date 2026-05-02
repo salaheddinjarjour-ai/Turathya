@@ -106,19 +106,15 @@
   position: relative;
   z-index: 3;
 
-  /* Desktop: match original image-based layout size */
-  width: 100%;
-  max-width: 900px;
+  /* Desktop: fluid width — SVG keeps natural aspect ratio */
+  width: clamp(600px, 80vw, 1200px);
 
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
 
-  /* Allow drop-shadow to bleed outside without clipping */
-  overflow: visible;
-
-  /* Premium depth */
+  /* Premium depth from SVG transparency */
   filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.35));
 }
 
@@ -130,14 +126,13 @@
 .frame-svg,
 .frame-image {
   display: block;
-  width: 100%;     /* fills container — container controls the size */
-  height: auto;    /* preserves SVG viewBox aspect ratio — never distort */
+  width: 100%;
+  height: auto;        /* preserves viewBox aspect ratio — never distort */
   position: relative;
   z-index: 3;
   pointer-events: none;
   user-select: none;
   transition: opacity 0.4s ease;
-  /* NO transform, NO vw sizing — let the container clamp do the work */
 }
 
 
