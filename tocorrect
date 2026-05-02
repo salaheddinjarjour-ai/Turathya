@@ -1,0 +1,371 @@
+Prompt
+
+You are working on the admin panel and database structure.
+
+⚠️ FIRST:
+Create a backup of:
+
+* Admin forms
+* Database schema
+* API / data handling files
+
+---
+
+🎯 OBJECTIVE:
+
+1. Add **Auction Start Time** and **Auction End Time** to products (auctions)
+2. Remove ANY auction time fields from category management
+3. Ensure proper data flow to frontend
+
+---
+
+## 🧱 DATABASE CHANGES
+
+Update products (auctions) table:
+
+Add fields:
+
+* auction_start (DATETIME)
+* auction_end (DATETIME)
+
+Ensure:
+
+* Stored in UTC or consistent timezone
+* Validations applied (end > start)
+
+---
+
+## 🧩 ADMIN PANEL UI
+
+### In Product / Auction Form:
+
+Add:
+
+* Start Date & Time picker
+* End Date & Time picker
+
+UI:
+
+* Clean, inline inputs
+* Use datetime-local or custom picker
+* Label clearly:
+
+  * "Auction Starts"
+  * "Auction Ends"
+
+---
+
+## ❌ REMOVE FROM CATEGORY
+
+* Remove ANY time/date inputs from category forms
+* Remove logic that links auction timing to category
+
+Categories should ONLY contain:
+
+* Name
+* Description
+* Image / metadata
+
+---
+
+## 🔄 FRONTEND DATA FLOW
+
+Ensure:
+
+* Auction pages read from:
+  auction_start / auction_end (product-level)
+
+* Countdown timers use correct values
+
+* “Ending Soon” logic depends on auction_end ONLY
+
+---
+
+## 🧪 VALIDATION
+
+✔ Cannot save auction without dates
+✔ End date must be after start
+✔ Dates render correctly on frontend
+✔ No category-based timing remains
+
+---
+
+Implement cleanly.
+No explanation.
+
+
+Prompt 2
+
+You are fixing the language system across the entire website.
+
+⚠️ FIRST:
+Backup translation system and JS files.
+
+---
+
+🎯 OBJECTIVE:
+
+Ensure STRICT language separation:
+
+* If English → EVERYTHING is English
+* If Arabic → EVERYTHING is Arabic
+* NO mixing under any condition
+
+---
+
+## 🚨 CURRENT PROBLEM
+
+* Partial translations
+* Mixed UI (Arabic + English)
+* Inconsistent switching
+
+---
+
+## 🧠 SOLUTION
+
+### 1. SINGLE SOURCE OF TRUTH
+
+Use ONE key:
+
+```js
+localStorage.setItem("site_language", "en" | "ar");
+```
+
+REMOVE:
+
+* old keys
+* inconsistent keys (vteke-lang, etc.)
+
+---
+
+### 2. GLOBAL LANGUAGE WRAPPER
+
+Apply to <html>:
+
+```html
+<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
+```
+
+Switch BOTH:
+
+* lang
+* dir
+
+---
+
+### 3. TRANSLATION SYSTEM
+
+Every text MUST use:
+
+```html
+data-en="English Text"
+data-ar="Arabic Text"
+```
+
+JS must:
+
+* Loop ALL elements with data-en / data-ar
+* Replace content fully
+
+---
+
+### 4. STRICT MODE (IMPORTANT)
+
+When language switches:
+
+✔ Replace ALL text nodes
+✔ Replace placeholders (inputs)
+✔ Replace buttons
+✔ Replace labels
+✔ Replace dynamic content
+
+NO EXCEPTIONS
+
+---
+
+### 5. DYNAMIC CONTENT (CRITICAL)
+
+For products / auctions:
+
+Ensure:
+
+* API returns BOTH languages OR
+* Store bilingual fields:
+
+Example:
+
+* title_en
+* title_ar
+
+---
+
+### 6. RTL FIX
+
+When Arabic:
+
+```css
+body {
+  direction: rtl;
+  text-align: right;
+}
+```
+
+Ensure:
+
+* spacing flips correctly
+* icons not broken
+
+---
+
+### 7. FINAL CHECK
+
+✔ No English in Arabic mode
+✔ No Arabic in English mode
+✔ Navbar fully switches
+✔ Pages fully switch
+✔ Admin content displays correctly
+
+---
+
+If any text is not translated → fix it.
+
+Implement strictly.
+
+
+Prompt 3
+
+You are fixing the mobile hero section.
+
+⚠️ FIRST:
+Backup hero section HTML/CSS.
+
+---
+
+🎯 OBJECTIVE:
+
+Make the hero frame:
+
+* Perfectly responsive
+* Vertical (portrait feel) on mobile
+* Centered
+* Premium looking
+
+---
+
+## 🚨 CURRENT ISSUES
+
+* Frame not centered
+* Looks horizontal on mobile
+* Poor scaling
+* Feels broken
+
+---
+
+## 🧠 SOLUTION
+
+### 1. MOBILE LAYOUT
+
+For screens < 768px:
+
+```css
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 15px;
+}
+```
+
+---
+
+### 2. FRAME BEHAVIOR
+
+Force vertical feel:
+
+```css
+.frame {
+  width: 85%;
+  max-width: 320px;
+  aspect-ratio: 3 / 4; /* portrait look */
+  position: relative;
+}
+```
+
+---
+
+### 3. IMAGE INSIDE FRAME
+
+```css
+.frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+```
+
+---
+
+### 4. SLIDER INSIDE FRAME
+
+Position EXACTLY inside opening:
+
+```css
+.slider {
+  position: absolute;
+  top: 14%;
+  left: 12%;
+  width: 76%;
+  height: 72%;
+  overflow: hidden;
+}
+```
+
+---
+
+### 5. RESPONSIVE TUNING
+
+Add scaling tweak:
+
+```css
+@media (max-width: 480px) {
+  .frame {
+    max-width: 280px;
+  }
+}
+```
+
+---
+
+### 6. SPACING
+
+Add breathing space:
+
+```css
+.hero {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+```
+
+---
+
+### 7. REMOVE
+
+❌ stretched layouts
+❌ horizontal overflow
+❌ misalignment
+
+---
+
+## ✅ FINAL RESULT
+
+✔ Frame centered
+✔ Vertical premium look
+✔ Slider perfectly inside frame
+✔ Clean mobile experience
+
+---
+
+Implement cleanly.
