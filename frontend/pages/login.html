@@ -74,120 +74,25 @@
                         <button type="submit" class="btn btn-primary btn-lg w-full" data-i18n="nav.login">Login</button>
                     </form>
 
-                    <div style="margin: 1.5rem 0; text-align: center; position: relative;">
-                        <span
-                            style="background: var(--theme-surface); padding: 0 10px; color: var(--theme-text-muted); position: relative; z-index: 1;">or</span>
-                        <div
-                            style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--theme-border); z-index: 0;">
-                        </div>
-                    </div>
-
-                    <button type="button" id="google-login-fallback" class="btn btn-social"
-                        aria-label="Login With Google">
-                        <svg class="btn-social-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill="#EA4335"
-                                d="M12 10.2v3.9h5.4c-.2 1.2-.9 2.3-1.9 3.1l3 2.3c1.8-1.6 2.8-4 2.8-6.8 0-.6-.1-1.2-.2-1.8H12z" />
-                            <path fill="#34A853"
-                                d="M6.9 14.3l-.7.5-2.4 1.9C5.4 20 8.5 22 12 22c2.7 0 5-1 6.7-2.6l-3-2.3c-.8.6-2 1-3.7 1-2.8 0-5.1-1.9-5.9-4.5z" />
-                            <path fill="#4A90E2"
-                                d="M3.8 7.3C3.3 8.3 3 9.4 3 10.5s.3 2.2.8 3.2c0 0 3.1-2.4 3.1-2.4-.2-.4-.3-.8-.3-1.3s.1-.9.3-1.3L3.8 7.3z" />
-                            <path fill="#FBBC05"
-                                d="M12 5.8c1.5 0 2.8.5 3.9 1.5l2.9-2.9C17 2.7 14.7 2 12 2 8.5 2 5.4 4 3.8 7.3l3.1 2.4c.8-2.6 3.1-4.5 5.9-4.5z" />
-                        </svg>
-                        <span data-i18n="auth.loginGoogle">Login With Google</span>
-                    </button>
-                    <div id="google-login-btn" style="display: none; justify-content: center;"></div>
-                    <div id="google-login-error" class="form-error" style="display: none; margin-top: 0.75rem;"></div>
-
                     <p class="text-center text-sm text-muted mt-6">
-                        <span data-i18n="auth.noAccount">Don't have an account?</span> <a href="register.html"
-                            class="text-accent" data-i18n="auth.signUp">Register here</a>
+                        <span data-i18n="auth.noAccount">Don't have an account?</span>
+                        <a href="register.html" class="text-accent" data-i18n="auth.signUp">Register here</a>
                     </p>
 
-                    <div class="demo-credentials">
-                        <p class="text-xs text-muted text-center mb-2">Demo Credentials:</p>
-                        <p class="text-xs text-center">Use your registered phone number + password</p>
-                    </div>
                 </div>
             </div>
         </div>
     </main>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/i18n.js"></script>
     <script>
-        function getGoogleClientId() {
-            return localStorage.getItem('google_client_id') || window.GOOGLE_CLIENT_ID || '';
-        }
-
-        async function handleGoogleCredentialResponse(response) {
-            const errorElement = document.getElementById('google-login-error');
-            errorElement.style.display = 'none';
-
-            try {
-                const result = await authAPI.googleOAuth(response.credential);
-
-                if (result.user.role === 'admin') {
-                    window.location.replace('admin.html');
-                } else {
-                    window.location.replace('account.html');
-                }
-            } catch (error) {
-                errorElement.textContent = error.message || 'Google login failed. Please try again.';
-                errorElement.style.display = 'block';
-            }
-        }
-
-        function initializeGoogleLogin() {
-            const clientId = getGoogleClientId();
-            const errorElement = document.getElementById('google-login-error');
-            const fallbackBtn = document.getElementById('google-login-fallback');
-            const googleBtnContainer = document.getElementById('google-login-btn');
-
-            fallbackBtn.addEventListener('click', () => {
-                errorElement.textContent = 'Google login will be available once OAuth is configured.';
-                errorElement.style.display = 'block';
-            });
-
-            if (!clientId) {
-                return;
-            }
-
-            if (!window.google?.accounts?.id) {
-                errorElement.textContent = 'Google Sign-In script failed to load.';
-                errorElement.style.display = 'block';
-                return;
-            }
-
-            fallbackBtn.style.display = 'none';
-            googleBtnContainer.style.display = 'flex';
-
-            window.google.accounts.id.initialize({
-                client_id: clientId,
-                callback: handleGoogleCredentialResponse
-            });
-
-            window.google.accounts.id.renderButton(
-                document.getElementById('google-login-btn'),
-                {
-                    theme: 'outline',
-                    size: 'large',
-                    text: 'signin_with',
-                    width: 320
-                }
-            );
-        }
-
         // DO NOT auto-redirect on this page - let user manually log in
-        // This prevents redirect loops
         window.addEventListener('DOMContentLoaded', () => {
-            // Clear any old flags
             sessionStorage.removeItem('loginRedirectCount');
             sessionStorage.removeItem('accountRedirectCount');
-
-            initializeGoogleLogin();
         });
+
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
