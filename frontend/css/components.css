@@ -355,7 +355,7 @@
 .logo img,
 .logo svg {
     display: block;
-    height: 60px;
+    height: 80px;
     width: auto;
     background: transparent !important;
     object-fit: contain;
@@ -366,7 +366,7 @@
 @media (max-width: 768px) {
     .logo img,
     .logo svg {
-        height: 44px;
+        height: 56px;
     }
 }
 
