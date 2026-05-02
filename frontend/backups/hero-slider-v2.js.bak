@@ -117,15 +117,37 @@
        LEFT/RIGHT border  ≈ 12 % of rendered frame width
      Adjust these four numbers if the alignment drifts.
    ══════════════════════════════════════════════════════════════ */
-  /* ── CSS OWNS POSITIONING ──────────────────────────────────────
-     .frame-inner is positioned via percentage-based CSS in hero-frame.css.
-     top: 14%  left: 12%  width: 76%  height: 72%  (desktop)
-     Adjustments for mobile are handled via media queries.
-     No JS measurement needed — SVG scales the frame, CSS scales the inner.
-  ────────────────────────────────────────────────────────────── */
+  var BORDER = {
+    top:    0.25,   /* 25% inset → slider height = 50% of frame */
+    bottom: 0.25,
+    left:   0.25,   /* 25% inset → slider width  = 50% of frame */
+    right:  0.25
+  };
+
   function positionSlider() {
-    /* intentionally empty — CSS handles all positioning */
+    var frameImg = document.getElementById('heroFrameImage');
+    var inner    = document.querySelector('.frame-inner');
+    if (!frameImg || !inner) return;
+
+    var fw = frameImg.offsetWidth;    /* rendered frame width  */
+    var fh = frameImg.offsetHeight;   /* rendered frame height */
+    if (!fw || !fh) return;           /* image not yet painted */
+
+    /* Exact pixel coordinates of the inner opening */
+    var top    = Math.round(fh * BORDER.top);
+    var left   = Math.round(fw * BORDER.left);
+    var width  = Math.round(fw * (1 - BORDER.left  - BORDER.right));
+    var height = Math.round(fh * (1 - BORDER.top   - BORDER.bottom));
+
+    inner.style.top       = top    + 'px';
+    inner.style.left      = left   + 'px';
+    inner.style.width     = width  + 'px';
+    inner.style.height    = height + 'px';
+    inner.style.transform = 'none';  /* override CSS centring   */
   }
+
+  /* Re-measure on every resize (frame width is fluid / clamp) */
+  window.addEventListener('resize', positionSlider);
 
   function initFrameImage() {
     /* ornate-frame-new.png already has alpha transparency from

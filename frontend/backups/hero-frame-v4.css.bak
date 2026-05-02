@@ -157,18 +157,17 @@
 .frame-inner {
   position: absolute;
 
-  /* Calibrated to ornate-frame.svg transparent opening */
   top:    14%;
   left:   12%;
-  width:  76%;   /* 100 - 12 - 12 */
-  height: 72%;   /* 100 - 14 - 14 */
+  right:  12%;
+  bottom: 18%;
 
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* width/height derived from inset — do not set explicitly */
+  width: auto;
+  height: auto;
 
   z-index: 1;        /* BEHIND frame-svg (z-index:3) */
+  overflow: hidden;
   background: transparent;
   border-radius: 2px;
 }
@@ -342,17 +341,25 @@
     margin: 40px auto;
   }
 
-  /* Inner opening — mobile */
+  /* Inner opening — more generous inset on mobile to stay inside frame */
   .frame-inner {
-    top:    16%;
+    top:    20%;
     left:   10%;
-    width:  80%;
-    height: 68%;
+    right:  10%;
+    bottom: 22%;
   }
 
-  .hero-dots { bottom: 0.5rem; }
-  .slide-overlay { padding: 1.2rem 0.8rem 0.8rem; }
-  .slide-title { font-size: 0.78rem; }
+  .hero-dots {
+    bottom: 0.5rem;
+  }
+
+  .slide-overlay {
+    padding: 1.2rem 0.8rem 0.8rem;
+  }
+
+  .slide-title {
+    font-size: 0.78rem;
+  }
 }
 
 /* ── Small mobile  ≤ 480px ───────────────────────────────────── */
@@ -365,10 +372,10 @@
   }
 
   .frame-inner {
-    top:    16%;
+    top:    20%;
     left:   10%;
-    width:  80%;
-    height: 68%;
+    right:  10%;
+    bottom: 22%;
   }
 }
 
@@ -385,8 +392,8 @@
   .frame-inner {
     top:    14%;
     left:   12%;
-    width:  76%;
-    height: 72%;
+    right:  12%;
+    bottom: 18%;
   }
 }
 
