@@ -57,8 +57,8 @@
 
 #landing-page .header .logo img {
     background: transparent !important;
-    /* Slightly stronger shadow for dark hero background */
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.40));
+    /* Convert burgundy logo to pure white for dark navbar */
+    filter: brightness(0) invert(1) contrast(1.2);
 }
 
 #landing-page .header .nav-link {

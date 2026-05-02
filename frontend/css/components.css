@@ -355,21 +355,18 @@
 .logo img,
 .logo svg {
     display: block;
-    height: 48px;
+    height: 42px;
     width: auto;
     background: transparent !important;
     object-fit: contain;
-    /* Step 3 — anti-aliasing / edge smoothing */
     image-rendering: -webkit-optimize-contrast;
-    /* Step 5 — premium drop shadow (logo mark only, not a box) */
-    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.20));
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
 }
 
-/* Step 6 — Responsive: shrink on mobile */
 @media (max-width: 768px) {
     .logo img,
     .logo svg {
-        height: 36px;
+        height: 32px;
     }
 }
 

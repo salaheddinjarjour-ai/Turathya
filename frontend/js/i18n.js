@@ -172,23 +172,12 @@ class I18n {
             if (link) link.setAttribute('href', href);
         });
 
-        // Update Logo Image Path
+        // Logo path is always logo_burgundy.png
+        // Home page appearance (white) is handled via CSS filter in landing.css:
+        // #landing-page .header .logo img { filter: brightness(0) invert(1) contrast(1.2); }
         const logoImg = document.querySelector('.logo img');
         if (logoImg) {
-            const path = window.location.pathname;
-            // Check if we are on the landing page (root index.html or just /)
-            // and NOT in a subdirectory
-            const isLandingData = document.body.dataset.page === 'landing'; // Best practice if we add data-page
-            // Fallback to path check if data attribute missing
-            const isLandingPath = !isInSubdir && (path.endsWith('index.html') || path.endsWith('/') || path.endsWith('TURATHYA/'));
-
-            if (isLandingPath) {
-                logoImg.src = `${rootPath}assets/images/logo_beige.png`;
-                logoImg.classList.add('landing-logo');
-            } else {
-                logoImg.src = `${rootPath}assets/images/logo_burgundy.png`;
-                logoImg.classList.remove('landing-logo');
-            }
+            logoImg.src = `${rootPath}assets/images/logo_burgundy.png`;
         }
     }
 
