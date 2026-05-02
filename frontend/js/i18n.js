@@ -15,31 +15,38 @@ class I18n {
     async init() {
         if (this.isInitialized) return;
 
-        // Apply language immediately (before translations load)
-        this.applyLanguage(this.currentLang);
+        // ── Failsafe: always reveal the page, even if init() crashes ──
+        const _reveal = () => document.documentElement.classList.remove('i18n-pending');
+        const _failsafe = setTimeout(_reveal, 1500);
 
-        // Load header partial first
-        await this.loadHeader();
-        await this.loadFooter();
+        try {
+            // Apply language immediately (before translations load)
+            this.applyLanguage(this.currentLang);
 
-        // Then load translations
-        await this.loadTranslations(this.currentLang);
-        await this.ensureFallbackTranslations();
+            // Load header partial first
+            await this.loadHeader();
+            await this.loadFooter();
 
-        // Translate page content
-        this.translatePage();
+            // Then load translations
+            await this.loadTranslations(this.currentLang);
+            await this.ensureFallbackTranslations();
 
-        // Setup language toggle
-        this.setupLanguageToggle();
+            // Translate page content
+            this.translatePage();
 
-        this.isInitialized = true;
+            // Setup language toggle
+            this.setupLanguageToggle();
 
-        // Remove pending class to reveal content
-        document.documentElement.classList.remove('i18n-pending');
+            this.isInitialized = true;
+        } finally {
+            // Remove pending class to reveal content (whether success or error)
+            clearTimeout(_failsafe);
+            _reveal();
 
-        window.dispatchEvent(new CustomEvent('i18nReady', {
-            detail: { lang: this.currentLang }
-        }));
+            window.dispatchEvent(new CustomEvent('i18nReady', {
+                detail: { lang: this.currentLang }
+            }));
+        }
     }
 
     async loadHeader() {

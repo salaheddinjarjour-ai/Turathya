@@ -362,3 +362,27 @@ section {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ════════════════════════════════════════════════════════════════
+   LANGUAGE FLASH PREVENTION (GLOBAL)
+   ────────────────────────────────────────────────────────────────
+   html.i18n-pending is added by an inline <script> at the very
+   top of <head> BEFORE any CSS loads, so the browser never paints
+   un-translated English content.
+
+   i18n.js removes .i18n-pending once translations are applied,
+   triggering the opacity transition below.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Hide body immediately — prevents English flash */
+html.i18n-pending body {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Smooth fade-in once language is applied */
+html:not(.i18n-pending) body {
+  opacity: 1;
+  transition: opacity 0.22s ease;
+}
