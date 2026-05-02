@@ -143,7 +143,9 @@
     inner.style.left      = left   + 'px';
     inner.style.width     = width  + 'px';
     inner.style.height    = height + 'px';
-    inner.style.transform = 'none';  /* override CSS centring   */
+    inner.style.right     = 'auto';   /* clear CSS inset — avoid conflict with width  */
+    inner.style.bottom    = 'auto';   /* clear CSS inset — avoid conflict with height */
+    inner.style.transform = 'none';   /* override any residual CSS centring           */
   }
 
   /* Re-measure on every resize (frame width is fluid / clamp) */
