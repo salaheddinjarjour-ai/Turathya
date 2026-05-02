@@ -49,7 +49,10 @@
 
      Paths are relative to index.html (root of /frontend/).
   ────────────────────────────────────────────────────────────── */
-  var SLIDES = [
+  /* ──────────────────────────────────────────────────────────────
+     FALLBACK SLIDES — only used if API is unavailable or empty
+  ────────────────────────────────────────────────────────────── */
+  var FALLBACK_SLIDES = [
     {
       src:   'assets/images/hero-slide-painting.jpg',
       label: 'Fine Art',
@@ -67,14 +70,75 @@
       label: 'Rare Jewellery',
       title: 'Signed Pieces & Precious Gems',
       bid:   'Estimate: SAR 8,000 – 22,000'
-    },
-    {
-      src:   'assets/images/hero-slide-ceramics.jpg',
-      label: 'Ceramics & Porcelain',
-      title: 'East Asian & Iznik Ceramics',
-      bid:   'Opening from SAR 1,800'
     }
   ];
+
+  /* ──────────────────────────────────────────────────────────────
+     LOAD REAL SLIDES FROM API
+     Fetches active lots sorted by bid activity.
+     Returns an array of { src, label, title, bid, href } objects.
+  ────────────────────────────────────────────────────────────── */
+  async function loadSlides() {
+    try {
+      if (typeof lotsAPI === 'undefined') return FALLBACK_SLIDES;
+
+      var result = await lotsAPI.getAll();
+      var lots   = (result && result.lots) || [];
+
+      /* Filter: active + currently in auction window */
+      var now    = new Date();
+      var active = lots.filter(function (lot) {
+        var start = lot.start_date ? new Date(lot.start_date) : null;
+        var end   = lot.end_date   ? new Date(lot.end_date)   : null;
+        return lot.status === 'active' &&
+               (!start || start <= now) &&
+               (end && end > now);
+      });
+
+      /* Sort by bid activity then bid amount */
+      active.sort(function (a, b) {
+        var bA = Number(a.bid_count || 0);
+        var bB = Number(b.bid_count || 0);
+        if (bB !== bA) return bB - bA;
+        return Number(b.current_bid || 0) - Number(a.current_bid || 0);
+      });
+
+      /* Take top 5 */
+      var top = active.slice(0, 5);
+      if (top.length === 0) return FALLBACK_SLIDES;
+
+      /* Map to slide format */
+      var lang = (typeof localStorage !== 'undefined' && localStorage.getItem('lang')) || 'ar';
+
+      return top.map(function (lot) {
+        /* Localised title */
+        var title = (lang === 'ar' && lot.title_ar) ? lot.title_ar
+                  : (lot.title_en || lot.title || 'Auction Lot');
+
+        /* Category / eyebrow */
+        var label = (lang === 'ar' && lot.category_ar) ? lot.category_ar
+                  : (lot.category_en || lot.category_title || lot.auction_title || 'Lot');
+
+        /* Image */
+        var src = lot.primary_image || lot.image_data || lot.auction_image
+                || 'assets/images/placeholder.jpg';
+
+        /* Bid text */
+        var amount = lot.current_bid && Number(lot.current_bid) > 0
+                   ? Number(lot.current_bid)
+                   : Number(lot.starting_bid || 0);
+        var bidLabel = lot.current_bid && Number(lot.current_bid) > 0
+                     ? 'Current Bid' : 'Starting';
+        var bid = bidLabel + ': SAR ' + amount.toLocaleString();
+
+        return { src: src, label: label, title: title, bid: bid, href: 'pages/lot.html?id=' + lot.id };
+      });
+
+    } catch (err) {
+      console.warn('[hero-slider] API unavailable, using fallback slides.', err);
+      return FALLBACK_SLIDES;
+    }
+  }
 
 
   /* ──────────────────────────────────────────────────────────────
@@ -155,10 +219,15 @@
          </div>
        </div>
   ══════════════════════════════════════════════════════════════ */
-  function buildSlider() {
+  function buildSlider(SLIDES) {
     var slider   = document.getElementById('heroFrameSlider');
     var dotsWrap = document.getElementById('heroSliderDots');
-    if (!slider || !dotsWrap || SLIDES.length === 0) return;
+    if (!slider || !dotsWrap || !SLIDES || SLIDES.length === 0) return;
+
+    /* Reset state in case of reload */
+    current         = 0;
+    isTransitioning = false;
+    if (timer) { clearInterval(timer); timer = null; }
 
     slider.innerHTML   = '';
     dotsWrap.innerHTML = '';
@@ -171,6 +240,14 @@
       el.className = 'hero-slide' + (isFirst ? ' is-active' : '');
       el.setAttribute('role', 'tabpanel');
       el.setAttribute('aria-label', slide.title);
+
+      /* Make entire slide clickable if href provided */
+      if (slide.href) {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', function () {
+          window.location.href = slide.href;
+        });
+      }
 
       /* Image */
       var img = document.createElement('img');
@@ -224,6 +301,9 @@
 
       dotsWrap.appendChild(dot);
     });
+
+    /* Store length for goTo() wrapping */
+    buildSlider._length = SLIDES.length;
   }
 
 
@@ -231,6 +311,7 @@
      TRANSITIONS — opacity fade only
   ══════════════════════════════════════════════════════════════ */
   function goTo(index) {
+    var slideCount = buildSlider._length || document.querySelectorAll('.hero-slide').length;
     if (isTransitioning || index === current) return;
     isTransitioning = true;
 
@@ -238,21 +319,17 @@
     var dots   = document.querySelectorAll('.hero-dot');
 
     /* Deactivate current */
-    slides[current].classList.remove('is-active');
-    dots[current].classList.remove('is-active');
-    dots[current].setAttribute('aria-selected', 'false');
+    if (slides[current]) slides[current].classList.remove('is-active');
+    if (dots[current])   { dots[current].classList.remove('is-active'); dots[current].setAttribute('aria-selected', 'false'); }
 
-    current = (index + SLIDES.length) % SLIDES.length;
+    current = ((index % slideCount) + slideCount) % slideCount;
 
     /* Activate next */
-    slides[current].classList.add('is-active');
-    dots[current].classList.add('is-active');
-    dots[current].setAttribute('aria-selected', 'true');
+    if (slides[current]) slides[current].classList.add('is-active');
+    if (dots[current])   { dots[current].classList.add('is-active'); dots[current].setAttribute('aria-selected', 'true'); }
 
     /* Unlock after CSS transition (matches opacity 1.4s) */
-    setTimeout(function () {
-      isTransitioning = false;
-    }, 1450);
+    setTimeout(function () { isTransitioning = false; }, 1450);
   }
 
   function advance() {
@@ -321,13 +398,14 @@
   /* ══════════════════════════════════════════════════════════════
      INIT
   ══════════════════════════════════════════════════════════════ */
-  function init() {
-    initFrameImage();   /* measure frame → set exact px position  */
-    buildSlider();      /* inject slides + dots                    */
-    startAutoplay();    /* begin auto-play                         */
-    bindHoverPause();   /* pause on hover                          */
-    bindSwipe();        /* swipe support                           */
-    bindKeyboard();     /* arrow key navigation                    */
+  async function init() {
+    var slides = await loadSlides();
+    initFrameImage();
+    buildSlider(slides);
+    startAutoplay();
+    bindHoverPause();
+    bindSwipe();
+    bindKeyboard();
   }
 
   /* Run after DOM is ready */
