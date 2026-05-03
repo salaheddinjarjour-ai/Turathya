@@ -350,23 +350,28 @@
     padding: 0;
     border: none;
     box-shadow: none;
+    overflow: visible; /* allow scaled logo to extend beyond layout bounds */
 }
 
 .logo img,
 .logo svg {
     display: block;
-    height: 80px;
+    height: 60px;
     width: auto;
     background: transparent !important;
     object-fit: contain;
     image-rendering: -webkit-optimize-contrast;
     filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
+    /* Scale logo visually without expanding bar height */
+    transform: scale(1.45);
+    transform-origin: center center;
 }
 
 @media (max-width: 768px) {
     .logo img,
     .logo svg {
-        height: 56px;
+        height: 44px;
+        transform: scale(1.3);
     }
 }
 
