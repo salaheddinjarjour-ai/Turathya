@@ -211,6 +211,7 @@ html[dir="rtl"] .collection-filters {
 
 html[dir="rtl"] .col-intro {
     direction: rtl;
+    text-align: center;
 }
 
 /* ─────────────────────────────────────────────

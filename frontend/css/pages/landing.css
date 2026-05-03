@@ -61,6 +61,11 @@
     filter: brightness(0) invert(1) contrast(1.2);
 }
 
+/* Mobile hamburger spans → white on dark landing navbar */
+#landing-page .header .mobile-menu-toggle {
+    color: #fff;
+}
+
 #landing-page .header .nav-link {
     color: rgba(255, 255, 255, 0.9);
     text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
