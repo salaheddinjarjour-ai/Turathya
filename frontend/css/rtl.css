@@ -1,13 +1,10 @@
 /* ==================== RTL STYLES FOR ARABIC ==================== */
 /* Professional RTL layout using logical properties */
 
-/* Import Arabic Font */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
-
 /* Apply Arabic Font */
 body.rtl,
 [lang="ar"] {
-    font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-arabic);
 }
 
 /* Maintain English fonts for specific elements */
@@ -15,7 +12,7 @@ body.rtl .brand-name,
 body.rtl .logo,
 [lang="ar"] .brand-name,
 [lang="ar"] .logo {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-headline);
 }
 
 /* ==================== LAYOUT & DIRECTION ==================== */
@@ -751,6 +748,73 @@ body.rtl .section-header p {
 body.rtl .container-md > h1,
 body.rtl .container-md > h1 + .text-lg {
     text-align: center;
+}
+
+
+/* ==================== PHONE & NUMERIC DATA — ALWAYS LTR ==================== */
+/*
+   Numbers, phone numbers, prices, IDs, and emails must always read
+   left-to-right regardless of the surrounding RTL context.
+   unicode-bidi: isolate  → each element treated as an independent bidi run
+   direction: ltr         → forces LTR rendering inside that run
+*/
+
+/* ── All tel / number / email inputs ───────────────────────── */
+body.rtl input[type="tel"],
+body.rtl input[type="number"],
+body.rtl input[type="email"],
+[dir="rtl"] input[type="tel"],
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="email"] {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: isolate;
+}
+
+/* ── Table cells — use plaintext so content auto-detects direction ── */
+/*   plaintext = each paragraph determines its own direction from
+     its first strong bidi character; phone numbers start with + or a
+     digit → LTR; Arabic text → RTL.  Works without any class needed. */
+body.rtl td,
+body.rtl .table td,
+[dir="rtl"] td {
+    unicode-bidi: plaintext;
+}
+
+/* ── Explicit numeric / phone value elements ────────────────── */
+body.rtl .phone-value,
+body.rtl .tel-value,
+body.rtl .email-value,
+body.rtl .number-value,
+body.rtl .price-value,
+body.rtl .bid-value,
+body.rtl .lot-number,
+body.rtl .stat-value,
+body.rtl .badge,
+body.rtl [data-numeric],
+[dir="rtl"] .phone-value,
+[dir="rtl"] .tel-value,
+[dir="rtl"] .email-value,
+[dir="rtl"] .number-value,
+[dir="rtl"] .price-value,
+[dir="rtl"] .bid-value,
+[dir="rtl"] .lot-number,
+[dir="rtl"] .stat-value,
+[dir="rtl"] .badge,
+[dir="rtl"] [data-numeric] {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block; /* isolate requires block/inline-block formatting */
+}
+
+/* ── Utility class: force any element LTR ───────────────────── */
+.dir-ltr,
+body.rtl .dir-ltr,
+[dir="rtl"] .dir-ltr {
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
+    text-align: left !important;
+    display: inline-block;
 }
 
 /* deploy trigger */

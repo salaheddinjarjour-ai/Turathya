@@ -9,13 +9,13 @@ main.section {
 }
 
 /* ─────────────────────────────────────────────
-   FILTER BAR — Glassmorphism premium style
+   FILTER BAR — Grid layout, equal heights
    ───────────────────────────────────────────── */
-.collection-filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+.filters-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    align-items: start;
     padding: 22px 26px;
     background: rgba(255, 255, 255, 0.68);
     backdrop-filter: blur(12px);
@@ -29,74 +29,86 @@ main.section {
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    flex: 1;
-    min-width: 160px;
+    gap: 8px;
 }
 
-.filter-group .form-label {
-    font-size: 9.5px;
+.filter-group label {
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: #aaa;
-    margin-bottom: 0;
-}
-
-/* Premium status toggles */
-.status-toggles {
-    display: flex;
-    background-color: rgba(0, 0, 0, 0.04);
-    border-radius: 8px;
-    padding: 3px;
-    min-height: 40px;
-}
-
-.status-btn {
-    flex: 1;
-    padding: 6px 14px;
-    border: none;
-    background: transparent;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    color: #999;
-    cursor: pointer;
-    border-radius: 7px;
-    transition: all 0.25s ease;
-    white-space: nowrap;
-}
-
-.status-btn:hover {
     color: #555;
+    margin-bottom: 4px;
 }
 
-.status-btn.active {
-    background-color: #fff;
-    color: #1a1a1a;
-    font-weight: 600;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.10);
-}
-
-/* Premium selects */
-.collection-filters .form-select {
-    padding: 9px 14px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.10);
-    background: #fff;
-    font-size: 13px;
+/* Dropdowns */
+.filters-wrapper select {
+    height: 56px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    padding: 0 16px;
+    width: 100%;
+    box-sizing: border-box;
+    background: white;
+    font-size: 14px;
     color: #444;
-    font-family: 'Inter', sans-serif;
-    transition: border-color 0.2s;
+    font-family: 'Inter', var(--font-arabic), sans-serif;
     cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: auto;
 }
 
-.collection-filters .form-select:focus {
+.filters-wrapper select:focus {
     outline: none;
     border-color: #C6A46C;
     box-shadow: 0 0 0 3px rgba(198, 164, 108, 0.12);
 }
+
+/* Status tabs */
+.filter-tabs {
+    display: flex;
+    height: 56px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.filter-tabs button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.22s ease;
+    white-space: nowrap;
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+}
+
+.filter-tabs button:hover { color: #555; }
+
+.filter-tabs button.active {
+    background: white;
+    color: #1a1a1a;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* RTL */
+html[dir="rtl"] .filters-wrapper { direction: rtl; }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .filters-wrapper {
+        grid-template-columns: 1fr;
+        padding: 16px 18px;
+        gap: 14px;
+    }
+}
+
 
 /* ─────────────────────────────────────────────
    COLLECTION INTRO
@@ -106,10 +118,11 @@ main.section {
     margin: 0 0 44px;
 }
 
+/* col-intro-label shares the exact same rule as .lot-section-label in auctions.css */
 .col-intro-label {
     display: block;
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 2.8px;
     text-transform: uppercase;
@@ -128,7 +141,7 @@ main.section {
 
 .col-intro-desc {
     font-family: 'Inter', sans-serif;
-    font-size: 13.5px;
+    font-size: 15.5px;
     color: #999;
     max-width: 520px;
     margin: 0 auto 18px;
@@ -142,9 +155,33 @@ main.section {
     margin: 0 auto;
 }
 
+body.rtl .col-intro {
+    text-align: right;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+body.rtl .col-intro-desc {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+body.rtl .col-intro-divider {
+    margin: 0 auto; /* stay centered even in RTL */
+}
+
 /* ─────────────────────────────────────────────
    PREMIUM LOT CARDS (reuses auctions system)
    ───────────────────────────────────────────── */
+
+/* Grid span utility — error / empty state messages */
+.col-span-full {
+    grid-column: 1 / -1;    /* span all columns regardless of grid size */
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
 
 /* Collection grid spacing */
 #collection-grid {

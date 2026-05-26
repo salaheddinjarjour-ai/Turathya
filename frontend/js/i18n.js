@@ -82,6 +82,11 @@ class I18n {
                 updateHeaderAuthState();
             }
 
+            // Init user dropdown menu after header is injected
+            if (typeof initUserMenu === 'function') {
+                initUserMenu();
+            }
+
             // ── Mobile Menu Overlay ──────────────────────────────────
             const mobileToggle  = document.querySelector('.mobile-menu-toggle');
             const mobileOverlay = document.getElementById('mobile-menu-overlay');
@@ -156,6 +161,13 @@ class I18n {
             'admin-link':    `${pagesPath}admin.html`,
             'login-link':    `${pagesPath}login.html`,
             'register-link': `${pagesPath}register.html`,
+            // User menu dropdown
+            'user-login-link':    `${pagesPath}login.html`,
+            'user-register-link': `${pagesPath}register.html`,
+            'user-forgot-link':   `${pagesPath}login.html?forgot=1`,
+            'user-profile-link':  `${pagesPath}profile.html`,
+            'user-auctions-link': `${pagesPath}my-auctions.html`,
+            'user-settings-link': `${pagesPath}settings.html`,
             // Mobile overlay mirrors
             'm-auctions-link':   `${pagesPath}auctions.html`,
             'm-collection-link': `${pagesPath}collection.html`,

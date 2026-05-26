@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════════════════════
+   TURATHYA — Enhanced Auth UI  (login + register)
+   Country selector · Password toggle · OTP boxes · RTL
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Phone + Country wrapper ─────────────────────────── */
+.phone-field-wrapper {
+  display: flex;
+  position: relative;
+  gap: 0;
+}
+
+.country-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  height: 48px;
+  min-width: 96px;
+  border: 1.5px solid var(--color-border, #d4c9a8);
+  border-inline-end: none;
+  border-radius: var(--radius-md, 8px) 0 0 var(--radius-md, 8px);
+  background: var(--color-surface-2, rgba(255,255,255,0.06));
+  color: var(--color-text, #1a1a1a);
+  font-size: 0.88rem;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.rtl .country-btn {
+  border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px) 0;
+  border-inline-end: 1.5px solid var(--color-border, #d4c9a8);
+  border-inline-start: none;
+}
+.country-btn:hover,
+.country-btn:focus-visible {
+  background: var(--color-surface-3, rgba(255,255,255,0.12));
+  border-color: var(--color-accent, #8b5e3c);
+  outline: none;
+}
+.country-btn .c-flag { font-size: 1.2rem; line-height: 1; }
+.country-btn .c-code { font-weight: 600; }
+.country-btn .c-chevron {
+  font-size: 0.65rem;
+  opacity: 0.6;
+  transition: transform 0.2s;
+}
+.country-btn[aria-expanded="true"] .c-chevron { transform: rotate(180deg); }
+
+.phone-field-wrapper .form-input {
+  border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px) 0 !important;
+  flex: 1;
+  min-width: 0;
+}
+.rtl .phone-field-wrapper .form-input {
+  border-radius: var(--radius-md, 8px) 0 0 var(--radius-md, 8px) !important;
+}
+
+/* ── Country Dropdown ────────────────────────────────── */
+.country-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-start: 0;
+  z-index: 1000;
+  background: var(--color-surface, #fff);
+  border: 1.5px solid var(--color-border, #d4c9a8);
+  border-radius: 12px;
+  width: 270px;
+  max-height: 290px;
+  overflow-y: auto;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  display: none;
+}
+.country-dropdown.open { display: block; }
+
+.country-search {
+  position: sticky;
+  top: 0;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border, #e8e0cc);
+  background: var(--color-surface, #fff);
+}
+.country-search input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 0.84rem;
+  border: 1px solid var(--color-border, #d4c9a8);
+  border-radius: 6px;
+  background: var(--color-surface-2, #f8f5ef);
+  color: var(--color-text, #1a1a1a);
+  outline: none;
+  font-family: inherit;
+}
+
+.country-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: background 0.15s;
+  direction: ltr; /* always LTR inside dropdown */
+}
+.country-option:hover { background: var(--color-surface-2, #f8f5ef); }
+.country-option.selected { background: var(--color-accent-light, rgba(139,94,60,0.08)); }
+.country-option .o-flag { font-size: 1.15rem; }
+.country-option .o-name { flex: 1; color: var(--color-text, #1a1a1a); }
+.country-option .o-code { color: var(--color-text-muted, #888); font-size: 0.8rem; }
+
+/* Scrollbar styling */
+.country-dropdown::-webkit-scrollbar { width: 4px; }
+.country-dropdown::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+
+/* ── Password Toggle ─────────────────────────────────── */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.password-wrapper .form-input {
+  padding-inline-end: 46px;
+  width: 100%;
+}
+.pwd-toggle {
+  position: absolute;
+  inset-inline-end: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-text-muted, #888);
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.pwd-toggle:hover { color: var(--color-accent, #8b5e3c); }
+.pwd-toggle svg { display: block; }
+
+/* ── OTP inputs ──────────────────────────────────────── */
+.otp-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 1.5rem 0;
+  direction: ltr; /* always LTR for digit boxes */
+}
+.otp-digit {
+  width: 52px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 2px solid var(--color-border, #d4c9a8);
+  border-radius: 12px;
+  background: var(--color-surface-2, rgba(255,255,255,0.06));
+  color: var(--color-text, #1a1a1a);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.12s;
+  -moz-appearance: textfield;
+  caret-color: var(--color-accent, #8b5e3c);
+  line-height: 1;
+}
+.otp-digit::-webkit-inner-spin-button,
+.otp-digit::-webkit-outer-spin-button { -webkit-appearance: none; }
+.otp-digit:focus {
+  border-color: var(--color-accent, #8b5e3c);
+  box-shadow: 0 0 0 3px rgba(139,94,60,0.15);
+  transform: scale(1.05);
+}
+.otp-digit.filled {
+  border-color: var(--color-accent, #8b5e3c);
+  background: var(--color-accent-light, rgba(139,94,60,0.06));
+}
+
+@media (max-width: 480px) {
+  .otp-digit { width: 42px; height: 50px; font-size: 1.3rem; border-radius: 9px; }
+  .otp-inputs { gap: 7px; }
+  .country-dropdown { width: 230px; }
+}

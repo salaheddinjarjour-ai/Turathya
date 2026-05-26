@@ -56,20 +56,17 @@
     {
       src:   'assets/images/hero-slide-painting.jpg',
       label: 'Fine Art',
-      title: 'European Old Masters — Spring Edition',
-      bid:   'Opening from SAR 4,200'
+      title: 'European Old Masters — Spring Edition'
     },
     {
       src:   'assets/images/hero-slide-furniture.jpg',
       label: 'Antique Furniture',
-      title: 'Ottoman & Levantine Interiors',
-      bid:   'Current Bid: SAR 11,500'
+      title: 'Ottoman & Levantine Interiors'
     },
     {
       src:   'assets/images/hero-slide-jewelry.jpg',
       label: 'Rare Jewellery',
-      title: 'Signed Pieces & Precious Gems',
-      bid:   'Estimate: SAR 8,000 – 22,000'
+      title: 'Signed Pieces & Precious Gems'
     }
   ];
 
@@ -84,54 +81,44 @@
 
       var result = await lotsAPI.getAll();
       var lots   = (result && result.lots) || [];
-
-      /* Filter: active + currently in auction window */
       var now    = new Date();
-      var active = lots.filter(function (lot) {
-        var start = lot.start_date ? new Date(lot.start_date) : null;
-        var end   = lot.end_date   ? new Date(lot.end_date)   : null;
-        return lot.status === 'active' &&
-               (!start || start <= now) &&
-               (end && end > now);
-      });
 
-      /* Sort by bid activity then bid amount */
-      active.sort(function (a, b) {
-        var bA = Number(a.bid_count || 0);
-        var bB = Number(b.bid_count || 0);
-        if (bB !== bA) return bB - bA;
-        return Number(b.current_bid || 0) - Number(a.current_bid || 0);
-      });
+      /* Priority 1: manually marked is_featured — regardless of auction status */
+      var featured = lots.filter(function (l) { return !!l.is_featured; });
 
-      /* Take top 5 */
-      var top = active.slice(0, 5);
+      /* Priority 2 (fallback): lots currently in a live auction window */
+      var pool;
+      if (featured.length > 0) {
+        pool = featured;
+      } else {
+        var active = lots.filter(function (lot) {
+          var start = lot.start_date ? new Date(lot.start_date) : null;
+          var end   = lot.end_date   ? new Date(lot.end_date)   : null;
+          return lot.status === 'active' &&
+                 (!start || start <= now) &&
+                 (end && end > now);
+        });
+        active.sort(function (a, b) {
+          var diff = Number(b.bid_count || 0) - Number(a.bid_count || 0);
+          return diff !== 0 ? diff : Number(b.current_bid || 0) - Number(a.current_bid || 0);
+        });
+        pool = active;
+      }
+
+      var top = pool.slice(0, 5);
       if (top.length === 0) return FALLBACK_SLIDES;
 
-      /* Map to slide format */
       var lang = (typeof localStorage !== 'undefined' && localStorage.getItem('lang')) || 'ar';
 
       return top.map(function (lot) {
-        /* Localised title */
         var title = (lang === 'ar' && lot.title_ar) ? lot.title_ar
                   : (lot.title_en || lot.title || 'Auction Lot');
-
-        /* Category / eyebrow */
         var label = (lang === 'ar' && lot.category_ar) ? lot.category_ar
                   : (lot.category_en || lot.category_title || lot.auction_title || 'Lot');
-
-        /* Image */
         var src = lot.primary_image || lot.image_data || lot.auction_image
                 || 'assets/images/placeholder.jpg';
 
-        /* Bid text */
-        var amount = lot.current_bid && Number(lot.current_bid) > 0
-                   ? Number(lot.current_bid)
-                   : Number(lot.starting_bid || 0);
-        var bidLabel = lot.current_bid && Number(lot.current_bid) > 0
-                     ? 'Current Bid' : 'Starting';
-        var bid = bidLabel + ': SAR ' + amount.toLocaleString();
-
-        return { src: src, label: label, title: title, bid: bid, href: 'pages/lot.html?id=' + lot.id };
+        return { src: src, label: label, title: title, href: 'pages/lot.html?id=' + lot.id };
       });
 
     } catch (err) {
@@ -278,7 +265,7 @@
 
       overlay.appendChild(label);
       overlay.appendChild(title);
-      overlay.appendChild(bid);
+      /* price/bid line intentionally removed for gallery-clean look */
 
       el.appendChild(img);
       el.appendChild(overlay);

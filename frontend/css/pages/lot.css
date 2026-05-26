@@ -1,3 +1,12 @@
+/* Collection mode — override lot-layout grid so collection-detail controls its own layout */
+.collection-mode-layout {
+    display: block;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
 /* ============================================
    TURATHYA - LOT PAGE STYLES
    Image gallery, bid interface, lot details
@@ -75,7 +84,57 @@
 
 .countdown-section .label {
     display: block;
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+}
+
+/* ── Big prominent countdown on lot page ── */
+.countdown-section .countdown {
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.countdown-section .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--theme-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 14px 18px 10px;
+    min-width: 68px;
+}
+
+.countdown-section .countdown-value {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--theme-text);
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.countdown-section .countdown-digit {
+    width: 0.6em;
+    height: 1.15em;
+}
+
+.countdown-section .countdown-current,
+.countdown-section .countdown-next {
+    flex: 0 0 1.15em;
+    height: 1.15em;
+    line-height: 1.15em;
+}
+
+.countdown-section .countdown-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+    margin-top: 8px;
 }
 
 .info-section {
@@ -135,4 +194,416 @@
     .current-bid .price {
         font-size: var(--text-3xl);
     }
+}
+
+/* ============================================================
+   COLLECTION DETAIL LAYOUT — Museum / Gallery Experience
+   No bidding. Clean. Premium. Spacious.
+   ============================================================ */
+
+.collection-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+/* Gallery — sticky on desktop */
+.collection-detail__gallery {
+    position: sticky;
+    top: calc(var(--header-h, 80px) + 16px);
+    max-height: calc(100vh - var(--header-h, 80px) - 32px);
+    overflow-y: auto;
+}
+
+/* Body */
+.collection-detail__body {
+    min-width: 0;
+    padding-bottom: var(--space-16);
+}
+
+/* Category label — gold uppercase */
+.collection-detail__category {
+    display: inline-block;
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #C6A46C;
+    margin-bottom: 16px;
+}
+
+/* Main title — large Playfair serif */
+.collection-detail__title {
+    font-family: 'Playfair Display', 'Cormorant Garamond', var(--font-primary), serif;
+    font-size: clamp(1.9rem, 3.5vw, 3rem);
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.18;
+    margin: 0 0 8px 0;
+}
+
+/* Subtitle / group name */
+.collection-detail__subtitle {
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--color-graphite);
+    margin: 0 0 24px 0;
+    opacity: 0.75;
+}
+
+/* Gold divider line */
+.collection-detail__divider {
+    width: 56px;
+    height: 1px;
+    background: linear-gradient(90deg, #C6A46C, transparent);
+    margin: 0 0 32px 0;
+    border: none;
+}
+
+/* Info section — spacious, gold left accent */
+.collection-detail__section {
+    padding: 24px 0 24px 20px;
+    border-left: 2px solid rgba(198, 164, 108, 0.3);
+    margin-bottom: 28px;
+    transition: border-color 0.25s;
+}
+
+.collection-detail__section:hover {
+    border-left-color: rgba(198, 164, 108, 0.7);
+}
+
+.collection-detail__section h3 {
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C6A46C;
+    margin: 0 0 10px 0;
+}
+
+.collection-detail__section p,
+.collection-detail__section .section-text {
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    font-size: 0.97rem;
+    color: var(--color-graphite);
+    line-height: 1.78;
+    margin: 0;
+    max-width: 52ch;
+}
+
+/* 2-column metadata grid (condition, origin, materials, etc.) */
+.collection-detail__meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.collection-detail__meta-item {
+    background: rgba(198, 164, 108, 0.05);
+    border: 1px solid rgba(198, 164, 108, 0.15);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.collection-detail__meta-item:hover {
+    border-color: rgba(198, 164, 108, 0.35);
+    background: rgba(198, 164, 108, 0.08);
+}
+
+.collection-detail__meta-item .meta-label {
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #C6A46C;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.collection-detail__meta-item .meta-value {
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    font-size: 0.9rem;
+    color: var(--color-graphite);
+    line-height: 1.5;
+}
+
+/* Hide auction-only bid modals when in collection mode */
+body.collection-mode #bid-modal,
+body.collection-mode #bid-confirm-modal,
+body.collection-mode #bid-success-modal {
+    display: none !important;
+}
+
+/* RTL */
+html[dir="rtl"] .collection-detail__divider {
+    background: linear-gradient(270deg, #C6A46C, transparent);
+    margin: 0 0 32px 0;
+}
+
+html[dir="rtl"] .collection-detail__section {
+    padding: 24px 20px 24px 0;
+    border-left: none;
+    border-right: 2px solid rgba(198, 164, 108, 0.3);
+}
+
+html[dir="rtl"] .collection-detail__section:hover {
+    border-right-color: rgba(198, 164, 108, 0.7);
+}
+
+/* Responsive — stack on tablet/mobile */
+@media (max-width: 1023px) {
+    .collection-detail {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+
+    .collection-detail__gallery {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .collection-detail__title {
+        font-size: clamp(1.6rem, 5vw, 2.4rem);
+    }
+
+    .collection-detail__meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .collection-detail__section {
+        padding-left: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .collection-detail__meta-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ══════════════════════════════════════════
+   PREMIUM BID MODAL
+   ══════════════════════════════════════════ */
+
+.bid-modal-premium {
+    max-width: 460px;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Header: title + lot name stacked, close on side */
+.bid-modal-premium .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--color-border-light);
+    gap: 16px;
+}
+
+.bid-modal-header-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bid-modal-premium .modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--theme-text);
+    margin: 0;
+}
+
+.bid-modal-lot-name {
+    font-size: 13px;
+    color: var(--color-graphite);
+    margin: 0;
+    font-style: italic;
+}
+
+.bid-modal-premium .modal-close {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-parchment);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-graphite);
+    transition: background 0.2s, color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.bid-modal-premium .modal-close:hover {
+    background: var(--color-border);
+    color: var(--theme-text);
+}
+
+/* Bid stats — two equal blocks */
+.bid-stats-row {
+    display: flex;
+    align-items: stretch;
+    background: var(--color-parchment);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    border: 1px solid var(--color-border-light);
+}
+
+.bid-stat-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 16px;
+    text-align: center;
+}
+
+.bid-stat-divider {
+    width: 1px;
+    background: var(--color-border);
+    margin: 12px 0;
+}
+
+.bid-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+}
+
+.bid-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--theme-text);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.bid-stat-value--accent {
+    color: #2d6a3f;  /* dark green accent */
+}
+
+/* Modal body spacing */
+.bid-modal-premium .modal-body {
+    padding: 24px 28px 16px;
+}
+
+/* Stepper input: − [amount] + */
+.bid-stepper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+    transition: border-color 0.2s;
+}
+
+.bid-stepper:focus-within {
+    border-color: #2d6a3f;
+    box-shadow: 0 0 0 3px rgba(45, 106, 63, 0.1);
+}
+
+.bid-stepper-btn {
+    width: 48px;
+    height: 52px;
+    border: none;
+    background: var(--color-parchment);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--theme-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.bid-stepper-btn:hover {
+    background: var(--color-border);
+}
+
+.bid-stepper-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--theme-text);
+    padding: 0 8px;
+    height: 52px;
+    font-variant-numeric: tabular-nums;
+    background: transparent;
+    -moz-appearance: textfield;
+}
+
+.bid-stepper-input::-webkit-inner-spin-button,
+.bid-stepper-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* Increment hint */
+.bid-increment-hint {
+    font-size: 12px;
+    color: var(--color-graphite);
+    margin-top: 8px;
+    text-align: center;
+}
+
+.bid-increment-hint strong {
+    color: var(--theme-text);
+    font-weight: 600;
+}
+
+/* Footer */
+.bid-modal-premium .modal-footer {
+    padding: 16px 28px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.bid-submit-btn {
+    flex: 1;
+    height: 48px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* RTL flip for stepper */
+html[dir="rtl"] .bid-stepper {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .bid-modal-premium .modal-footer {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .bid-modal-header-inner {
+    text-align: right;
+}
+
+html[dir="rtl"] .bid-stat-block {
+    direction: rtl;
 }

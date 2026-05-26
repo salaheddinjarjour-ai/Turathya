@@ -1,0 +1,289 @@
+/* ═══════════════════════════════════════════════════════
+   TURATHYA — Premium Lot Card System
+   Sotheby's / Christie's inspired auction card design
+   Two modes:
+     .lot-card              → gallery (no price)
+     .lot-card.has-auction  → auction (price + timer shown)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Card Shell ──────────────────────────────────────── */
+.lot-card {
+  display: block;
+  background: var(--color-surface, #fff);
+  border: 1px solid rgba(198, 164, 108, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.40s cubic-bezier(.16,1,.3,1),
+              box-shadow 0.40s cubic-bezier(.16,1,.3,1),
+              border-color 0.30s ease;
+  position: relative;
+  will-change: transform;
+}
+.lot-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 28px 52px rgba(0,0,0,.11);
+  border-color: rgba(198, 164, 108, .50);
+}
+.lot-card.is-past { opacity: .70; }
+.lot-card.is-past:hover { transform: translateY(-3px); }
+
+/* ── Image Area ──────────────────────────────────────── */
+.lot-img-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background: #f4f0ea;
+}
+
+/* single image (no slider) */
+.lot-img-wrap > img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.65s cubic-bezier(.25,.46,.45,.94);
+}
+.lot-card:hover .lot-img-wrap > img { transform: scale(1.07); }
+
+/* ── Image Slider ────────────────────────────────────── */
+.lot-slider {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+  transition: transform 0.44s cubic-bezier(.16,1,.3,1);
+}
+.lot-slider-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.lot-slider-slide img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.65s cubic-bezier(.25,.46,.45,.94);
+}
+.lot-card:hover .lot-slider-slide:first-child img { transform: scale(1.07); }
+
+/* Prev / Next buttons */
+.lot-slider-btn {
+  position: absolute; top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,.46);
+  color: #fff;
+  border: none; border-radius: 50%;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 6;
+  opacity: 0;
+  transition: opacity 0.22s, background 0.2s;
+  font-size: 15px; line-height: 1;
+  padding: 0;
+}
+.lot-card:hover .lot-slider-btn { opacity: 1; }
+.lot-slider-btn:hover { background: rgba(0,0,0,.68); }
+.lot-slider-prev { left: 9px; }
+.lot-slider-next { right: 9px; }
+.rtl .lot-slider-prev { left: auto; right: 9px; }
+.rtl .lot-slider-next { right: auto; left: 9px; }
+
+/* Dots */
+.lot-slider-dots {
+  position: absolute; bottom: 10px;
+  left: 0; right: 0;
+  display: flex; justify-content: center; gap: 5px;
+  z-index: 6;
+}
+.lot-slider-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.50);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  border: none; padding: 0;
+}
+.lot-slider-dot.active {
+  background: #fff;
+  transform: scale(1.35);
+}
+
+/* ── Lot number tag ──────────────────────────────────── */
+.lot-num-tag {
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(0,0,0,.56);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 1.8px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 2px;
+  backdrop-filter: blur(5px);
+  z-index: 5;
+}
+.rtl .lot-num-tag { left: auto; right: 12px; }
+
+/* ── Badge wrap ──────────────────────────────────────── */
+.lot-badge-wrap {
+  position: absolute; top: 12px; right: 12px;
+  z-index: 5;
+}
+.rtl .lot-badge-wrap { right: auto; left: 12px; }
+
+/* Live badge: HIDDEN on cards — shown only inside auction detail pages */
+.lot-card .badge-live-gold { display: none !important; }
+
+/* Ending-soon badge */
+.badge-ending-gold {
+  background: rgba(180,96,55,.12);
+  color: #C05A28;
+  border: 1px solid rgba(180,96,55,.30);
+  font-family: 'Inter', sans-serif;
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 20px;
+  display: inline-flex; align-items: center; gap: 5px;
+  white-space: nowrap; backdrop-filter: blur(4px);
+}
+/* Ended badge */
+.badge-ended-neutral {
+  background: rgba(0,0,0,.52);
+  color: rgba(255,255,255,.90);
+  border: 1px solid rgba(255,255,255,.15);
+  font-family: 'Inter', sans-serif;
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 20px;
+  display: inline-flex; align-items: center; gap: 5px;
+  backdrop-filter: blur(4px);
+}
+/* Pulse dot */
+.badge-pulse-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: currentColor; display: inline-block;
+  animation: badge-pulse 1.6s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .45; transform: scale(.65); }
+}
+
+/* ── Card Body ───────────────────────────────────────── */
+.lot-body {
+  padding: 24px 22px 22px;
+}
+
+.lot-cat {
+  font-family: var(--font-body);
+  font-size: var(--type-card-cat);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: #C6A46C;
+  margin-bottom: 11px;
+  line-height: 1;
+}
+
+/* LARGER, PROMINENT title */
+.lot-title {
+  font-family: var(--font-heading);
+  font-size: var(--type-card-title);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text, #1a1a1a);
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lot-sub {
+  font-family: var(--font-body);
+  font-size: var(--type-subtitle);
+  font-weight: var(--weight-normal);
+  color: var(--color-text-muted, #888);
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lot-desc {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted, #777);
+  margin: 8px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lot-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(198,164,108,.35), transparent);
+  margin: 16px 0;
+}
+
+/* ── Price Row (auction pages only) ─────────────────── */
+.lot-price-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.lot-price-label {
+  font-family: var(--font-body);
+  font-size: var(--type-meta);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted, #888);
+  margin-bottom: 3px;
+}
+.lot-price-value {
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text, #1a1a1a);
+}
+.lot-timer {
+  font-family: var(--font-body);
+  font-size: var(--type-meta);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted, #888);
+  text-align: end; white-space: nowrap;
+}
+.lot-timer.ending-soon-timer { color: #C05A28; font-weight: var(--weight-semibold); }
+
+/* ── Gallery mode: hide price row ───────────────────── */
+.lot-card:not(.has-auction) .lot-price-row,
+.lot-card:not(.has-auction) .lot-divider { display: none; }
+
+/* ── Dark theme / OS dark mode ──────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .lot-card { background: #1a1612; border-color: rgba(198,164,108,.12); }
+  .lot-img-wrap { background: #2a241c; }
+  .lot-title  { color: #f0ece4; }
+  .lot-sub    { color: rgba(240,236,228,.65); }
+  .lot-desc   { color: rgba(240,236,228,.55); }
+  .lot-price-label { color: rgba(240,236,228,.55); }
+  .lot-price-value { color: #f0ece4; }
+  .lot-timer  { color: rgba(240,236,228,.55); }
+  .lot-divider { background: linear-gradient(90deg, transparent, rgba(198,164,108,.25), transparent); }
+}
+
+/* ── RTL ─────────────────────────────────────────────── */
+.rtl .lot-body { direction: rtl; text-align: right; }
+.rtl .lot-cat { letter-spacing: 0; font-family: var(--font-arabic), var(--font-body); font-size: calc(var(--type-card-cat) * var(--type-ar-boost)); }
+.rtl .lot-title { font-family: var(--font-arabic), var(--font-heading); letter-spacing: 0; }
+.rtl .lot-price-row { direction: rtl; }
+.rtl .lot-timer { text-align: start; }
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 640px) {
+  .lot-body { padding: 16px 15px 15px; }
+  .lot-body .lot-cat { margin-bottom: 8px; }
+  .lot-slider-btn { width: 28px; height: 28px; font-size: 13px; }
+}

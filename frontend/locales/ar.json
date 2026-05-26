@@ -2,7 +2,7 @@
   "nav": {
     "home": "الرئيسية",
     "auctions": "المزادات",
-    "collection": "المجموعة",
+    "collection": "المعرض",
     "about": "من نحن",
     "contact": "تواصل معنا",
     "login": "تسجيل الدخول",
@@ -12,6 +12,12 @@
     "logout": "تسجيل الخروج",
     "myBids": "عروضي",
     "watchlist": "قائمة المتابعة"
+  },
+  "userMenu": {
+    "welcome": "مرحباً،",
+    "profile": "الملف الشخصي",
+    "myAuctions": "مزاداتي",
+    "settings": "الإعدادات"
   },
   "hero": {
     "title": "اكتشف الكنوز النادرة",
@@ -31,6 +37,7 @@
     "startingBid": "سعر البداية",
     "estimate": "التقدير",
     "timeRemaining": "الوقت المتبقي",
+    "startsIn": "يبدأ خلال",
     "endDate": "تاريخ الانتهاء",
     "startDate": "تاريخ البداية",
     "category": "الفئة",
@@ -149,7 +156,14 @@
     "required": "مطلوب",
     "optional": "اختياري",
     "fullName": "الاسم الكامل",
-    "auction": "المزاد"
+    "fullNamePlaceholder": "أدخل اسمك الكامل",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "auction": "المزاد",
+    "verificationCode": "رمز التحقق",
+    "phoneHint": "اختر رمز دولتك ثم أدخل رقمك المحلي.",
+    "passwordHint": "ما لا يقل عن 8 أحرف تتضمن أحرف كبيرة وصغيرة ورقماً ورمزاً خاصاً.",
+    "otpHint": "أدخل رمز التحقق المكون من 6 أرقام الذي تلقيته عبر واتساب."
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -173,6 +187,17 @@
     "registerTitle": "إنشاء حساب",
     "registerSubtitle": "انضم إلى مجتمع المزادات الحصري",
     "forgotPassword": "نسيت كلمة المرور؟",
+    "forgotTitle": "إعادة تعيين كلمة المرور",
+    "forgotSubtitle": "أدخل رقم هاتفك المسجل وسنرسل لك رمز التحقق عبر واتساب.",
+    "sendOtp": "إرسال الرمز",
+    "enterOtp": "أدخل الرمز",
+    "verifyOtp": "تحقق من الرمز",
+    "noCode": "لم تستلمه؟",
+    "newPassword": "كلمة المرور الجديدة",
+    "newPasswordSub": "اختر كلمة مرور قوية لا تقل عن 8 أحرف، تتضمن أحرفاً كبيرة وصغيرة ورقماً ورمزاً.",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "passwordResetSuccess": "تم تعيين كلمة المرور!",
+    "passwordResetSuccessSub": "تم تحديث كلمة مرورك. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
     "rememberMe": "تذكرني",
     "noAccount": "ليس لديك حساب؟",
     "hasAccount": "لديك حساب بالفعل؟",
@@ -188,7 +213,21 @@
     "demoCredentials": "بيانات تجريبية:",
     "user": "مستخدم",
     "loginGoogle": "تسجيل الدخول بجوجل",
-    "registerGoogle": "المتابعة بجوجل"
+    "registerGoogle": "المتابعة بجوجل",
+    "haveAccount": "تسجيل الدخول",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟;",
+    "loggingIn": "جاري تسجيل الدخول...",
+    "loginFailed": "فشل تسجيل الدخول. حاول مرة أخرى.",
+    "sendingOtp": "جاري الإرسال...",
+    "verifyingOtp": "جاري التحقق...",
+    "verifyOtpCreate": "تحقق وإنشاء الحساب",
+    "codeSentTo": "تم إرسال رمز إلى",
+    "viaWhatsapp": "عبر واتساب",
+    "sendCodeFailed": "فشل إرسال الرمز. حاول مرة أخرى.",
+    "otpSentAlert": "تم إرسال رمز التحقق. أدخل الرمز المكون من 6 أرقام لإتمام التسجيل.",
+    "enterFullOtp": "يرجى إدخال رمز التحقق المكون من 6 أرقام كاملاً.",
+    "accountCreated": "تم إنشاء الحساب بنجاح! جلستك نشطة.",
+    "registrationFailed": "فشل التسجيل. حاول مرة أخرى."
   },
   "cta": {
     "eyebrow": "ابدأ المزاد",
@@ -236,7 +275,7 @@
   "collection": {
     "subtitle": "جميع القطع، الماضية والحالية.",
     "allAuctions": "جميع المزادات",
-    "introLabel": "المجموعة",
+    "introLabel": "TURATHYA",
     "introTitle": "قطع مختارة",
     "introDesc": "استكشف مجموعة مختارة من القطع النادرة والاستثنائية المتاحة للمزايدة",
     "viewLot": "عرض القطعة",
@@ -374,7 +413,8 @@
     "conditionEn": "الحالة (إنجليزي)",
     "conditionAr": "الحالة (عربي)",
     "provenanceEn": "المصدر EN (اختياري)",
-    "provenanceAr": "المصدر AR (اختياري)"
+    "provenanceAr": "المصدر AR (اختياري)",
+    "role": "الدور"
   },
   "notifications": {
     "failedLoadDashboardStats": "فشل تحميل إحصائيات لوحة التحكم",
@@ -518,6 +558,7 @@
     "no": "لا",
     "ok": "موافق",
     "or": "أو",
+    "loadMore": "للمزيد",
     "and": "و",
     "of": "من",
     "to": "إلى",

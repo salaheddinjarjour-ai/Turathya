@@ -95,6 +95,7 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages/auctions.css">
+    <link rel="stylesheet" href="../css/components/lot-card.css">
     <link rel="stylesheet" href="../css/rtl.css?v=5">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
 </head>
@@ -146,14 +147,10 @@
                             data-i18n-placeholder="auctionsPage.searchPlaceholder"
                             placeholder="Search by title, lot number, category">
                     </div>
-                    <div style="width: 100%; max-width: 280px;">
-                        <label class="form-label" for="category-filter" data-i18n="auction.filterByCategory">Filter by
-                            Category</label>
-                        <select class="form-select" id="category-filter">
-                            <option value="" data-i18n="categories.all">All Categories</option>
-                            <!-- Populated by JavaScript -->
-                        </select>
-                    </div>
+                    <select id="category-filter">
+                        <option value="" data-i18n="categories.all">جميع الفئات</option>
+                        <!-- Populated by JavaScript -->
+                    </select>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="ongoing-auctions">
@@ -182,6 +179,7 @@
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/countdown.js"></script>
+    <script src="../js/lot-cards.js"></script>
     <script src="../js/i18n.js"></script>
     <script>
         // i18n helper — safe to call before or after i18n fully loads
@@ -192,6 +190,8 @@
         let allLots = [];
 
         function isLiveLot(lot) {
+            // Must be an auction item — collection-only items never appear here
+            if (typeof hasAuction === 'function' && !hasAuction(lot)) return false;
             const now = new Date();
             const startDate = lot.start_date ? new Date(lot.start_date) : null;
             const endDate = lot.end_date ? new Date(lot.end_date) : null;
@@ -201,71 +201,29 @@
         }
 
         function isEndedLot(lot) {
+            // Must be an auction item — collection-only items never appear here
+            if (typeof hasAuction === 'function' && !hasAuction(lot)) return false;
             const endDate = lot.end_date ? new Date(lot.end_date) : null;
             return !!endDate && !Number.isNaN(endDate.getTime()) && endDate < new Date();
         }
 
-        // ── Premium lot card renderer ──────────────────────────────
-        function renderAuctionCard(lot, isPast = false) {
-            const title       = localizedField(lot, 'title');
-            const productType = localizedField(lot, 'category') || T('auction.lot');
-            const catGroup    = lot.category_title || lot.auction_title || '';
-            const image       = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
-            const amount      = lot.current_bid && Number(lot.current_bid) > 0
-                ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
-            const amountLabel = lot.current_bid && Number(lot.current_bid) > 0
-                ? T('auction.currentBid') : T('auction.startingBid');
-
-            // Badge
-            let badgeHTML;
-            if (isPast) {
-                badgeHTML = `<span class="badge-ended-neutral">${T('auction.ended')}</span>`;
-            } else if (isEndingSoon(lot.end_date)) {
-                badgeHTML = `<span class="badge-ending-gold"><span class="badge-pulse-dot"></span>${T('auction.endingSoon')}</span>`;
-            } else {
-                badgeHTML = `<span class="badge-live-gold"><span class="badge-pulse-dot"></span>${T('auction.live')}</span>`;
-            }
-
-            // Lot # label (RTL: reversed via CSS)
-            const lotTag = `LOT ${lot.lot_number}`;
-
-            // Timer cell
-            const timerCell = isPast
-                ? `<span class="lot-timer">${T('time.ended')} ${formatDate(lot.end_date)}</span>`
-                : `<span class="lot-timer" data-lot-end="${lot.end_date || ''}">—</span>`;
-
-            const cardClass = isPast ? 'lot-card is-past' : 'lot-card';
-            const archiveParam = isPast ? '&archive=true' : '';
-
-            return `
-                <a href="lot.html?id=${lot.id}${archiveParam}" class="${cardClass}">
-                    <div class="lot-img-wrap">
-                        <img loading="lazy" src="${image}" alt="${title}">
-                        <div class="lot-num-tag">${lotTag}</div>
-                        <div class="lot-badge-wrap">${badgeHTML}</div>
-                    </div>
-                    <div class="lot-body">
-                        <div class="lot-cat">${productType}</div>
-                        <h3 class="lot-title">${title}</h3>
-                        ${catGroup ? `<p class="lot-sub">${catGroup}</p>` : ''}
-                        <div class="lot-divider"></div>
-                        <div class="lot-price-row">
-                            <div>
-                                <div class="lot-price-label">${amountLabel}</div>
-                                <div class="lot-price-value">${formatCurrency(amount)}</div>
-                            </div>
-                            ${timerCell}
-                        </div>
-                    </div>
-                </a>
-            `;
+        // ── Card renderer → delegates to shared lot-cards.js ──
+        function renderAuctionCard(lot, isPast) {
+            return buildAuctionCard(lot, isPast || false);
         }
+
 
         // ── Live countdown engine ──────────────────────────────────
         function updateLotTimer(el) {
             const end = el.dataset.lotEnd;
             if (!end) return;
-            const diff = new Date(end) - new Date();
+            const parsedEnd = (typeof parseDateSafe === 'function') ? parseDateSafe(end) : new Date(end);
+            if (!parsedEnd || Number.isNaN(parsedEnd.getTime())) {
+                el.textContent = '—';
+                el.classList.remove('ending-soon-timer');
+                return;
+            }
+            const diff = parsedEnd - new Date();
             if (diff <= 0) {
                 el.textContent = T('time.ended');
                 el.classList.remove('ending-soon-timer');
@@ -322,6 +280,7 @@
             try {
                 await loadAllLots();
                 const recentLotIds = JSON.parse(localStorage.getItem('recentLots') || '[]');
+                // Only auction items in featured — collection-only items excluded
                 const liveLots = allLots.filter((lot) => isLiveLot(lot));
 
                 const ranked = [...liveLots].sort((a, b) => {
@@ -354,6 +313,7 @@
                 }
 
                 container.innerHTML = featuredLots.map((lot) => renderAuctionCard(lot, false)).join('');
+                initCardSliders(container);
                 startLotCountdowns();
             } catch (error) {
                 console.error('Failed to load featured products:', error);
@@ -379,6 +339,7 @@
                     .sort((a, b) => new Date(a.end_date) - new Date(b.end_date))
                     .map((lot) => renderAuctionCard(lot, false))
                     .join('');
+                initCardSliders(container);
                 startLotCountdowns();
             } catch (error) {
                 console.error('Failed to load live products:', error);
@@ -407,6 +368,7 @@
                 }
 
                 container.innerHTML = endedLots.map((lot) => renderAuctionCard(lot, true)).join('');
+                initCardSliders(container);
                 startLotCountdowns();
             } catch (error) {
                 console.error('Failed to load ended products:', error);
@@ -420,7 +382,9 @@
                     await loadAllLots();
                 }
 
-                const categories = [...new Set(allLots.map((lot) => lot.category).filter(Boolean))].sort();
+                // Only pull categories from auction items
+                const auctionLots = (typeof hasAuction === 'function') ? allLots.filter(hasAuction) : allLots;
+                const categories = [...new Set(auctionLots.map((lot) => lot.category).filter(Boolean))].sort();
                 const select = document.getElementById('category-filter');
 
                 categories.forEach((cat) => {

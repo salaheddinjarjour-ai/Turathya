@@ -69,14 +69,16 @@ router.post('/', [
     (0, express_validator_1.body)('lot_number').isInt({ min: 1 }),
     (0, express_validator_1.body)('title').trim().notEmpty(),
     (0, express_validator_1.body)('starting_bid').isFloat({ min: 0 }),
-    (0, express_validator_1.body)('bid_increment').optional().isFloat({ min: 0 })
+    (0, express_validator_1.body)('bid_increment').optional().isFloat({ min: 0 }),
+    (0, express_validator_1.body)('start_date').optional().isISO8601(),
+    (0, express_validator_1.body)('end_date').optional().isISO8601()
 ], async (req, res) => {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { auction_id, category_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100 } = req.body;
+        const { auction_id, category_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100, start_date, end_date } = req.body;
         const resolvedCategoryId = category_id || auction_id;
         if (!resolvedCategoryId) {
             return res.status(400).json({ error: 'category_id is required' });
@@ -92,8 +94,8 @@ router.post('/', [
           category_en, category_ar, condition_en, condition_ar,
           provenance_en, provenance_ar,
           estimate_low, estimate_high, starting_bid, reserve_price,
-          bid_increment, status, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 'active', NOW(), NOW())
+          bid_increment, start_date, end_date, status, created_at, updated_at
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, 'active', NOW(), NOW())
         RETURNING *`, [resolvedCategoryId, lot_number,
             title || title_en || title_ar,
             description || description_en || description_ar,
@@ -104,7 +106,7 @@ router.post('/', [
             category_en, category_ar, condition_en, condition_ar,
             provenance_en, provenance_ar,
             estimate_low, estimate_high, starting_bid, reserve_price,
-            bid_increment]);
+            bid_increment, start_date || null, end_date || null]);
         res.status(201).json({
             message: 'Lot created successfully',
             lot: result.rows[0]
@@ -128,7 +130,14 @@ router.post('/', [
 router.patch('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const updates = req.body;
+        const updates = { ...req.body };
+        // Map frontend alias 'category_id' → actual DB column 'auction_id'
+        if ('category_id' in updates) {
+            if (updates.category_id != null && updates.category_id !== '') {
+                updates.auction_id = updates.category_id;
+            }
+            delete updates.category_id;
+        }
         const fields = Object.keys(updates);
         if (fields.length === 0) {
             return res.status(400).json({ error: 'No fields to update' });

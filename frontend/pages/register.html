@@ -43,6 +43,7 @@
     </style>
     <link rel="stylesheet" href="../css/rtl.css?v=5">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
+    <link rel="stylesheet" href="../css/auth-enhanced.css">
 </head>
 
 <body>
@@ -56,48 +57,70 @@
 
                     <form id="register-form">
                         <div class="form-group">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-input" id="name" required>
+                            <label class="form-label" data-i18n="forms.fullName">الاسم الكامل</label>
+                            <input type="text" class="form-input" id="name" data-i18n-placeholder="forms.fullNamePlaceholder" placeholder="أدخل اسمك الكامل" required autocomplete="name">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Phone Number</label>
-                            <div style="display: grid; grid-template-columns: 140px 1fr; gap: 8px;">
-                                <input type="text" class="form-input" id="country-code" placeholder="+963" required>
-                                <input type="tel" class="form-input" id="phone-local" placeholder="944123456" required>
+                            <label class="form-label" data-i18n="forms.email">البريد الإلكتروني <span class="text-xs text-muted" data-i18n="forms.optional">اختياري</span></label>
+                            <input type="email" class="form-input" id="email" data-i18n-placeholder="forms.emailPlaceholder" placeholder="أدخل بريدك الإلكتروني" autocomplete="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="forms.phone">رقم الهاتف</label>
+                            <div class="phone-field-wrapper">
+                                <button type="button" class="country-btn" id="reg-country-btn" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="c-flag">🇸🇾</span>
+                                    <span class="c-code">+963</span>
+                                    <span class="c-chevron">▾</span>
+                                </button>
+                                <div class="country-dropdown" id="reg-country-dropdown" role="listbox"></div>
+                                <input type="hidden" id="country-code" value="+963">
+                                <input type="tel" class="form-input phone-input" id="phone-local" placeholder="944123456" required autocomplete="tel-local">
                             </div>
-                            <p class="text-xs text-muted mt-2">Enter country code (with +) and local number separately.
-                            </p>
+                            <p class="text-xs text-muted mt-2" data-i18n="forms.phoneHint">أدخل رمز الدولة والرقم المحلي بشكل منفصل.</p>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-input" id="password" required minlength="8">
-                            <p class="text-xs text-muted mt-2">Minimum 8 chars with uppercase, lowercase, number, and
-                                special character.</p>
+                            <label class="form-label" data-i18n="forms.password">كلمة المرور</label>
+                            <div class="password-wrapper">
+                                <input type="password" class="form-input" id="password" required minlength="8" autocomplete="new-password">
+                                <button type="button" class="pwd-toggle" id="reg-pwd-toggle" aria-label="إظهار كلمة المرور"></button>
+                            </div>
+                            <p class="text-xs text-muted mt-2" data-i18n="forms.passwordHint">ما لا يقل عن 8 أحرف تتضمن أحرف كبيرة وصغيرة ورقماً ورمزاً خاصاً.</p>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Confirm Password</label>
-                            <input type="password" class="form-input" id="confirm-password" required minlength="8">
+                            <label class="form-label" data-i18n="forms.confirmPassword">تأكيد كلمة المرور</label>
+                            <div class="password-wrapper">
+                                <input type="password" class="form-input" id="confirm-password" required minlength="8" autocomplete="new-password">
+                                <button type="button" class="pwd-toggle" id="reg-cpwd-toggle" aria-label="إظهار كلمة المرور"></button>
+                            </div>
                         </div>
 
                         <div class="form-group" id="otp-group" style="display: none;">
-                            <label class="form-label">Verification Code</label>
-                            <input type="text" class="form-input" id="otp-code" maxlength="6"
-                                placeholder="Enter 6-digit OTP">
-                            <p class="text-xs text-muted mt-2">Enter the 6-digit code you received.</p>
+                            <label class="form-label" data-i18n="forms.verificationCode">رمز التحقق</label>
+                            <div class="otp-inputs" id="reg-otp-inputs">
+                                <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="الرقم 1">
+                                <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="الرقم 2">
+                                <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="الرقم 3">
+                                <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="الرقم 4">
+                                <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="الرقم 5">
+                                <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="الرقم 6">
+                            </div>
+                            <p class="text-xs text-muted mt-2" data-i18n="forms.otpHint">أدخل رمز التحقق المكون من 6 أرقام الذي تلقيته عبر واتساب.</p>
                         </div>
 
                         <div id="register-error" class="form-error" style="display: none;"></div>
 
                         <button type="submit" class="btn btn-primary btn-lg w-full"
-                            data-i18n="auth.registerTitle">Create Account</button>
+                            data-i18n="auth.registerTitle">إنشاء حساب</button>
                     </form>
 
 
                     <p class="text-center text-sm text-muted mt-6">
-                        Already have an account? <a href="login.html" class="text-accent" data-i18n="auth.haveAccount">Login here</a>
+                        <span data-i18n="auth.alreadyHaveAccount">لديك حساب بالفعل؟;</span>
+                        <a href="login.html" class="text-accent" data-i18n="auth.haveAccount">تسجيل الدخول</a>
                     </p>
                 </div>
             </div>
@@ -106,6 +129,7 @@
     <script src="../js/utils.js"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/auth-enhanced.js"></script>
     <script>
         let otpRequested = false;
 
@@ -120,12 +144,14 @@
         });
 
 
-        function validateRegistrationInput(full_name, countryCode, phoneLocal, password, confirmPassword) {
+        function validateRegistrationInput(full_name, countryCode, phoneLocal, password, confirmPassword, email) {
             const sanitizedCountryCodeDigits = (countryCode || '').replace(/\D/g, '');
             const sanitizedLocal = (phoneLocal || '').replace(/\D/g, '');
             const normalizedPhone = `+${sanitizedCountryCodeDigits}${sanitizedLocal}`;
             const phoneRegex = /^\+[0-9]{6,15}$/;
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+            const emailValue = (email || '').trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!full_name || !countryCode || !phoneLocal || !password || !confirmPassword) {
                 throw new Error('Please fill all required fields.');
@@ -143,11 +169,16 @@
                 throw new Error('Password confirmation does not match.');
             }
 
+            if (emailValue && !emailRegex.test(emailValue)) {
+                throw new Error('Please enter a valid email address.');
+            }
+
             return normalizedPhone;
         }
 
         function setRegistrationFieldsDisabled(disabled) {
             document.getElementById('name').disabled = disabled;
+            document.getElementById('email').disabled = disabled;
             document.getElementById('country-code').disabled = disabled;
             document.getElementById('phone-local').disabled = disabled;
             document.getElementById('password').disabled = disabled;
@@ -157,55 +188,69 @@
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const full_name = document.getElementById('name').value;
-            const countryCode = document.getElementById('country-code').value;
-            const phoneLocal = document.getElementById('phone-local').value;
-            const password = document.getElementById('password').value;
+            const full_name    = document.getElementById('name').value;
+            const email        = document.getElementById('email').value;
+            const countryCode  = document.getElementById('country-code').value;
+            const phoneLocal   = document.getElementById('phone-local').value;
+            const password     = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
-            const otpCode = document.getElementById('otp-code').value;
-            const otpGroup = document.getElementById('otp-group');
+            const otpCode      = getOtpValue('#reg-otp-inputs');
+            const otpGroup     = document.getElementById('otp-group');
             const errorElement = document.getElementById('register-error');
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitBtn    = e.target.querySelector('button[type="submit"]');
 
             // Disable submit button
             submitBtn.disabled = true;
-            submitBtn.textContent = otpRequested ? 'Verifying OTP...' : 'Sending OTP...';
+            submitBtn.textContent = otpRequested
+                ? (window.i18n?.t?.('auth.verifyingOtp') || 'جاري التحقق...')
+                : (window.i18n?.t?.('auth.sendingOtp') || 'جاري الإرسال...');
             errorElement.style.display = 'none';
 
             try {
-                const normalizedPhone = validateRegistrationInput(full_name, countryCode, phoneLocal, password, confirmPassword);
+                const normalizedPhone = validateRegistrationInput(full_name, countryCode, phoneLocal, password, confirmPassword, email);
 
                 if (!otpRequested) {
-                    await authAPI.requestRegistrationOtp(password, confirmPassword, full_name, normalizedPhone);
+                    await authAPI.requestRegistrationOtp(password, confirmPassword, full_name, normalizedPhone, email);
                     otpRequested = true;
                     setRegistrationFieldsDisabled(true);
-                    otpGroup.style.display = 'block';
+                    const otpGroupEl = document.getElementById('otp-group');
+                    otpGroupEl.style.display = 'block';
+                    // Init OTP digit boxes once shown
+                    initOtpInputs('#reg-otp-inputs');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Verify OTP & Create Account';
-                    alert('Verification code sent. Enter the 6-digit code to complete registration.');
+                    submitBtn.textContent = window.i18n?.t?.('auth.verifyOtpCreate') || 'تحقق وإنشاء الحساب';
+                    alert(window.i18n?.t?.('auth.otpSentAlert') || 'تم إرسال رمز التحقق. أدخل الرمز المكون من 6 أرقام لإتمام التسجيل.');
                     return;
                 }
 
                 if (!otpCode || otpCode.length !== 6) {
-                    throw new Error('Please enter the 6-digit OTP code.');
+                    throw new Error(window.i18n?.t?.('auth.enterFullOtp') || 'يرجى إدخال رمز التحقق المكون من 6 أرقام.، كاملاً.');
                 }
 
                 const result = await authAPI.verifyRegistrationOtp(normalizedPhone, otpCode);
 
-                alert('Account created successfully! Your session is active. If your account is pending approval, bidding will be enabled automatically after approval.');
+                alert(window.i18n?.t?.('auth.accountCreated') || 'تم إنشاء الحساب بنجاح! جلستك نشطة.');
                 if (result?.user?.role === 'admin') {
                     window.location.href = 'admin.html';
                 } else {
                     window.location.href = 'account.html';
                 }
             } catch (error) {
-                errorElement.textContent = error.message || 'Registration failed. Please try again.';
+                errorElement.textContent = error.message || (window.i18n?.t?.('auth.registrationFailed')) || 'فشل التسجيل. حاول مرة أخرى.';
                 errorElement.style.display = 'block';
                 submitBtn.disabled = false;
-                submitBtn.textContent = otpRequested ? 'Verify OTP & Create Account' : 'Create Account';
+                submitBtn.textContent = otpRequested
+                    ? (window.i18n?.t?.('auth.verifyOtpCreate') || 'تحقق وإنشاء الحساب')
+                    : (window.i18n?.t?.('auth.registerTitle') || 'إنشاء حساب');
             }
         });
+        // ── Init enhanced components ──────────────────────────────────
+        buildCountryDropdownShell('reg-country-dropdown');
+        buildCountrySelector('reg-country-btn', 'reg-country-dropdown', 'country-code');
+        initPasswordToggle('password', 'reg-pwd-toggle');
+        initPasswordToggle('confirm-password', 'reg-cpwd-toggle');
     </script>
+    <div id="site-footer"></div>
 </body>
 
 </html>

@@ -1,3 +1,6 @@
+import { prisma } from '../config/prisma';
+import { WHATSAPP_MESSAGES } from './whatsappMessages';
+
 type WhatsAppBridgeStatus = {
     isConnected: boolean;
     hasQRCode: boolean;
@@ -13,6 +16,14 @@ type BroadcastPayload = {
     title: string;
     message: string;
     url?: string;
+};
+
+type MessagePayload = {
+    message: string;
+};
+
+type SingleMessagePayload = MessagePayload & {
+    phoneNumber: string;
 };
 
 const bridgeUrl = (process.env.WHATSAPP_BRIDGE_URL || 'http://localhost:3001').replace(/\/$/, '');
@@ -93,45 +104,77 @@ export async function sendAutomatedBroadcast(payload: BroadcastPayload) {
     await bridgePost('/api/events/broadcast', payload);
 }
 
+export async function broadcastWhatsAppMessage(message: string) {
+    if (!automationEnabled) {
+        return;
+    }
+
+    if (!String(message).trim()) {
+        return;
+    }
+
+    const payload: MessagePayload = {
+        message: String(message)
+    };
+
+    await bridgePost('/api/messages/broadcast', payload);
+}
+
+export async function sendWhatsAppMessage(phone: string, message: string) {
+    if (!automationEnabled) {
+        return;
+    }
+
+    const normalizedPhone = normalizePhone(phone);
+    if (!normalizedPhone || !String(message).trim()) {
+        return;
+    }
+
+    const payload: SingleMessagePayload = {
+        phoneNumber: normalizedPhone,
+        message: String(message)
+    };
+
+    await bridgePost('/api/messages/send', payload);
+}
+
 export async function notifyNewAuctionCreated(auction: { id: string; title: string; start_date?: string; location?: string | null; }) {
     const auctionUrl = `${frontendUrl}/pages/auction.html?id=${auction.id}`;
-    const startDateText = auction.start_date ? new Date(auction.start_date).toLocaleString('en-US') : 'Soon';
-
-    await sendAutomatedBroadcast({
-        eventType: 'new_auction',
-        title: `New auction: ${auction.title}`,
-        message: `A new auction has been added. Starts: ${startDateText}. Location: ${auction.location || 'Online'}.`,
-        url: auctionUrl
-    });
+    const message = `${WHATSAPP_MESSAGES.collectionLaunch}\n🔗 ${auctionUrl}`;
+    await broadcastWhatsAppMessage(message);
 }
 
 export async function notifyAuctionFeatured(auction: { id: string; title: string; }) {
     const auctionUrl = `${frontendUrl}/pages/auction.html?id=${auction.id}`;
-
-    await sendAutomatedBroadcast({
-        eventType: 'featured_auction',
-        title: `Featured auction: ${auction.title}`,
-        message: 'An auction has just been featured by the admin team.',
-        url: auctionUrl
-    });
+    const message = `${WHATSAPP_MESSAGES.featuredAuctionOneHour}\n🔗 ${auctionUrl}`;
+    await broadcastWhatsAppMessage(message);
 }
 
 export async function notifyNewLotCreated(lot: { id: string; title: string; auction_title?: string; starting_bid?: string | number; }) {
     const lotUrl = `${frontendUrl}/pages/lot.html?id=${lot.id}`;
-    const startingBid = lot.starting_bid ?? 0;
-
-    await sendAutomatedBroadcast({
-        eventType: 'new_product',
-        title: `New product: ${lot.title}`,
-        message: `A new product was added${lot.auction_title ? ` in ${lot.auction_title}` : ''}. Starting bid: ${startingBid}.`,
-        url: lotUrl
-    });
+    const startingBid = Number(lot.starting_bid ?? 0).toFixed(2);
+    const auctionPart = lot.auction_title ? `\nالمجموعة: ${lot.auction_title}` : '';
+    const message = `🔔 منتج جديد في المزاد\n${lot.title}${auctionPart}\nالسعر الابتدائي: $${startingBid}\n🔗 ${lotUrl}`;
+    await broadcastWhatsAppMessage(message);
 }
 
 export async function notifyNewSubscriber(user: { fullName: string; }) {
-    await sendAutomatedBroadcast({
-        eventType: 'new_subscriber',
-        title: 'New subscriber joined',
-        message: `${user.fullName} has joined the platform.`
+    // Fetch all admin users that have a phone number registered
+    const admins = await prisma.user.findMany({
+        where: { role: 'admin', phone: { not: null } },
+        select: { phone: true }
     });
+
+    if (admins.length === 0) {
+        return;
+    }
+
+    const message = `🔔 مشترك جديد: *${user.fullName}* انضم إلى المنصة للتو.`;
+
+    // Send a direct message to each admin — not a broadcast to all users
+    await Promise.allSettled(
+        admins
+            .filter(a => a.phone)
+            .map(a => sendWhatsAppMessage(a.phone!, message))
+    );
 }

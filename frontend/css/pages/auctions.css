@@ -2,6 +2,7 @@
    TURATHYA - AUCTIONS PAGE STYLES
    Filters sidebar and grid layout
    ============================================ */
+@import url('../components/lot-card.css');
 
 /* Keep centered in RTL mode */
 body.rtl .page-header {
@@ -72,9 +73,11 @@ main.section {
     margin-bottom: 44px;
 }
 
-.lot-section-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
+.lot-section-label,
+.col-intro-label {
+    display: block;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 2.8px;
     text-transform: uppercase;
@@ -93,7 +96,7 @@ main.section {
 
 .lot-section-sub {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     color: #999;
     margin: 0 0 18px;
 }
@@ -105,127 +108,9 @@ main.section {
     margin: 0 auto;
 }
 
-/* ── Card ── */
-.lot-card {
-    display: block;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    border-radius: 3px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-    will-change: transform;
-}
+/* ── Card styles now in css/components/lot-card.css ── */
+/* Old rules below kept only for legacy badge compat   */
 
-.lot-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 22px 44px rgba(0, 0, 0, 0.09);
-    border-color: rgba(198, 164, 108, 0.45);
-}
-
-.lot-card.is-past {
-    opacity: 0.72;
-}
-
-.lot-card.is-past:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
-}
-
-/* ── Image ── */
-.lot-img-wrap {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-    background: #f0ece6;
-}
-
-.lot-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.lot-card:hover .lot-img-wrap img {
-    transform: scale(1.08);
-}
-
-/* ── Lot number tag (top-left) ── */
-.lot-num-tag {
-    position: absolute;
-    top: 11px;
-    left: 11px;
-    background: rgba(0, 0, 0, 0.60);
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-size: 9.5px;
-    font-weight: 500;
-    letter-spacing: 1.6px;
-    text-transform: uppercase;
-    padding: 4px 9px;
-    border-radius: 3px;
-    backdrop-filter: blur(4px);
-}
-
-/* ── Badge (top-right) ── */
-.lot-badge-wrap {
-    position: absolute;
-    top: 11px;
-    right: 11px;
-}
-
-/* Live gold badge */
-.badge-live-gold {
-    background: rgba(198, 164, 108, 0.14);
-    color: #C6A46C;
-    border: 1px solid rgba(198, 164, 108, 0.38);
-    font-family: 'Inter', sans-serif;
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: 1.1px;
-    text-transform: uppercase;
-    padding: 4px 9px;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    backdrop-filter: blur(4px);
-}
-
-/* Ending soon badge */
-.badge-ending-gold {
-    background: rgba(180, 96, 55, 0.12);
-    color: #C05A28;
-    border: 1px solid rgba(180, 96, 55, 0.30);
-    font-family: 'Inter', sans-serif;
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: 1.1px;
-    text-transform: uppercase;
-    padding: 4px 9px;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    backdrop-filter: blur(4px);
-}
-
-/* Ended badge */
-.badge-ended-neutral {
-    background: rgba(0, 0, 0, 0.08);
-    color: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    font-family: 'Inter', sans-serif;
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: 1.1px;
-    text-transform: uppercase;
-    padding: 4px 9px;
     border-radius: 20px;
     display: inline-flex;
     align-items: center;
@@ -334,6 +219,30 @@ main.section {
     text-transform: uppercase;
     color: #aaa;
     margin-bottom: 6px;
+}
+
+/* Category filter — same look as collection page select */
+#category-filter {
+    height: 56px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    padding: 0 16px;
+    width: 100%;
+    max-width: 280px;
+    box-sizing: border-box;
+    background: white;
+    font-size: 14px;
+    color: #444;
+    font-family: 'Inter', var(--font-arabic), sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: auto;
+}
+
+#category-filter:focus {
+    outline: none;
+    border-color: #C6A46C;
+    box-shadow: 0 0 0 3px rgba(198, 164, 108, 0.12);
 }
 
 /* ── RTL overrides ── */

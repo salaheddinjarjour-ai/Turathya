@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startLiveAuctionNotifier = startLiveAuctionNotifier;
 const database_1 = require("../config/database");
+const whatsappBridge_1 = require("./whatsappBridge");
+const whatsappMessages_1 = require("./whatsappMessages");
 const bridgeUrl = (process.env.WHATSAPP_BRIDGE_URL || 'http://localhost:3001').replace(/\/$/, '');
 const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:8000').replace(/\/$/, '');
 const isEnabled = process.env.WHATSAPP_LIVE_NOTIFICATIONS_ENABLED === 'true';
@@ -39,6 +41,7 @@ async function getAuctionsToNotify() {
             a.title,
             a.location,
             a.start_date,
+            COALESCE(a.featured, FALSE) AS featured,
             (SELECT MIN(l.starting_bid) FROM lots l WHERE l.auction_id = a.id) AS min_starting_bid
         FROM auctions a
         LEFT JOIN live_auction_notifications n ON n.auction_id = a.id
@@ -51,35 +54,12 @@ async function getAuctionsToNotify() {
     return result.rows;
 }
 async function sendLiveNotification(auction) {
-    const payload = {
-        auctionId: auction.id,
-        title: `🔴 LIVE NOW: ${auction.title}`,
-        startingPrice: Number(auction.min_starting_bid || 0),
-        startTime: new Date(auction.start_date).toLocaleString('en-US'),
-        location: auction.location || 'Online',
-        url: `${frontendUrl}/pages/auction.html?id=${auction.id}`
-    };
-    const response = await fetch(`${bridgeUrl}/api/auctions/notify`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-    if (!response.ok) {
-        let message = `Live notification failed (${response.status})`;
-        try {
-            const errorPayload = await response.json();
-            message = errorPayload.error || errorPayload.message || message;
-        }
-        catch {
-            const text = await response.text();
-            if (text) {
-                message = text;
-            }
-        }
-        throw new Error(message);
-    }
+    const auctionUrl = `${frontendUrl}/pages/auction.html?id=${auction.id}`;
+    const template = auction.featured
+        ? whatsappMessages_1.WHATSAPP_MESSAGES.featuredAuctionLive
+        : whatsappMessages_1.WHATSAPP_MESSAGES.normalAuctionLive;
+    const message = `${template}\n🔗 ${auctionUrl}`;
+    await (0, whatsappBridge_1.broadcastWhatsAppMessage)(message);
 }
 async function markAuctionNotified(auctionId) {
     await database_1.pool.query(`INSERT INTO live_auction_notifications (auction_id) VALUES ($1) ON CONFLICT (auction_id) DO NOTHING`, [auctionId]);

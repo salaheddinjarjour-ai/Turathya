@@ -32,6 +32,7 @@ function normalizeOrigin(url) {
     return url.replace(/\/+$/, '').trim();
 }
 const allowNetlifyPreviews = process.env.ALLOW_NETLIFY_PREVIEWS !== 'false';
+const allowCfPages = process.env.ALLOW_CF_PAGES !== 'false';
 // Build allowed origins from FRONTEND_URL/FRONTEND_URLS env vars + localhost defaults
 const allowedOrigins = new Set([
     'http://localhost:5050',
@@ -51,6 +52,7 @@ if (process.env.FRONTEND_URLS) {
 }
 console.log('🔒 Allowed CORS origins:', Array.from(allowedOrigins));
 console.log('🔒 Netlify preview origins allowed:', allowNetlifyPreviews);
+console.log('🔒 Cloudflare Pages origins allowed:', allowCfPages);
 // CORS origin checker function
 const corsOriginCheck = (origin, callback) => {
     // Allow requests with no origin (server-to-server, curl, health checks)
@@ -58,6 +60,7 @@ const corsOriginCheck = (origin, callback) => {
         return callback(null, true);
     const normalizedOrigin = normalizeOrigin(origin);
     let isNetlifyPreview = false;
+    let isCfPages = false;
     if (allowNetlifyPreviews) {
         try {
             isNetlifyPreview = /\.netlify\.app$/i.test(new URL(normalizedOrigin).hostname);
@@ -66,7 +69,15 @@ const corsOriginCheck = (origin, callback) => {
             isNetlifyPreview = false;
         }
     }
-    if (allowedOrigins.has(normalizedOrigin) || isNetlifyPreview) {
+    if (allowCfPages) {
+        try {
+            isCfPages = /\.pages\.dev$/i.test(new URL(normalizedOrigin).hostname);
+        }
+        catch {
+            isCfPages = false;
+        }
+    }
+    if (allowedOrigins.has(normalizedOrigin) || isNetlifyPreview || isCfPages) {
         return callback(null, true);
     }
     console.warn(`⚠️ Blocked CORS request from origin: ${origin}`);

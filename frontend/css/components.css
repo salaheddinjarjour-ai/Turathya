@@ -10,7 +10,7 @@
     align-items: center;
     justify-content: center;
     padding: var(--space-3) var(--space-8);
-    font-family: var(--font-sans);
+    font-family: var(--font-brand);
     font-size: var(--text-base);
     font-weight: var(--weight-medium);
     line-height: 1;
@@ -113,7 +113,7 @@
     color: var(--theme-text);
     border: var(--border-thin) solid var(--theme-border);
     border-radius: var(--radius-sm);
-    font-family: var(--font-sans);
+    font-family: var(--font-brand);
     font-weight: var(--weight-medium);
     transition: all var(--duration-normal) var(--ease-elegant);
     position: relative;
@@ -168,6 +168,7 @@
 }
 
 .card-subtitle {
+    font-family: var(--font-brand);
     font-size: var(--text-sm);
     color: var(--theme-text-muted);
     margin-bottom: var(--space-4);
@@ -193,6 +194,7 @@
     font-weight: var(--weight-medium);
     color: var(--theme-text);
     margin-bottom: var(--space-2);
+    font-family: var(--font-brand);
 }
 
 .form-input,
@@ -301,7 +303,8 @@
 }
 
 .nav-link {
-    font-size: var(--text-base);
+    font-family: var(--font-brand);
+    font-size: var(--text-md);
     font-weight: var(--weight-normal);
     color: var(--theme-text);
     transition: color var(--duration-normal) var(--ease-elegant);
@@ -322,6 +325,143 @@
     background-color: var(--theme-accent);
 }
 
+/* ==================== USER MENU (TOP BAR) ==================== */
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgb(238 227 217);
+    border: 1px solid rgb(73 18 17);
+    border-radius: 25px;
+    color: #481610;
+    font-family: var(--font-brand);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-btn:hover {
+    background: rgb(225 210 196);
+    border-color: rgb(73 18 17);
+    color: #481610;
+}
+
+/* ── Home page only: frosted-white style (sits over dark hero) ── */
+#landing-page .user-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgb(255 255 255 / 50%);
+    color: #ededed;
+}
+
+#landing-page .user-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #ededed;
+}
+
+.user-btn .avatar,
+.user-dropdown .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #D4AF37, #8B6914);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2C1810;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    left: auto;
+    min-width: 220px;
+    background: #1a0f0f;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.user-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background: #1a0f0f;
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+    border-right: 1px solid rgba(212, 175, 55, 0.3);
+    transform: rotate(-45deg);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #e0d5c7;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background: rgba(212, 175, 55, 0.1);
+    color: #D4AF37;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(212, 175, 55, 0.2);
+    margin: 8px 0;
+}
+
+.dropdown-item.logout {
+    color: #e74c3c;
+}
+
+.dropdown-item.logout:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.user-welcome {
+    font-size: 12px;
+    color: #888;
+}
+
+.user-name-display {
+    font-weight: bold;
+    color: #D4AF37;
+}
+
 /* Header */
 .header {
     position: sticky;
@@ -330,6 +470,21 @@
     background-color: var(--theme-bg);
     border-bottom: var(--border-thin) solid var(--theme-border);
     padding: var(--space-6) 0;
+}
+
+/* Landing page: let hero background show under header */
+#landing-page .header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(44, 24, 16, 0.95) 0%,
+        rgba(44, 24, 16, 0.7) 50%,
+        transparent 100%
+    );
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    backdrop-filter: blur(2px);
 }
 
 .header-content {
@@ -443,10 +598,17 @@
 /* ==================== FOOTER ==================== */
 
 .footer {
-    background-color: #AD9E89;
-    border-top: var(--border-thin) solid var(--theme-border);
+    background-color: #5C4D3C;
+    border-top: var(--border-thin) solid rgba(255,255,255,0.1);
     padding: var(--space-16) 0 var(--space-8) 0;
     margin-top: var(--section-padding-lg);
+}
+
+/* Remove gap when footer immediately follows the CTA band (with or without divider) */
+.cta-band + .footer,
+.cta-band + .section-divider + .footer,
+.section-divider + .footer {
+    margin-top: 0;
 }
 
 .footer-content {
@@ -457,9 +619,10 @@
 }
 
 .footer-section h4 {
-    font-size: var(--text-base);
+    font-size: var(--text-md);   /* 18px — up from 16px */
     font-weight: var(--weight-semibold);
     margin-bottom: var(--space-4);
+    color: rgba(255, 255, 255, 0.92);
 }
 
 .footer-links {
@@ -473,24 +636,24 @@
 }
 
 .footer-links a {
-    font-size: var(--text-sm);
-    color: var(--color-graphite);
+    font-size: var(--text-base);  /* 16px — up from 14px */
+    color: rgba(255, 255, 255, 0.65);
     transition: color var(--duration-normal) var(--ease-elegant);
 }
 
 .footer-links a:hover {
-    color: var(--theme-accent);
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .footer-bottom {
     padding-top: var(--space-8);
-    border-top: var(--border-thin) solid var(--theme-border);
+    border-top: var(--border-thin) solid rgba(255, 255, 255, 0.15);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: var(--text-sm);
-    color: #ffffff;
+    font-size: var(--text-base);  /* 16px — up from 14px */
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .footer-bottom p {
@@ -613,7 +776,7 @@
 .countdown-digit {
     display: inline-block;
     width: 1ch;
-    height: 1em;
+    height: 1.2em;
     overflow: hidden;
 }
 
@@ -627,9 +790,9 @@
 .countdown-current,
 .countdown-next {
     display: block;
-    flex: 0 0 1em;
-    height: 1em;
-    line-height: 1em;
+    flex: 0 0 1.2em;
+    height: 1.2em;
+    line-height: 1.2em;
     width: 100%;
     text-align: center;
 }

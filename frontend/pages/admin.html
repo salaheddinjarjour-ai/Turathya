@@ -351,42 +351,45 @@
                             <!-- Right Column: Financials & Media -->
                             <div class="form-column">
                                 <fieldset class="admin-fieldset">
-                                    <legend>Financials</legend>
+                                    <legend>Financials <small style="font-weight:400;opacity:.65;">(Optional)</small></legend>
 
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="admin.estimateMinDollar">Est. Low
-                                                ($)</label>
-                                            <input type="number" class="form-input" name="estimateMin" required>
+                                            <label class="form-label" data-i18n="admin.estimateMinDollar">Est. Low ($) <span style="opacity:.6;font-weight:400;">(optional)</span></label>
+                                            <input type="number" class="form-input" name="estimateMin" min="0" step="any" placeholder="—">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="admin.estimateMaxDollar">Est. High
-                                                ($)</label>
-                                            <input type="number" class="form-input" name="estimateMax" required>
+                                            <label class="form-label" data-i18n="admin.estimateMaxDollar">Est. High ($) <span style="opacity:.6;font-weight:400;">(optional)</span></label>
+                                            <input type="number" class="form-input" name="estimateMax" min="0" step="any" placeholder="—">
                                         </div>
                                     </div>
 
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="admin.startingBidDollar">Start Bid
-                                                ($)</label>
-                                            <input type="number" class="form-input" name="startingBid" required>
+                                            <label class="form-label" data-i18n="admin.startingBidDollar">Start Bid ($) <span style="opacity:.6;font-weight:400;">(optional)</span></label>
+                                            <input type="number" class="form-input" name="startingBid" min="0" step="any" placeholder="—">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="admin.reserveDollar">Reserve
-                                                ($)</label>
-                                            <input type="number" class="form-input" name="reserve" value="0">
+                                            <label class="form-label" data-i18n="admin.reserveDollar">Reserve ($) <span style="opacity:.6;font-weight:400;">(optional)</span></label>
+                                            <input type="number" class="form-input" name="reserve" min="0" step="any" placeholder="0">
                                         </div>
                                     </div>
 
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="auction.startDate">Auction Starts</label>
+                                            <label class="form-label" data-i18n="auction.startDate">Auction Starts <span style="opacity:.6;font-weight:400;">(optional)</span></label>
                                             <input type="datetime-local" class="form-input" name="startDate">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="auction.endDate">Auction Ends</label>
+                                            <label class="form-label" data-i18n="auction.endDate">Auction Ends <span style="opacity:.6;font-weight:400;">(optional)</span></label>
                                             <input type="datetime-local" class="form-input" name="endDate">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group" style="display:flex;align-items:center;gap:.6rem;">
+                                            <input type="checkbox" id="lot-featured" name="isFeatured" value="1" style="width:18px;height:18px;cursor:pointer;accent-color:var(--theme-accent);">
+                                            <label for="lot-featured" class="form-label" style="margin:0;cursor:pointer;">★ Feature on Homepage</label>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -482,6 +485,7 @@
                                     <th data-i18n="auction.currentBid">Current Bid</th>
                                     <th data-i18n="admin.highestBidder">Highest Bidder</th>
                                     <th data-i18n="admin.status">Status</th>
+                                    <th>★ Featured</th>
                                     <th data-i18n="admin.actions">Actions</th>
                                 </tr>
                             </thead>
@@ -526,6 +530,7 @@
                                     <th data-i18n="account.name">Name</th>
                                     <th data-i18n="forms.email">Email</th>
                                     <th data-i18n="admin.registered">Registered</th>
+                                    <th data-i18n="admin.role">Role</th>
                                     <th data-i18n="admin.status">Status</th>
                                     <th data-i18n="admin.actions">Actions</th>
                                 </tr>

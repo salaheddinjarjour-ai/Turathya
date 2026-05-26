@@ -333,6 +333,20 @@
 
             user = currentUser;
 
+            // ── Deep-link: activate tab from URL ?tab= parameter ──────────
+            const urlTab = new URLSearchParams(window.location.search).get('tab');
+            if (urlTab) {
+                const targetBtn = document.querySelector(`.tab-btn[data-tab="${urlTab}"]`);
+                const targetContent = document.getElementById(`${urlTab}-tab`);
+                if (targetBtn && targetContent) {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    targetBtn.classList.add('active');
+                    targetContent.classList.add('active');
+                }
+            }
+            // ──────────────────────────────────────────────────────────────
+
             loadWatchlist();
             loadBids();
             loadProfile();

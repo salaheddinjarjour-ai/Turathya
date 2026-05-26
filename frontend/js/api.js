@@ -1,7 +1,9 @@
 // API Configuration — auto-detect backend URL based on environment
-const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+const _isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = _isLocal
     ? 'http://localhost:3000/api'
-    : 'https://turathya.onrender.com/api';
+    : 'https://turathya.com/api';
+
 
 // Get token from localStorage
 function getToken() {
@@ -126,6 +128,21 @@ const authAPI = {
     logout() {
         clearAuth();
         window.location.href = '../index.html';
+    },
+
+    forgotPassword: {
+        async requestOtp(phone) {
+            return apiRequest('/auth/forgot-password/request-otp', {
+                method: 'POST',
+                body: JSON.stringify({ phone })
+            });
+        },
+        async reset(phone, otp, new_password) {
+            return apiRequest('/auth/forgot-password/reset', {
+                method: 'POST',
+                body: JSON.stringify({ phone, otp, new_password })
+            });
+        }
     }
 };
 
@@ -285,6 +302,13 @@ const adminAPI = {
         async unsuspend(userId) {
             return apiRequest(`/admin/users/${userId}/unsuspend`, {
                 method: 'PATCH'
+            });
+        },
+
+        async setRole(userId, role) {
+            return apiRequest(`/admin/users/${userId}/role`, {
+                method: 'PATCH',
+                body: JSON.stringify({ role })
             });
         },
 
@@ -531,7 +555,7 @@ function getSocketServerUrl() {
         const apiUrl = new URL(API_BASE_URL);
         return `${apiUrl.protocol}//${apiUrl.host}`;
     } catch {
-        return (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        return _isLocal
             ? 'http://localhost:3000'
             : 'https://turathya.onrender.com';
     }

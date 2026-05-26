@@ -236,6 +236,16 @@ function incrementBid() {
     bidInput.value = currentValue + increment;
 }
 
+// Decrement bid by one increment, never below the minimum
+function decrementBid() {
+    const bidInput = document.getElementById('bid-amount');
+    const currentValue = parseFloat(bidInput.value) || 0;
+    const min = parseFloat(bidInput.min) || 0;
+    const increment = getBidIncrement(currentValue);
+    const next = currentValue - increment;
+    bidInput.value = next >= min ? next : min;
+}
+
 // ==================== INITIALIZE ====================
 
 document.addEventListener('DOMContentLoaded', () => {

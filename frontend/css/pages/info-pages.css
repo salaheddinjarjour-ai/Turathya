@@ -104,7 +104,7 @@
 }
 
 .ip-hero__title h1 {
-  font-family: 'Playfair Display', serif !important;
+  font-family: var(--font-headline) !important;
   font-size: clamp(2.4rem, 5vw, 4rem) !important;
   font-weight: 400 !important;
   line-height: 1.12 !important;

@@ -1,0 +1,11 @@
+# SPA-style fallback: serve index.html for any unmatched route
+# (Cloudflare Pages uses this for client-side routing)
+
+# Redirect /index.html → / (canonical)
+/index.html / 301
+
+# Ensure trailing-slash-free URLs resolve to .html pages
+# (Cloudflare Pages handles this automatically via the 200 fallback below)
+
+# 404 fallback for all unmatched paths
+/* /404.html 404

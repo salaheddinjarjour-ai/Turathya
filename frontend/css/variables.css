@@ -105,36 +105,73 @@
   /* ==================== TYPOGRAPHY ==================== */
 
   /* Font Families — Brand Typography System */
-  --font-heading:    "Darby Sans Poster", "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-subheading: "Kepler Std Semicondensed", "Kepler Std", "Playfair Display", Georgia, serif;
-  --font-body:       "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  --font-body-ar:    "Helvetica Neue", "Noto Sans Arabic", "Cairo", "Tajawal", Tahoma, sans-serif;
+  --font-headline:  "Playfair Display", Georgia, serif;
+  --font-subheader: "Cormorant Garamond", "Times New Roman", serif;
+  --font-body:      "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --font-arabic:    "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
 
-  /* Legacy aliases — kept for backward compatibility */
+  /* App aliases */
+  --font-brand:      var(--font-body);
+  --font-heading:    var(--font-headline);
+  --font-subheading: var(--font-subheader);
+  --font-body-ar:    var(--font-arabic);
   --font-serif: var(--font-heading);
   --font-sans:  var(--font-body);
 
-  /* Font Sizes - Fluid Scale */
-  --text-xs: 0.75rem;
-  /* 12px */
-  --text-sm: 0.875rem;
-  /* 14px */
-  --text-base: 1rem;
-  /* 16px */
-  --text-lg: 1.125rem;
-  /* 18px */
-  --text-xl: 1.25rem;
-  /* 20px */
-  --text-2xl: 1.5rem;
-  /* 24px */
-  --text-3xl: 1.875rem;
-  /* 30px */
-  --text-4xl: 2.25rem;
-  /* 36px */
-  --text-5xl: 3rem;
-  /* 48px */
-  --text-6xl: 3.75rem;
-  /* 60px */
+  /* ── Primitive Type Scale (refined, proportional) ── */
+  --text-2xs:  10px;   /* badge labels, micro tags      */
+  --text-xs:   11px;   /* lot-num, tiny metadata         */
+  --text-sm:   13px;   /* captions, helper text          */
+  --text-base: 15px;   /* body copy                      */
+  --text-md:   16px;   /* slightly larger body / buttons */
+  --text-lg:   18px;   /* card titles mobile             */
+  --text-xl:   20px;   /* card titles desktop / nav      */
+  --text-2xl:  24px;   /* section sub-headings           */
+  --text-3xl:  28px;   /* section headings               */
+  --text-4xl:  36px;   /* page headings                  */
+  --text-5xl:  44px;   /* hero headings                  */
+  --text-6xl:  56px;   /* large hero                     */
+
+  /* ── Semantic Fluid Type Tokens (use these in components) ── */
+  /* Page / Hero Titles */
+  --type-hero:         clamp(2rem, 6vw, 3.8rem);    /* 32px → 61px */
+  --type-page-title:   clamp(1.75rem, 4.5vw, 2.75rem); /* 28px → 44px */
+
+  /* Section headings */
+  --type-section-title: clamp(1.35rem, 3vw, 2rem);  /* 22px → 32px */
+  --type-section-sub:   clamp(0.9rem, 1.5vw, 1.1rem); /* 14px → 18px */
+
+  /* Card product name */
+  --type-card-title:    clamp(1rem, 2.2vw, 1.375rem); /* 16px → 22px */
+
+  /* Card category / eyebrow label */
+  --type-card-cat:      10px;
+
+  /* Subtitles / secondary labels */
+  --type-subtitle:      clamp(0.8rem, 1.4vw, 1rem);  /* 13px → 16px */
+
+  /* Body copy */
+  --type-body:          clamp(0.875rem, 1.2vw, 0.9375rem); /* 14px → 15px */
+
+  /* Metadata: lot numbers, dates, etc. */
+  --type-meta:          clamp(0.6875rem, 1vw, 0.8125rem); /* 11px → 13px */
+
+  /* Buttons */
+  --type-button:        clamp(0.8125rem, 1.2vw, 0.9375rem); /* 13px → 15px */
+
+  /* Form inputs & labels */
+  --type-form:          15px;
+  --type-form-label:    12px;
+
+  /* Navigation */
+  --type-nav:           13px;
+  --type-nav-mobile:    16px;
+
+  /* Footer */
+  --type-footer:        13px;
+
+  /* Arabic optical size boost (+8% to compensate for smaller optical rendering) */
+  --type-ar-boost:      1.08;
 
   /* Font Weights */
   --weight-light: 300;
@@ -144,17 +181,18 @@
   --weight-bold: 700;
 
   /* Line Heights */
-  --leading-tight: 1.2;
+  --leading-tight: 1.20;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 1.75;
+  --leading-relaxed: 1.65;
+  --leading-loose: 1.8;
 
   /* Letter Spacing */
   --tracking-tight: -0.02em;
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
   --tracking-wider: 0.05em;
+  --tracking-widest: 0.12em;
 
   /* ==================== SPACING ==================== */
 

@@ -88,6 +88,7 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages/auctions.css">
+    <link rel="stylesheet" href="../css/components/lot-card.css">
     <link rel="stylesheet" href="../css/pages/collection.css">
     <link rel="stylesheet" href="../css/rtl.css?v=5">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
@@ -110,30 +111,32 @@
     <main class="section">
         <div class="container">
 
-            <!-- Premium Filter Bar -->
-            <div class="collection-filters mb-12">
+            <!-- Filter Bar -->
+            <div class="filters-wrapper mb-12">
+
                 <div class="filter-group">
-                    <label class="form-label" data-i18n="collection.filterStatus">Status</label>
-                    <div class="status-toggles">
-                        <button class="status-btn active" data-status="all" data-i18n="common.all">All</button>
-                        <button class="status-btn" data-status="active" data-i18n="auction.live">Live</button>
-                        <button class="status-btn" data-status="closed" data-i18n="auction.ended">Ended</button>
+                    <label data-i18n="collection.filterStatus">الحالة</label>
+                    <div class="filter-tabs">
+                        <button class="active" data-status="all" data-i18n="common.all">الكل</button>
+                        <button data-status="active" data-i18n="auction.live">مباشر</button>
+                        <button data-status="closed" data-i18n="auction.ended">منتهي</button>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <label class="form-label" for="group-select" data-i18n="collection.filterGroup">Category Group</label>
-                    <select id="group-select" class="form-select">
-                        <option value="" data-i18n="collection.allGroups">All Category Groups</option>
+                    <label for="group-select" data-i18n="collection.filterGroup">المجموعة</label>
+                    <select id="group-select">
+                        <option value="">كل المجموعات</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
-                    <label class="form-label" for="category-select" data-i18n="collection.filterType">Product Type</label>
-                    <select id="category-select" class="form-select">
-                        <option value="" data-i18n="collection.allTypes">All Product Types</option>
+                    <label for="category-select" data-i18n="collection.filterType">نوع المنتج</label>
+                    <select id="category-select">
+                        <option value="">كل الأنواع</option>
                     </select>
                 </div>
+
             </div>
 
             <!-- Collection Intro -->
@@ -163,10 +166,28 @@
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/countdown.js"></script>
+    <script src="../js/lot-cards.js"></script>
     <script src="../js/i18n.js"></script>
     <script>
-        // ── i18n helper ────────────────────────────────────────────
-        const T = (k) => (window.i18n && window.i18n.t) ? window.i18n.t(k) : k;
+        // ── i18n helper with fallbacks (i18n loads async) ──────────
+        const FALLBACK_LABELS = {
+            'collection.allGroups':   { ar: 'كل المجموعات',       en: 'All Groups' },
+            'collection.allTypes':    { ar: 'كل الأنواع',          en: 'All Types' },
+            'collection.filterStatus':{ ar: 'الحالة',              en: 'Status' },
+            'collection.filterGroup': { ar: 'المجموعة',            en: 'Group' },
+            'collection.filterType':  { ar: 'نوع المنتج',          en: 'Type' },
+            'common.all':             { ar: 'الكل',                en: 'All' },
+            'auction.live':           { ar: 'مباشر',               en: 'Live' },
+            'auction.ended':          { ar: 'منتهي',               en: 'Ended' },
+            'time.ended':             { ar: 'منتهي',               en: 'Ended' },
+            'errors.loadCollection':  { ar: 'فشل تحميل المعرض',   en: 'Failed to load collection' },
+        };
+        const T = (k) => {
+            const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('lang')) || 'ar';
+            if (window.i18n && window.i18n.t) { const v = window.i18n.t(k); if (v && v !== k) return v; }
+            const fb = FALLBACK_LABELS[k];
+            return (fb && (fb[lang] || fb['en'])) || k;
+        };
 
         let allLots       = [];
         let filteredLots  = [];
@@ -223,85 +244,9 @@
             });
         }
 
-        // ── Render card (premium lot card, reuses auctions system) ─
+        // ── Gallery card (no prices, no Live badge) ──────────────────
         function renderCard(lot, isClosed) {
-            const now       = new Date();
-            const startDate = lot.start_date ? new Date(lot.start_date) : null;
-            const endDate   = lot.end_date   ? new Date(lot.end_date)   : null;
-            const isLive    = (!startDate || startDate <= now) && endDate && endDate > now && lot.status === 'active';
-            const endingSoon = isLive && endDate && (endDate - now) < 86400000 * 2; // < 2 days
-
-            const title     = localizedField(lot, 'title') || lot.title || '';
-            const category  = localizedField(lot, 'category') || T('auction.lot');
-            const catGroup  = lot.category_title || lot.auction_title || '';
-            const image     = lot.primary_image || lot.image_data || lot.auction_image || '../assets/images/placeholder.jpg';
-
-            // Price
-            let priceLabel, priceValue;
-            if (isClosed) {
-                if (lot.status === 'sold') {
-                    priceLabel = T('collection.hammerPrice');
-                    priceValue = formatCurrency(lot.final_price || lot.current_bid || 0);
-                } else {
-                    priceLabel = lot.estimate_low && lot.estimate_high
-                        ? `Est. ${formatCurrency(lot.estimate_low)} – ${formatCurrency(lot.estimate_high)}`
-                        : '';
-                    priceValue = T('collection.unsold');
-                }
-            } else {
-                priceLabel = lot.current_bid && lot.current_bid > 0
-                    ? T('auction.currentBid') : T('auction.startingBid');
-                priceValue = lot.current_bid && lot.current_bid > 0
-                    ? formatCurrency(lot.current_bid) : formatCurrency(lot.starting_bid);
-            }
-
-            // Badge
-            let badgeHTML;
-            if (isClosed) {
-                badgeHTML = `<span class="badge-ended-neutral">${T('auction.ended')}</span>`;
-            } else if (endingSoon) {
-                badgeHTML = `<span class="badge-ending-gold"><span class="badge-pulse-dot"></span>${T('auction.endingSoon')}</span>`;
-            } else if (isLive) {
-                badgeHTML = `<span class="badge-live-gold"><span class="badge-pulse-dot"></span>${T('auction.live')}</span>`;
-            } else {
-                badgeHTML = '';
-            }
-
-            // Timer cell
-            const timerCell = isClosed
-                ? `<span class="lot-timer">${T('time.ended')} ${formatDate(lot.end_date)}</span>`
-                : (endDate ? `<span class="lot-timer" data-lot-end="${lot.end_date}">—</span>` : '');
-
-            // Hover CTA
-            const ctaText = T('collection.viewLot');
-
-            const cardClass = isClosed ? 'lot-card is-past lot-card-fade' : 'lot-card lot-card-fade';
-            const archiveParam = isClosed ? '&archive=true' : '';
-            const lotTag = `LOT ${lot.lot_number}`;
-
-            return `
-                <a href="lot.html?id=${lot.id}${archiveParam}" class="${cardClass}">
-                    <div class="lot-img-wrap">
-                        <img loading="lazy" src="${image}" alt="${title}">
-                        <div class="lot-num-tag">${lotTag}</div>
-                        ${badgeHTML ? `<div class="lot-badge-wrap">${badgeHTML}</div>` : ''}
-                        <div class="col-cta-overlay"><span>${ctaText} →</span></div>
-                    </div>
-                    <div class="lot-body">
-                        <div class="lot-cat">${category}</div>
-                        <h3 class="lot-title">${title}</h3>
-                        ${catGroup ? `<p class="lot-sub">${catGroup}</p>` : ''}
-                        <div class="lot-divider"></div>
-                        <div class="lot-price-row">
-                            <div>
-                                <div class="lot-price-label">${priceLabel}</div>
-                                <div class="lot-price-value">${priceValue}</div>
-                            </div>
-                            ${timerCell}
-                        </div>
-                    </div>
-                </a>
-            `;
+            return buildGalleryCard(lot);
         }
 
         // ── Filter logic ──────────────────────────────────────────
@@ -355,9 +300,19 @@
                 const endDate   = lot.end_date   ? new Date(lot.end_date)   : null;
                 const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
                 const isClosed = endDate && endDate < now;
+                // Collection-only items (no auction dates) are always shown under 'all'
+                const isCollectionOnly = !startDate && !endDate;
 
-                if (filters.status === 'active' && (!isLiveWindow || lot.status !== 'active')) return false;
-                if (filters.status === 'closed' && !isClosed) return false;
+                if (filters.status === 'active') {
+                    // Collection-only items have no active window — exclude them from 'active' filter
+                    if (isCollectionOnly) return false;
+                    if (!isLiveWindow || lot.status !== 'active') return false;
+                }
+                if (filters.status === 'closed') {
+                    // Collection-only items are never 'closed' — exclude them
+                    if (isCollectionOnly) return false;
+                    if (!isClosed) return false;
+                }
                 if (filters.categoryId && (lot.category_id || lot.auction_id) !== filters.categoryId) return false;
                 if (filters.productType && lot.category !== filters.productType) return false;
                 return true;
@@ -381,9 +336,9 @@
                 return renderCard(lot, isClosed);
             }).join('');
 
+            initCardSliders(container);
             startLotCountdowns();
             initScrollReveal();
-
             if (window.i18n) window.i18n.translatePage();
         }
 
@@ -391,9 +346,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             initCollection();
 
-            document.querySelectorAll('.status-btn').forEach(btn => {
+            document.querySelectorAll('.filter-tabs button').forEach(btn => {
                 btn.addEventListener('click', e => {
-                    document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.filter-tabs button').forEach(b => b.classList.remove('active'));
                     e.currentTarget.classList.add('active');
                     filters.status = e.currentTarget.dataset.status;
                     applyFilters();

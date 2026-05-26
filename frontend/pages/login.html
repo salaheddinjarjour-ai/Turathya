@@ -27,9 +27,9 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages/account.css">
-
     <link rel="stylesheet" href="../css/rtl.css?v=5">
     <link rel="stylesheet" href="../css/components/lang-toggle.css">
+    <link rel="stylesheet" href="../css/auth-enhanced.css">
     <style>
         .section {
             display: flex;
@@ -38,10 +38,102 @@
             min-height: calc(100vh - 80px);
             padding-bottom: 80px;
         }
-
         .auth-card {
             width: 100%;
             max-width: 450px;
+        }
+
+        /* ── Step visibility ── */
+        .fp-step { display: none; }
+        .fp-step.active { display: block; }
+
+        /* ── OTP input group ── */
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 0.5rem 0 1.25rem;
+        }
+        .otp-digit {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border: 1.5px solid var(--color-border, #ccc);
+            border-radius: 10px;
+            background: var(--color-surface, #fff);
+            color: var(--color-text, #1a1a1a);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -moz-appearance: textfield;
+        }
+        .otp-digit::-webkit-inner-spin-button,
+        .otp-digit::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .otp-digit:focus {
+            border-color: var(--color-accent, #7b1c1c);
+            box-shadow: 0 0 0 3px rgba(123,28,28,0.12);
+        }
+
+        /* ── Progress steps indicator ── */
+        .fp-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 1.75rem;
+        }
+        .fp-pip {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--color-border, #ddd);
+            transition: background 0.3s, width 0.3s;
+        }
+        .fp-pip.done  { background: #4caf50; }
+        .fp-pip.active { background: var(--color-accent, #7b1c1c); width: 22px; border-radius: 4px; }
+
+        /* ── Resend link ── */
+        .resend-row {
+            text-align: center;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted, #888);
+        }
+        .resend-link {
+            color: var(--color-accent, #7b1c1c);
+            cursor: pointer;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            font: inherit;
+            padding: 0;
+        }
+        .resend-link:disabled { opacity: 0.5; cursor: not-allowed; text-decoration: none; }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            color: var(--color-text-muted, #888);
+            cursor: pointer;
+            margin-bottom: 1.25rem;
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+        }
+        .back-link:hover { color: var(--color-accent, #7b1c1c); }
+
+        /* ── Success box ── */
+        .fp-success-box {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        .fp-success-icon {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
         }
     </style>
 </head>
@@ -53,75 +145,419 @@
         <div class="container">
             <div class="auth-container">
                 <div class="auth-card">
-                    <h1 class="text-center mb-8" data-i18n="auth.loginTitle">Welcome Back</h1>
 
-                    <form id="login-form">
-                        <div class="form-group">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-input" id="phone" placeholder="+963944123456" required>
+                    <!-- ══════════════════════════════════
+                         STEP 0 — LOGIN FORM (default)
+                    ══════════════════════════════════ -->
+                    <div id="step-login" class="fp-step active">
+                        <h1 class="text-center mb-8" data-i18n="auth.loginTitle">Welcome Back</h1>
+
+                        <form id="login-form">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="forms.phone">رقم الهاتف</label>
+                                <div class="phone-field-wrapper">
+                                    <button type="button" class="country-btn" id="login-country-btn" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="c-flag">🇸🇾</span>
+                                        <span class="c-code">+963</span>
+                                        <span class="c-chevron">▾</span>
+                                    </button>
+                                    <div class="country-dropdown" id="login-country-dropdown" role="listbox"></div>
+                                    <input type="hidden" id="login-country-code" value="+963">
+                                    <input type="tel" class="form-input phone-input" id="phone" placeholder="944123456" required autocomplete="tel-local">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="forms.password">كلمة المرور</label>
+                                <div class="password-wrapper">
+                                    <input type="password" class="form-input" id="password" required autocomplete="current-password">
+                                    <button type="button" class="pwd-toggle" id="login-pwd-toggle" aria-label="إظهار كلمة المرور"></button>
+                                </div>
+                            </div>
+
+                            <div id="login-error" class="form-error" style="display: none;"></div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-full" id="login-btn" data-i18n="nav.login">Login</button>
+                        </form>
+
+                        <p class="text-center mt-4" style="font-size:0.875rem;">
+                            <button class="resend-link" onclick="showStep('fp-phone')" data-i18n="auth.forgotPassword">Forgot password?</button>
+                        </p>
+
+                        <p class="text-center text-sm text-muted mt-4">
+                            <span data-i18n="auth.noAccount">Don't have an account?</span>
+                            <a href="register.html" class="text-accent" data-i18n="auth.signUp">Register here</a>
+                        </p>
+                    </div>
+
+                    <!-- ══════════════════════════════════
+                         STEP 1 — ENTER PHONE
+                    ══════════════════════════════════ -->
+                    <div id="step-fp-phone" class="fp-step">
+                        <button class="back-link" onclick="showStep('login')">
+                            ← <span data-i18n="buttons.back">Back to login</span>
+                        </button>
+
+                        <div class="fp-progress">
+                            <div class="fp-pip active" id="pip-1"></div>
+                            <div class="fp-pip" id="pip-2"></div>
+                            <div class="fp-pip" id="pip-3"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-input" id="password" required>
+                        <h1 class="text-center mb-2" data-i18n="auth.forgotTitle">Reset Password</h1>
+                        <p class="text-center text-muted mb-6" style="font-size:0.9rem;" data-i18n="auth.forgotSubtitle">
+                            Enter your registered phone number and we'll send a verification code via WhatsApp.
+                        </p>
+
+                        <form id="fp-phone-form">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="forms.phone">رقم الهاتف</label>
+                                <div class="phone-field-wrapper">
+                                    <button type="button" class="country-btn" id="fp-country-btn" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="c-flag">🇸🇾</span>
+                                        <span class="c-code">+963</span>
+                                        <span class="c-chevron">▾</span>
+                                    </button>
+                                    <div class="country-dropdown" id="fp-country-dropdown" role="listbox"></div>
+                                    <input type="hidden" id="fp-country-code" value="+963">
+                                    <input type="tel" class="form-input phone-input" id="fp-phone" placeholder="944123456" required autocomplete="tel-local">
+                                </div>
+                            </div>
+                            <div id="fp-phone-error" class="form-error" style="display:none;"></div>
+                            <button type="submit" class="btn btn-primary btn-lg w-full" id="fp-phone-btn" data-i18n="auth.sendOtp">إرسال الرمز</button>
+                        </form>
+                    </div>
+
+                    <!-- ══════════════════════════════════
+                         STEP 2 — ENTER OTP
+                    ══════════════════════════════════ -->
+                    <div id="step-fp-otp" class="fp-step">
+                        <button class="back-link" onclick="showStep('fp-phone')">
+                            ← <span data-i18n="buttons.back">Back</span>
+                        </button>
+
+                        <div class="fp-progress">
+                            <div class="fp-pip done" id="pip-1b"></div>
+                            <div class="fp-pip active" id="pip-2b"></div>
+                            <div class="fp-pip" id="pip-3b"></div>
                         </div>
 
-                        <div id="login-error" class="form-error" style="display: none;"></div>
+                        <h1 class="text-center mb-2" data-i18n="auth.enterOtp">Enter Code</h1>
+                        <p class="text-center text-muted mb-6" style="font-size:0.9rem;" id="otp-sent-msg">
+                            A 6-digit code was sent to your WhatsApp.
+                        </p>
 
-                        <button type="submit" class="btn btn-primary btn-lg w-full" data-i18n="nav.login">Login</button>
-                    </form>
+                        <form id="fp-otp-form">
+                            <div class="otp-inputs" id="otp-digit-inputs">
+                                <input class="otp-digit" type="number" min="0" max="9" maxlength="1" inputmode="numeric" aria-label="Digit 1">
+                                <input class="otp-digit" type="number" min="0" max="9" maxlength="1" inputmode="numeric" aria-label="Digit 2">
+                                <input class="otp-digit" type="number" min="0" max="9" maxlength="1" inputmode="numeric" aria-label="Digit 3">
+                                <input class="otp-digit" type="number" min="0" max="9" maxlength="1" inputmode="numeric" aria-label="Digit 4">
+                                <input class="otp-digit" type="number" min="0" max="9" maxlength="1" inputmode="numeric" aria-label="Digit 5">
+                                <input class="otp-digit" type="number" min="0" max="9" maxlength="1" inputmode="numeric" aria-label="Digit 6">
+                            </div>
+                            <div id="fp-otp-error" class="form-error" style="display:none;"></div>
+                            <button type="submit" class="btn btn-primary btn-lg w-full" id="fp-otp-btn" data-i18n="auth.verifyOtp">
+                                Verify Code
+                            </button>
+                        </form>
 
-                    <p class="text-center text-sm text-muted mt-6">
-                        <span data-i18n="auth.noAccount">Don't have an account?</span>
-                        <a href="register.html" class="text-accent" data-i18n="auth.signUp">Register here</a>
-                    </p>
+                        <div class="resend-row">
+                            <span data-i18n="auth.noCode">Didn't receive it?</span>
+                            <button class="resend-link" id="resend-btn" onclick="resendOtp()">Resend</button>
+                            <span id="resend-timer" style="display:none;"> (<span id="resend-count">60</span>s)</span>
+                        </div>
+                    </div>
 
-                </div>
+                    <!-- ══════════════════════════════════
+                         STEP 3 — NEW PASSWORD
+                    ══════════════════════════════════ -->
+                    <div id="step-fp-reset" class="fp-step">
+                        <div class="fp-progress">
+                            <div class="fp-pip done"></div>
+                            <div class="fp-pip done"></div>
+                            <div class="fp-pip active"></div>
+                        </div>
+
+                        <h1 class="text-center mb-2" data-i18n="auth.newPassword">New Password</h1>
+                        <p class="text-center text-muted mb-6" style="font-size:0.9rem;" data-i18n="auth.newPasswordSub">
+                            Choose a strong password for your account.
+                        </p>
+
+                        <form id="fp-reset-form">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="forms.newPassword">كلمة المرور الجديدة</label>
+                                <div class="password-wrapper">
+                                    <input type="password" class="form-input" id="fp-new-password" required autocomplete="new-password">
+                                    <button type="button" class="pwd-toggle" id="fp-new-pwd-toggle" aria-label="إظهار كلمة المرور"></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="forms.confirmPassword">تأكيد كلمة المرور</label>
+                                <div class="password-wrapper">
+                                    <input type="password" class="form-input" id="fp-confirm-password" required autocomplete="new-password">
+                                    <button type="button" class="pwd-toggle" id="fp-confirm-pwd-toggle" aria-label="إظهار كلمة المرور"></button>
+                                </div>
+                            </div>
+                            <div id="fp-reset-error" class="form-error" style="display:none;"></div>
+                            <button type="submit" class="btn btn-primary btn-lg w-full" id="fp-reset-btn" data-i18n="auth.resetPassword">إعادة تعيين كلمة المرور</button>
+                        </form>
+                    </div>
+
+                    <!-- ══════════════════════════════════
+                         STEP 4 — SUCCESS
+                    ══════════════════════════════════ -->
+                    <div id="step-fp-success" class="fp-step">
+                        <div class="fp-success-box">
+                            <div class="fp-success-icon">✅</div>
+                            <h2 class="mb-3" data-i18n="auth.passwordResetSuccess">Password Reset!</h2>
+                            <p class="text-muted mb-6" data-i18n="auth.passwordResetSuccessSub">
+                                Your password has been updated. You can now log in with your new password.
+                            </p>
+                            <button class="btn btn-primary btn-lg w-full" onclick="showStep('login')" data-i18n="nav.login">
+                                Back to Login
+                            </button>
+                        </div>
+                    </div>
+
+                </div><!-- /.auth-card -->
             </div>
         </div>
     </main>
+
     <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/i18n.js"></script>
+    <script src="../js/auth-enhanced.js"></script>
     <script>
-        // DO NOT auto-redirect on this page - let user manually log in
+        // ── Reset loop counter on load ────────────────────────────────
         window.addEventListener('DOMContentLoaded', () => {
             sessionStorage.removeItem('loginRedirectCount');
             sessionStorage.removeItem('accountRedirectCount');
         });
 
+        // ── State ─────────────────────────────────────────────────────
+        let _fpPhone = '';   // phone captured in step 1
+        let _fpOtp   = '';   // otp captured in step 2
+        let _resendTimer = null;
 
+        // ── Step switcher ─────────────────────────────────────────────
+        function showStep(name) {
+            document.querySelectorAll('.fp-step').forEach(el => el.classList.remove('active'));
+            const el = document.getElementById('step-' + name);
+            if (el) el.classList.add('active');
+        }
+
+        // ── OTP digit-box behaviour ───────────────────────────────────
+        function initOtpInputs() {
+            const digits = document.querySelectorAll('.otp-digit');
+            digits.forEach((input, i) => {
+                // strip non-digit on input and auto-advance
+                input.addEventListener('input', () => {
+                    input.value = input.value.replace(/\D/g, '').slice(-1);
+                    if (input.value && i < digits.length - 1) digits[i + 1].focus();
+                });
+                // backspace moves back
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && i > 0) digits[i - 1].focus();
+                });
+                // paste handling
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                    [...text].slice(0, 6).forEach((ch, j) => { if (digits[i + j]) digits[i + j].value = ch; });
+                    const next = Math.min(i + text.length, digits.length - 1);
+                    digits[next].focus();
+                });
+            });
+        }
+
+        function getOtpValue() {
+            return [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
+        }
+
+        function clearOtpInputs() {
+            document.querySelectorAll('.otp-digit').forEach(d => { d.value = ''; });
+            document.querySelector('.otp-digit')?.focus();
+        }
+
+        // ── Resend countdown ──────────────────────────────────────────
+        function startResendCountdown(seconds = 60) {
+            const btn   = document.getElementById('resend-btn');
+            const timer = document.getElementById('resend-timer');
+            const count = document.getElementById('resend-count');
+            btn.disabled = true;
+            timer.style.display = 'inline';
+            count.textContent = seconds;
+            clearInterval(_resendTimer);
+            _resendTimer = setInterval(() => {
+                seconds--;
+                count.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(_resendTimer);
+                    btn.disabled = false;
+                    timer.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        async function resendOtp() {
+            if (!_fpPhone) return;
+            try {
+                await authAPI.forgotPassword.requestOtp(_fpPhone);
+                clearOtpInputs();
+                startResendCountdown(60);
+            } catch (err) {
+                showError(err.message || 'Failed to resend code');
+            }
+        }
+
+        // ── Helper ────────────────────────────────────────────────────
+        function setFormError(id, msg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = msg;
+            el.style.display = msg ? 'block' : 'none';
+        }
+        function setBtnLoading(id, loading, defaultText) {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            btn.disabled = loading;
+            btn.textContent = loading ? '...' : defaultText;
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // STEP 0 — LOGIN
+        // ══════════════════════════════════════════════════════════════
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const phone = document.getElementById('phone').value;
+            const countryCode = document.getElementById('login-country-code').value || '';
+            const localPhone  = document.getElementById('phone').value.replace(/^0+/, '');
+            const phone    = countryCode + localPhone;
             const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('login-error');
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const errorEl  = document.getElementById('login-error');
+            const btn      = document.getElementById('login-btn');
 
-            // Disable submit button
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Logging in...';
-            errorElement.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = (window.i18n?.t?.('auth.loggingIn')) || '...';
+            errorEl.style.display = 'none';
 
             try {
                 const result = await authAPI.login(phone, password);
-
-                // Check if user is admin
                 if (result.user.role === 'admin') {
                     window.location.replace('admin.html');
                 } else {
                     window.location.replace('account.html');
                 }
-            } catch (error) {
-                console.error('Login error:', error);
-                errorElement.textContent = error.message || 'Login failed. Please try again.';
-                errorElement.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Login';
+            } catch (err) {
+                errorEl.textContent = err.message || (window.i18n?.t?.('auth.loginFailed')) || 'Login failed.';
+                errorEl.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = window.i18n?.t?.('nav.login') || 'تسجيل الدخول';
             }
         });
+
+        // ══════════════════════════════════════════════════════════════
+        // STEP 1 — PHONE SUBMIT → send OTP
+        // ══════════════════════════════════════════════════════════════
+        document.getElementById('fp-phone-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setFormError('fp-phone-error', '');
+            setBtnLoading('fp-phone-btn', true, window.i18n?.t?.('auth.sendingOtp') || '...');
+
+            const countryCode = document.getElementById('fp-country-code').value || '';
+            const localPhone  = document.getElementById('fp-phone').value.trim().replace(/^0+/, '');
+            const phone = countryCode + localPhone;
+
+            try {
+                await authAPI.forgotPassword.requestOtp(phone);
+                _fpPhone = phone;
+
+                const masked = phone.slice(0, -4).replace(/./g, '•') + phone.slice(-4);
+                const sentMsg = document.getElementById('otp-sent-msg');
+                if (sentMsg) sentMsg.textContent = `${window.i18n?.t?.('auth.codeSentTo') || 'تم إرسال رمز إلى'} ${masked} ${window.i18n?.t?.('auth.viaWhatsapp') || 'عبر واتساب'}.`;
+
+                showStep('fp-otp');
+                startResendCountdown(60);
+                setTimeout(() => document.querySelector('.otp-digit')?.focus(), 100);
+            } catch (err) {
+                setFormError('fp-phone-error', err.message || (window.i18n?.t?.('auth.sendCodeFailed')) || 'فشل إرسال الرمز.');
+            } finally {
+                setBtnLoading('fp-phone-btn', false, window.i18n?.t?.('auth.sendOtp') || 'إرسال الرمز');
+            }
+        });
+
+        // ══════════════════════════════════════════════════════════════
+        // STEP 2 — OTP SUBMIT → verify (store for step 3)
+        // ══════════════════════════════════════════════════════════════
+        document.getElementById('fp-otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = getOtpValue();
+
+            if (otp.length !== 6) {
+                setFormError('fp-otp-error', 'Please enter all 6 digits.');
+                return;
+            }
+
+            setFormError('fp-otp-error', '');
+            setBtnLoading('fp-otp-btn', true, 'Verify Code');
+
+            // We don't call the backend yet — we'll pass phone+otp+password together in step 3
+            // Just check locally that 6 digits were entered, then advance
+            _fpOtp = otp;
+            setBtnLoading('fp-otp-btn', false, 'Verify Code');
+            showStep('fp-reset');
+            setTimeout(() => document.getElementById('fp-new-password')?.focus(), 100);
+        });
+
+        // ══════════════════════════════════════════════════════════════
+        // STEP 3 — RESET PASSWORD
+        // ══════════════════════════════════════════════════════════════
+        document.getElementById('fp-reset-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setFormError('fp-reset-error', '');
+
+            const newPw  = document.getElementById('fp-new-password').value;
+            const confPw = document.getElementById('fp-confirm-password').value;
+
+            if (newPw !== confPw) {
+                setFormError('fp-reset-error', 'Passwords do not match.');
+                return;
+            }
+
+            setBtnLoading('fp-reset-btn', true, 'Reset Password');
+
+            try {
+                await authAPI.forgotPassword.reset(_fpPhone, _fpOtp, newPw);
+                showStep('fp-success');
+                clearInterval(_resendTimer);
+            } catch (err) {
+                const msg = err.message || 'Failed to reset password.';
+                setFormError('fp-reset-error', msg);
+
+                // If OTP error, send user back to OTP step
+                if (/otp|code|expired/i.test(msg)) {
+                    setTimeout(() => {
+                        showStep('fp-otp');
+                        clearOtpInputs();
+                    }, 1800);
+                }
+            } finally {
+                setBtnLoading('fp-reset-btn', false, 'Reset Password');
+            }
+        });
+
+        // ── Init enhanced components ──────────────────────────────────
+        buildCountryDropdownShell('login-country-dropdown');
+        buildCountrySelector('login-country-btn', 'login-country-dropdown', 'login-country-code');
+        buildCountryDropdownShell('fp-country-dropdown');
+        buildCountrySelector('fp-country-btn', 'fp-country-dropdown', 'fp-country-code');
+        initPasswordToggle('password', 'login-pwd-toggle');
+        initPasswordToggle('fp-new-password', 'fp-new-pwd-toggle');
+        initPasswordToggle('fp-confirm-password', 'fp-confirm-pwd-toggle');
+        initOtpInputs();
     </script>
+    <div id="site-footer"></div>
 </body>
 
 </html>

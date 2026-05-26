@@ -61,6 +61,19 @@ class WhatsAppService {
 
           if (shouldReconnect) {
             await this.initialize();
+          } else {
+            // Logged out or session expired — clear stale credentials & regenerate QR
+            console.log('🔄 Session expired. Clearing credentials to regenerate QR code...');
+            this.isConnected = false;
+            this.qrCode = null;
+            try {
+              const fs = await import('fs');
+              fs.rmSync('./auth_info', { recursive: true, force: true });
+              console.log('🗑️ auth_info cleared.');
+            } catch (e) {
+              console.error('Failed to clear auth_info:', e);
+            }
+            setTimeout(() => this.initialize(), 2000);
           }
         } else if (connection === 'open') {
           this.isConnected = true;
@@ -91,7 +104,7 @@ class WhatsAppService {
     try {
       const formattedNumber = this.formatPhoneNumber(phoneNumber);
 
-      const message = `🔐 *Your Verification Code*\n\nYour OTP is: *${otp}*\n\nThis code will expire in 5 minutes.\n\n_Do not share this code with anyone._`;
+      const message = `🔐 *رمز التحقق الخاص بك*\n\nرمز التحقق (OTP) الخاص بك هو: *${otp}*\n\nسينتهي هذا الرمز خلال 5 دقائق.\n\nلا تشارك هذا الرمز مع أي شخص.`;
 
       await this.sock.sendMessage(formattedNumber, { text: message });
       
@@ -130,13 +143,13 @@ class WhatsAppService {
     try {
       const formattedNumber = this.formatPhoneNumber(phoneNumber);
 
-      const message = `🔔 *New Auction Alert!*\n\n` +
+      const message = `🔔 *تنبيه مزاد جديد!*\n\n` +
         `📦 *${auctionData.title}*\n\n` +
-        `💰 Starting Price: $${auctionData.startingPrice}\n` +
-        `⏰ Starts: ${auctionData.startTime}\n` +
-        `📍 Location: ${auctionData.location || 'Online'}\n\n` +
-        `🔗 Bid now: ${auctionData.url}\n\n` +
-        `_Good luck! 🍀_`;
+        `💰 سعر البداية: ${auctionData.startingPrice}\n` +
+        `⏰ يبدأ: ${auctionData.startTime}\n` +
+        `📍 الموقع: ${auctionData.location || 'عبر الإنترنت'}\n\n` +
+        `👉 زايد الآن: ${auctionData.url}\n\n` +
+        `_حظاً موفقاً! 🏆_`;
 
       await this.sock.sendMessage(formattedNumber, { text: message });
       

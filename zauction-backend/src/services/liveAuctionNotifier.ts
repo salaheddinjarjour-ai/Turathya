@@ -1,10 +1,13 @@
 import { pool } from '../config/database';
+import { broadcastWhatsAppMessage, isWhatsAppAutomationEnabled } from './whatsappBridge';
+import { WHATSAPP_MESSAGES } from './whatsappMessages';
 
 type LiveAuction = {
     id: string;
     title: string;
     location: string | null;
     start_date: string;
+    featured: boolean;
     min_starting_bid: string | number | null;
 };
 
@@ -50,6 +53,7 @@ async function getAuctionsToNotify(): Promise<LiveAuction[]> {
             a.title,
             a.location,
             a.start_date,
+            COALESCE(a.featured, FALSE) AS featured,
             (SELECT MIN(l.starting_bid) FROM lots l WHERE l.auction_id = a.id) AS min_starting_bid
         FROM auctions a
         LEFT JOIN live_auction_notifications n ON n.auction_id = a.id
@@ -64,36 +68,12 @@ async function getAuctionsToNotify(): Promise<LiveAuction[]> {
 }
 
 async function sendLiveNotification(auction: LiveAuction) {
-    const payload = {
-        auctionId: auction.id,
-        title: `🔴 LIVE NOW: ${auction.title}`,
-        startingPrice: Number(auction.min_starting_bid || 0),
-        startTime: new Date(auction.start_date).toLocaleString('en-US'),
-        location: auction.location || 'Online',
-        url: `${frontendUrl}/pages/auction.html?id=${auction.id}`
-    };
-
-    const response = await fetch(`${bridgeUrl}/api/auctions/notify`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-        let message = `Live notification failed (${response.status})`;
-        try {
-            const errorPayload = await response.json() as { error?: string; message?: string };
-            message = errorPayload.error || errorPayload.message || message;
-        } catch {
-            const text = await response.text();
-            if (text) {
-                message = text;
-            }
-        }
-        throw new Error(message);
-    }
+    const auctionUrl = `${frontendUrl}/pages/auction.html?id=${auction.id}`;
+    const template = auction.featured
+        ? WHATSAPP_MESSAGES.featuredAuctionLive
+        : WHATSAPP_MESSAGES.normalAuctionLive;
+    const message = `${template}\n🔗 ${auctionUrl}`;
+    await broadcastWhatsAppMessage(message);
 }
 
 async function markAuctionNotified(auctionId: string) {

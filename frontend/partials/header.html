@@ -13,11 +13,47 @@
                 <a href="collection.html"         class="nav-link" id="collection-link" data-i18n="nav.collection">Collection</a>
                 <a href="pages/info/about-us.html" class="nav-link" id="about-link"    data-i18n="nav.about">About Us</a>
                 <a href="pages/info/contact.html"  class="nav-link" id="contact-link"  data-i18n="nav.contact">Contact Us</a>
-                <a href="account.html"  class="nav-link user-link"  id="account-link"  style="display:none;" data-i18n="nav.account">Account</a>
                 <a href="admin.html"    class="nav-link admin-link" id="admin-link"    style="display:none;" data-i18n="nav.admin">Admin</a>
-                <a href="login.html"    class="nav-link auth-link"  id="login-link"    data-i18n="nav.login">Login</a>
-                <a href="register.html" class="nav-link auth-link"  id="register-link" data-i18n="nav.register">Register</a>
-                <button onclick="logout()" class="btn btn-ghost btn-sm user-link" style="display:none;" data-i18n="nav.logout">Logout</button>
+                <!-- User menu replaces login/register links -->
+                <div class="user-menu-container" id="userMenu">
+                    <button class="user-btn" id="userBtn" type="button" aria-haspopup="true" aria-expanded="false">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span id="userBtnText" data-i18n="nav.account">Account</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    <div class="user-dropdown" id="userDropdown" aria-hidden="true">
+                        <!-- Guest Items -->
+                        <div id="guestMenu">
+                            <a href="login.html" class="dropdown-item auth-link" id="user-login-link" data-i18n="nav.login">Login</a>
+                            <a href="register.html" class="dropdown-item auth-link" id="user-register-link" data-i18n="nav.register">Register</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="login.html" class="dropdown-item" id="user-forgot-link" data-i18n="auth.forgotPassword">Forgot Password?</a>
+                        </div>
+
+                        <!-- Authenticated Items -->
+                        <div id="authMenu" style="display:none;">
+                            <div class="dropdown-item" style="pointer-events:none;">
+                                <div class="avatar" id="userAvatar">U</div>
+                                <div>
+                                    <div class="user-welcome" data-i18n="userMenu.welcome">Welcome,</div>
+                                    <div id="userNameDisplay" class="user-name-display">User</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="account.html?tab=profile" class="dropdown-item" id="user-profile-link" data-i18n="userMenu.profile">My Profile</a>
+                            <a href="account.html?tab=bids" class="dropdown-item" id="user-auctions-link" data-i18n="userMenu.myAuctions">My Auctions</a>
+                            <a href="account.html" class="dropdown-item" id="user-settings-link" data-i18n="userMenu.settings">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <button type="button" class="dropdown-item logout" id="user-logout-btn" data-i18n="nav.logout">Logout</button>
+                        </div>
+                    </div>
+                </div>
             </nav>
 
             <!-- Language Toggle -->

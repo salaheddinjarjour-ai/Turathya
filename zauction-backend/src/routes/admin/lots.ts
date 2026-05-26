@@ -176,7 +176,15 @@ router.post('/',
 router.patch('/:id', async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
-        const updates = req.body;
+        const updates: Record<string, any> = { ...req.body };
+
+        // Map frontend alias 'category_id' → actual DB column 'auction_id'
+        if ('category_id' in updates) {
+            if (updates.category_id != null && updates.category_id !== '') {
+                updates.auction_id = updates.category_id;
+            }
+            delete updates.category_id;
+        }
 
         const fields = Object.keys(updates);
         if (fields.length === 0) {

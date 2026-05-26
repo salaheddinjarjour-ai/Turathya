@@ -1,0 +1,8 @@
+name = "turathya"
+pages_build_output_dir = "."
+
+# No build step — this is a static site.
+# Cloudflare Pages will serve the contents of this directory directly.
+
+# Compatibility date for Cloudflare Workers/Pages runtime
+compatibility_date = "2024-09-23"

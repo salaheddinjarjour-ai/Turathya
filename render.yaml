@@ -25,10 +25,12 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://melodious-parfait-a2944a.netlify.app
+        value: https://turathya.pages.dev
       - key: FRONTEND_URLS
-        value: https://melodious-parfait-a2944a.netlify.app,https://turathya.netlify.app
+        value: https://turathya.pages.dev,https://melodious-parfait-a2944a.netlify.app,https://turathya.netlify.app
       - key: ALLOW_NETLIFY_PREVIEWS
+        value: "true"
+      - key: ALLOW_CF_PAGES
         value: "true"
       - key: DB_SSL
         value: "true"
@@ -50,4 +52,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://melodious-parfait-a2944a.netlify.app
+        value: https://turathya.pages.dev

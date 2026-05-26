@@ -240,23 +240,39 @@ window.loadWhatsAppIntegration = async function () {
             const qrPayload = await adminAPI.whatsapp.getQr();
             const isConnected = !!qrPayload.isConnected;
 
-            stateEl.textContent = isConnected ? 'Connected' : 'Disconnected';
+            stateEl.textContent = isConnected ? 'Connected ✅' : 'Disconnected ⚠️';
             jidEl.textContent = qrPayload.connectedJid || '-';
 
             if (isConnected) {
+                // Hide QR section when connected
                 qrWrapper.style.display = 'none';
                 statusEl.className = 'alert alert-success';
                 statusEl.textContent = 'WhatsApp is connected. Automated notifications are active.';
                 statusEl.style.display = 'block';
             } else {
-                qrWrapper.style.display = qrPayload.qrCode ? 'block' : 'none';
-                if (qrPayload.qrCode) {
-                    qrImage.src = qrPayload.qrCode;
-                }
-
+                // Always show QR section when disconnected
+                qrWrapper.style.display = 'block';
                 statusEl.className = 'alert alert-error';
-                statusEl.textContent = 'WhatsApp is not connected. Scan the QR code below.';
+                statusEl.textContent = 'WhatsApp is not connected. Scan the QR code below with your phone.';
                 statusEl.style.display = 'block';
+
+                if (qrPayload.qrCode) {
+                    // QR code ready — show the image
+                    qrImage.src = qrPayload.qrCode;
+                    qrImage.style.display = 'block';
+                    const loadingMsg = qrWrapper.querySelector('.qr-loading-msg');
+                    if (loadingMsg) loadingMsg.remove();
+                } else {
+                    // QR not generated yet — show loading message
+                    qrImage.style.display = 'none';
+                    if (!qrWrapper.querySelector('.qr-loading-msg')) {
+                        const loadingMsg = document.createElement('div');
+                        loadingMsg.className = 'qr-loading-msg';
+                        loadingMsg.style.cssText = 'padding: 2rem; font-size: 1rem; color: var(--color-graphite);';
+                        loadingMsg.innerHTML = '<div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>Generating QR code, please wait…';
+                        qrWrapper.appendChild(loadingMsg);
+                    }
+                }
             }
         } catch (error) {
             console.error('Failed to load WhatsApp admin state:', error);
@@ -416,6 +432,15 @@ window.loadLots = async function () {
                         <td>${currentBid}</td>
                         <td>${highestBidder}</td>
                         <td><span class="badge badge-${statusBadgeClass}">${statusText}</span></td>
+                        <td style="text-align:center;">
+                            <button
+                                onclick="toggleLotFeatured('${lot.id}', ${!!lot.is_featured})"
+                                title="${lot.is_featured ? 'Remove from homepage' : 'Feature on homepage'}"
+                                style="background:none;border:none;cursor:pointer;font-size:1.3rem;line-height:1;padding:2px 6px;color:${lot.is_featured ? '#C6A46C' : '#ccc'};transition:color .2s;"
+                                onmouseover="this.style.color='#C6A46C'"
+                                onmouseout="this.style.color='${lot.is_featured ? '#C6A46C' : '#ccc'}'"
+                            >★</button>
+                        </td>
                         <td>
                             <button class="btn btn-ghost btn-sm" onclick="editLot('${lot.id}')">${t('buttons.edit')}</button>
                             <button class="btn btn-ghost btn-sm" onclick="confirmDeleteLot('${lot.id}', ${lot.lot_number}, '${(lot.title || '').replace(/'/g, "\\'")}')">&#8203;${t('buttons.delete')}</button>
@@ -607,13 +632,17 @@ async function handleLotForm(event) {
         provenance: formData.get('provenanceEn') || formData.get('provenanceAr') || null,
         provenance_en: formData.get('provenanceEn') || null,
         provenance_ar: formData.get('provenanceAr') || null,
-        estimate_low: parseFloat(formData.get('estimateMin')),
-        estimate_high: parseFloat(formData.get('estimateMax')),
-        starting_bid: parseFloat(formData.get('startingBid')),
-        reserve_price: parseFloat(formData.get('reserve')) || 0,
+        // Financials — all optional, null when blank
+        estimate_low:   formData.get('estimateMin') !== '' ? parseFloat(formData.get('estimateMin')) : null,
+        estimate_high:  formData.get('estimateMax') !== '' ? parseFloat(formData.get('estimateMax')) : null,
+        starting_bid:   formData.get('startingBid') !== '' ? parseFloat(formData.get('startingBid')) : null,
+        reserve_price:  formData.get('reserve')     !== '' ? parseFloat(formData.get('reserve'))     : null,
         bid_increment: 100,
+        // Dates — optional
         start_date: startDateLocal ? new Date(startDateLocal).toISOString() : null,
-        end_date: endDateLocal ? new Date(endDateLocal).toISOString() : null
+        end_date:   endDateLocal   ? new Date(endDateLocal).toISOString()   : null,
+        // Featured flag
+        is_featured: formData.get('isFeatured') === '1'
     };
 
     try {
@@ -699,10 +728,14 @@ function editLot(lotId) {
         setVal('conditionAr', lot.condition_ar || '');
         setVal('provenanceEn', lot.provenance_en || lot.provenance || '');
         setVal('provenanceAr', lot.provenance_ar || '');
-        setVal('estimateMin', lot.estimate_low || '');
-        setVal('estimateMax', lot.estimate_high || '');
-        setVal('startingBid', lot.starting_bid || '');
-        setVal('reserve', lot.reserve_price ?? 0);
+        setVal('estimateMin', lot.estimate_low ?? '');
+        setVal('estimateMax', lot.estimate_high ?? '');
+        setVal('startingBid', lot.starting_bid ?? '');
+        setVal('reserve', lot.reserve_price ?? '');
+
+        // Pre-fill featured checkbox
+        const featuredCb = form.querySelector('[name="isFeatured"]');
+        if (featuredCb) featuredCb.checked = !!lot.is_featured;
 
         // Pre-fill lot-level auction dates if they exist
         if (lot.start_date || lot.end_date) {
@@ -731,6 +764,21 @@ function editLot(lotId) {
         showError(t('notifications.failedLoadLotDetails'));
     });
 }
+
+// ==================== FEATURED TOGGLE ====================
+
+async function toggleLotFeatured(lotId, currentValue) {
+    const newValue = !currentValue;
+    try {
+        await adminAPI.lots.update(lotId, { is_featured: newValue });
+        showSuccess(newValue ? '★ Added to featured homepage' : 'Removed from featured homepage');
+        await loadLots();
+    } catch (err) {
+        console.error('Failed to toggle featured:', err);
+        showError('Failed to update featured status');
+    }
+}
+window.toggleLotFeatured = toggleLotFeatured;
 
 // ==================== INITIALIZE ====================
 

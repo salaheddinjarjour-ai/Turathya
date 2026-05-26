@@ -3,9 +3,26 @@
    Backup: variables_backup_fonts.css / typography_backup_fonts.css
 
    FONT HIERARCHY:
-     H1 H2 H3  →  "Darby Sans Poster"       (heading)
-     H4 H5     →  "Kepler Std Semicondensed" (subheading)
-     Body / UI →  "Helvetica Neue"           (body)
+     H1 H2 H3  →  "Playfair Display"     (heading — elegant serif)
+     H4 H5     →  "Cormorant Garamond"   (subheading — refined companion serif)
+     Body / UI →  "Helvetica Neue"        (body)
+
+   GOOGLE FONTS:
+     Playfair Display: titles and main headings
+     Cormorant Garamond: subtitles, labels, subheadings
+
+   ARABIC:
+     "Noto Naskh Arabic" / "Amiri" serve as web-safe fallbacks.
+
+   RULE: Only font-family and font-weight change.
+         No sizes, spacing, margins, or layout touched.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+   Google Fonts — loaded globally here
+   (brand-fonts.css is included on every page)
+───────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
 
    LOCAL() STRATEGY:
      Fonts load from system if installed (Adobe Fonts / macOS).
@@ -56,6 +73,33 @@
        /* url("../assets/fonts/KeplerStd-SemiCnSemibold.woff2") format("woff2") */
 }
 
+@font-face {
+  font-family: "Helvetica Neue";
+  font-style:  normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Helvetica Neue Bold"),
+       local("HelveticaNeue-Bold");
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Helvetica Neue"),
+       local("HelveticaNeue");
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-style:  normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local("Helvetica Neue Light"),
+       local("HelveticaNeue-Light");
+}
+
 
 /* ═══════════════════════════════════════
    GLOBAL BASE
@@ -73,12 +117,11 @@ blockquote,
 .badge,
 .form-label,
 .form-input,
-.card-subtitle,
 .text-muted,
 .text-graphite,
 .price,
 .label {
-  font-family: var(--font-body);
+  font-family: var(--font-body) !important;
 }
 
 /* Arabic override: switch to Arabic-optimised stack */
@@ -97,12 +140,12 @@ html[lang="ar"] .btn,
 html[lang="ar"] .badge,
 html[lang="ar"] .form-label,
 html[lang="ar"] .form-input {
-  font-family: var(--font-body-ar);
+  font-family: var(--font-arabic) !important;
 }
 
 
 /* ═══════════════════════════════════════
-   HEADINGS  →  Darby Sans Poster
+   HEADINGS  →  Playfair Display (elegant serif)
 ═══════════════════════════════════════ */
 
 h1, h2, h3,
@@ -117,7 +160,8 @@ h1, h2, h3,
 .cta-band__title,
 .ip-hero__title h1,
 .ab-heading {
-  font-family: var(--font-heading);
+  font-family: var(--font-headline) !important; /* Playfair Display */
+  font-weight: 400;
 }
 
 html[lang="ar"] h1,
@@ -126,12 +170,13 @@ html[lang="ar"] h3,
 html[lang="ar"] .title,
 html[lang="ar"] .card-title,
 html[lang="ar"] .cta-band__title {
-  font-family: var(--font-body-ar);
+  font-family: var(--font-arabic) !important;
 }
 
 
 /* ═══════════════════════════════════════
-   SUBHEADINGS  →  Kepler Std Semicondensed
+   SUBHEADINGS  →  Cormorant Garamond (refined companion serif)
+   Used for h4/h5, subtitles, eyebrows, captions
 ═══════════════════════════════════════ */
 
 h4, h5,
@@ -141,10 +186,15 @@ h4, h5,
 .ab-tag,
 .ip-card h2,
 .card-label,
+.card-subtitle,
 .cta-band__eyebrow,
 .section-header p,
-.ab-intro__text {
-  font-family: var(--font-subheading);
+.ab-intro__text,
+.ab-closing__sub,
+.col-hero__sub,
+.ab-hero__sub {
+  font-family: var(--font-subheader) !important; /* Cormorant Garamond */
+  font-weight: 400;
 }
 
 html[lang="ar"] h4,
@@ -152,7 +202,7 @@ html[lang="ar"] h5,
 html[lang="ar"] .subtitle,
 html[lang="ar"] .ab-tag,
 html[lang="ar"] .cta-band__eyebrow {
-  font-family: var(--font-body-ar);
+  font-family: var(--font-arabic) !important;
 }
 
 
@@ -187,13 +237,13 @@ strong, b,
 
 .nav-link,
 .lang-toggle {
-  font-family: var(--font-body);
+  font-family: var(--font-body) !important;
   /* font-size and weight inherited from components.css */
 }
 
 html[lang="ar"] .nav-link,
 html[lang="ar"] .lang-toggle {
-  font-family: var(--font-body-ar);
+  font-family: var(--font-arabic) !important;
 }
 
 
@@ -204,15 +254,15 @@ html[lang="ar"] .lang-toggle {
 .footer,
 .footer-links a,
 .footer-section h4 {
-  font-family: var(--font-body);
+  font-family: var(--font-body) !important;
 }
 
 .footer-section h4 {
-  font-family: var(--font-subheading);
+  font-family: var(--font-body) !important;
 }
 
 html[lang="ar"] .footer,
 html[lang="ar"] .footer-links a,
 html[lang="ar"] .footer-section h4 {
-  font-family: var(--font-body-ar);
+  font-family: var(--font-arabic) !important;
 }

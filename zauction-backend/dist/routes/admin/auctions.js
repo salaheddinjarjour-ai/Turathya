@@ -43,8 +43,8 @@ router.get('/', async (req, res) => {
 // Create auction
 router.post('/', [
     (0, express_validator_1.body)('title').trim().notEmpty(),
-    (0, express_validator_1.body)('start_date').isISO8601(),
-    (0, express_validator_1.body)('end_date').isISO8601(),
+    (0, express_validator_1.body)('start_date').optional().isISO8601(),
+    (0, express_validator_1.body)('end_date').optional().isISO8601(),
     (0, express_validator_1.body)('buyers_premium').optional().isFloat({ min: 0, max: 100 })
 ], async (req, res) => {
     try {
@@ -53,20 +53,21 @@ router.post('/', [
             return res.status(400).json({ errors: errors.array() });
         }
         const { title, description, category, location, title_en, title_ar, description_en, description_ar, category_en, category_ar, location_en, location_ar, start_date, end_date, image_url, featured = false } = req.body;
-        // Validate dates
-        if (new Date(end_date) <= new Date(start_date)) {
-            return res.status(400).json({ error: 'End date must be after start date' });
-        }
-        // Determine status based on dates
-        const now = new Date();
-        const startDate = new Date(start_date);
-        const endDate = new Date(end_date);
+        // Validate dates only if both are provided
         let status = 'upcoming';
-        if (now >= startDate && now < endDate) {
-            status = 'active';
-        }
-        else if (now >= endDate) {
-            status = 'ended';
+        if (start_date && end_date) {
+            if (new Date(end_date) <= new Date(start_date)) {
+                return res.status(400).json({ error: 'End date must be after start date' });
+            }
+            const now = new Date();
+            const startDate = new Date(start_date);
+            const endDate = new Date(end_date);
+            if (now >= startDate && now < endDate) {
+                status = 'active';
+            }
+            else if (now >= endDate) {
+                status = 'ended';
+            }
         }
         const result = await database_1.pool.query(`INSERT INTO auctions (
           id, title, description, category, location,
@@ -81,7 +82,7 @@ router.post('/', [
             location || location_en || location_ar,
             title_en, title_ar, description_en, description_ar,
             category_en, category_ar, location_en, location_ar,
-            start_date, end_date,
+            start_date || null, end_date || null,
             image_url, featured, status, req.user.id]);
         res.status(201).json({
             message: 'Auction created successfully',

@@ -5,7 +5,8 @@
 
 class CountdownTimer {
     constructor(endDate, element, options = {}) {
-        this.endDate = new Date(endDate);
+        const parsed = (typeof parseDateSafe === 'function') ? parseDateSafe(endDate) : new Date(endDate);
+        this.endDate = parsed;
         this.element = element;
         this.options = {
             onEnd: options.onEnd || null,
@@ -27,6 +28,13 @@ class CountdownTimer {
     }
 
     update() {
+        if (!this.endDate || Number.isNaN(this.endDate.getTime())) {
+            this.stop();
+            if (this.element) {
+                this.element.innerHTML = '<span class="text-muted">—</span>';
+            }
+            return;
+        }
         const now = new Date();
         const diff = this.endDate - now;
 
@@ -247,12 +255,18 @@ class CountdownTimer {
 // ==================== HELPER FUNCTIONS ====================
 
 function initCountdowns() {
-    const countdownElements = document.querySelectorAll('[data-countdown]');
+    // Only initialize elements that haven't been initialized yet
+    // The 'data-countdown-init' attribute acts as a guard against double-initialization
+    // (which would cause duplicate digit slots and the "3 3 5 5" visual bug)
+    const countdownElements = document.querySelectorAll('[data-countdown]:not([data-countdown-init])');
     const timers = [];
 
     countdownElements.forEach(element => {
         const endDate = element.getAttribute('data-countdown');
         const compact = element.hasAttribute('data-compact');
+
+        // Mark as initialized BEFORE creating the timer to prevent any re-entry
+        element.setAttribute('data-countdown-init', 'true');
 
         const timer = new CountdownTimer(endDate, element, {
             compact,
@@ -270,5 +284,7 @@ function initCountdowns() {
     return timers;
 }
 
-// Auto-initialize on page load
+// Auto-initialize any countdown elements already in the DOM on page load.
+// The data-countdown-init guard above prevents any element being initialized twice,
+// so calling this multiple times (e.g. DOMContentLoaded + explicit call after render) is safe.
 document.addEventListener('DOMContentLoaded', initCountdowns);

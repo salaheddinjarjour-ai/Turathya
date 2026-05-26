@@ -13,6 +13,12 @@
     "myBids": "My Bids",
     "watchlist": "Watchlist"
   },
+  "userMenu": {
+    "welcome": "Welcome,",
+    "profile": "My Profile",
+    "myAuctions": "My Auctions",
+    "settings": "Settings"
+  },
   "hero": {
     "title": "Discover Rare Treasures",
     "subtitle": "Curated auctions of fine art, antiques, and collectibles",
@@ -31,6 +37,7 @@
     "startingBid": "Starting Bid",
     "estimate": "Estimate",
     "timeRemaining": "Time Remaining",
+    "startsIn": "Starts In",
     "endDate": "End Date",
     "startDate": "Start Date",
     "category": "Category",
@@ -149,7 +156,14 @@
     "required": "Required",
     "optional": "Optional",
     "fullName": "Full Name",
-    "auction": "Auction"
+    "fullNamePlaceholder": "Enter your full name",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "auction": "Auction",
+    "verificationCode": "Verification Code",
+    "phoneHint": "Select your country code then enter your local number.",
+    "passwordHint": "Minimum 8 characters with uppercase, lowercase, number, and special character.",
+    "otpHint": "Enter the 6-digit code sent to you via WhatsApp."
   },
   "validation": {
     "required": "This field is required",
@@ -173,6 +187,17 @@
     "registerTitle": "Create Account",
     "registerSubtitle": "Join our exclusive auction community",
     "forgotPassword": "Forgot Password?",
+    "forgotTitle": "Reset Password",
+    "forgotSubtitle": "Enter your registered phone number and we'll send a verification code via WhatsApp.",
+    "sendOtp": "Send Code",
+    "enterOtp": "Enter Code",
+    "verifyOtp": "Verify Code",
+    "noCode": "Didn't receive it?",
+    "newPassword": "New Password",
+    "newPasswordSub": "Choose a strong password with at least 8 characters, including uppercase, lowercase, a number, and a symbol.",
+    "resetPassword": "Reset Password",
+    "passwordResetSuccess": "Password Reset!",
+    "passwordResetSuccessSub": "Your password has been updated. You can now log in with your new password.",
     "rememberMe": "Remember Me",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
@@ -184,7 +209,21 @@
     "registerError": "Registration failed",
     "logoutSuccess": "Logged out successfully",
     "loginGoogle": "Login With Google",
-    "registerGoogle": "Continue With Google"
+    "registerGoogle": "Continue With Google",
+    "haveAccount": "Login",
+    "alreadyHaveAccount": "Already have an account?",
+    "loggingIn": "Logging in...",
+    "loginFailed": "Login failed. Please try again.",
+    "sendingOtp": "Sending code...",
+    "verifyingOtp": "Verifying...",
+    "verifyOtpCreate": "Verify & Create Account",
+    "codeSentTo": "A 6-digit code was sent to",
+    "viaWhatsapp": "via WhatsApp",
+    "sendCodeFailed": "Failed to send code. Please try again.",
+    "otpSentAlert": "Verification code sent. Enter the 6-digit code to complete registration.",
+    "enterFullOtp": "Please enter the complete 6-digit OTP code.",
+    "accountCreated": "Account created successfully! Your session is active.",
+    "registrationFailed": "Registration failed. Please try again."
   },
   "cta": {
     "eyebrow": "Start Bidding",
@@ -232,7 +271,7 @@
   "collection": {
     "subtitle": "All lots, past and present.",
     "allAuctions": "All Auctions",
-    "introLabel": "COLLECTION",
+    "introLabel": "TURATHYA",
     "introTitle": "Curated Pieces",
     "introDesc": "Explore a refined selection of rare and exceptional items currently available for bidding.",
     "viewLot": "View Lot",
@@ -370,7 +409,8 @@
     "conditionEn": "Condition (English)",
     "conditionAr": "Condition (Arabic)",
     "provenanceEn": "Provenance EN (Optional)",
-    "provenanceAr": "Provenance AR (Optional)"
+    "provenanceAr": "Provenance AR (Optional)",
+    "role": "Role"
   },
   "notifications": {
     "failedLoadDashboardStats": "Failed to load dashboard statistics",
@@ -514,6 +554,7 @@
     "no": "No",
     "ok": "OK",
     "or": "or",
+    "loadMore": "Load More",
     "and": "and",
     "of": "of",
     "to": "to",

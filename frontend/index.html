@@ -36,12 +36,15 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/components/lang-toggle.css">
+  <link rel="stylesheet" href="css/components/lot-card.css">
   <link rel="stylesheet" href="css/pages/landing.css">
   <!-- Framed hero showcase — overrides default hero styles -->
   <link rel="stylesheet" href="css/hero-frame.css">
   <!-- Fonts — same as all other pages -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
   <!-- AOS loaded async — not render-critical -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" media="print" onload="this.media='all'">
 </head>
@@ -109,81 +112,110 @@
 
 
   <!-- Section Divider -->
-  <hr class="section-divider">
 
   <!-- ── Live Stats Bar ── -->
-  <section id="stats-bar" style="background:linear-gradient(135deg,#1a1208 0%,#2c1e0a 50%,#1a1208 100%);border-bottom:1px solid rgba(201,169,110,.18);padding:36px 0;position:relative;overflow:hidden;">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;"></div>
-    <div class="container" style="position:relative;z-index:1;">
-      <div style="display:flex;justify-content:center;align-items:center;gap:clamp(24px,5vw,80px);flex-wrap:wrap;">
-
-        <div style="text-align:center;min-width:90px;">
-          <div id="stat-auctions" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
-          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.auctions">Auctions</div>
+  <section id="stats-bar" class="stats-section">
+    <div class="stats-overlay" aria-hidden="true"></div>
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div id="stat-auctions" class="stat-number">—</div>
+          <div class="stat-label" data-i18n="stats.auctions">Auctions</div>
         </div>
 
-        <div style="width:1px;height:44px;background:rgba(201,169,110,.22);"></div>
+        <div class="stat-divider" aria-hidden="true"></div>
 
-        <div style="text-align:center;min-width:90px;">
-          <div id="stat-lots" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
-          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.lots">Lots</div>
+        <div class="stat-item">
+          <div id="stat-lots" class="stat-number">—</div>
+          <div class="stat-label" data-i18n="stats.lots">Lots</div>
         </div>
 
-        <div style="width:1px;height:44px;background:rgba(201,169,110,.22);"></div>
+        <div class="stat-divider" aria-hidden="true"></div>
 
-        <div style="text-align:center;min-width:90px;">
-          <div id="stat-live" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
-          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.liveNow">Live Now</div>
+        <div class="stat-item">
+          <div id="stat-live" class="stat-number">—</div>
+          <div class="stat-label" data-i18n="stats.liveNow">Live Now</div>
         </div>
 
-        <div style="width:1px;height:44px;background:rgba(201,169,110,.22);"></div>
+        <div class="stat-divider" aria-hidden="true"></div>
 
-        <div style="text-align:center;min-width:90px;">
-          <div id="stat-bids" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:#c9a96e;line-height:1;">—</div>
-          <div style="font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;" data-i18n="stats.bids">Active Bids</div>
+        <div class="stat-item">
+          <div id="stat-bids" class="stat-number">—</div>
+          <div class="stat-label" data-i18n="stats.bids">Active Bids</div>
         </div>
-
       </div>
     </div>
   </section>
 
   <script>
   (function(){
-    var API=(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')
-      ?'http://localhost:3000/api':'https://turathya-backend.onrender.com/api';
-    function countUp(el,target,dur){
-      if(isNaN(target)){el.textContent='0';return;}
-      var s=performance.now();
-      (function step(now){
-        var p=Math.min((now-s)/dur,1),e=1-Math.pow(1-p,3);
-        el.textContent=Math.round(e*target);
-        if(p<1)requestAnimationFrame(step);
+    var API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000/api' : 'https://turathya.com/api';
+
+    function countUp(el, target, dur) {
+      if (!el) return;
+      var n = parseInt(target, 10);
+      if (!n || isNaN(n)) { el.textContent = '0'; return; }
+      var s = performance.now();
+      (function step(now) {
+        var p = Math.min((now - s) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(e * n);
+        if (p < 1) requestAnimationFrame(step);
       })(s);
     }
-    Promise.all([
-      fetch(API+'/auctions').catch(()=>null),
-      fetch(API+'/lots').catch(()=>null)
-    ]).then(function(r){return Promise.all(r.map(function(x){return x&&x.ok?x.json():null;}));})
-    .then(function(d){
-      var aData=d[0]||{},lData=d[1]||{};
-      var auctions=aData.auctions||[];var lots=lData.lots||[];
-      var live=auctions.filter(function(a){return a.status==='live'||a.status==='active';}).length;
-      var bids=lots.reduce(function(s,l){return s+((l.current_bid||l.currentBid)>0?1:0);},0);
-      countUp(document.getElementById('stat-auctions'),auctions.length||aData.total||0,1200);
-      countUp(document.getElementById('stat-lots'),lots.length||lData.total||0,1200);
-      countUp(document.getElementById('stat-live'),live,900);
-      countUp(document.getElementById('stat-bids'),bids,1000);
-    }).catch(function(){
-      ['stat-auctions','stat-lots','stat-live','stat-bids'].forEach(function(id){
-        var el=document.getElementById(id);if(el)el.textContent='0';
+
+    function setZeros() {
+      ['stat-auctions','stat-lots','stat-live','stat-bids'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.textContent = '0';
       });
+    }
+
+    // /api/categories = auctions, /api/lots = lots
+    Promise.all([
+      fetch(API + '/categories').catch(function(){ return null; }),
+      fetch(API + '/lots?limit=500').catch(function(){ return null; })
+    ])
+    .then(function(responses) {
+      return Promise.all(responses.map(function(r) {
+        return r && r.ok ? r.json() : null;
+      }));
+    })
+    .then(function(d) {
+      var catData  = d[0] || {};
+      var lotData  = d[1] || {};
+
+      // Handle all possible API response shapes
+      var auctions = catData.categories || catData.auctions || catData.data || [];
+      var lots     = lotData.lots || lotData.data || [];
+      var totalLots = lots.length || lotData.total || 0;
+
+      // Live = lots with status active and within their auction window
+      var now = Date.now();
+      var live = lots.filter(function(l) {
+        var end = l.end_date ? new Date(l.end_date).getTime() : 0;
+        return (l.status === 'active' || l.status === 'live') && end > now;
+      }).length;
+
+      // Active bids = lots that have at least one bid
+      var bids = lots.filter(function(l) {
+        return (Number(l.current_bid || l.currentBid || 0)) > 0;
+      }).length;
+
+      countUp(document.getElementById('stat-auctions'), auctions.length || catData.total || 0, 1200);
+      countUp(document.getElementById('stat-lots'),     totalLots, 1200);
+      countUp(document.getElementById('stat-live'),     live, 900);
+      countUp(document.getElementById('stat-bids'),     bids, 1000);
+    })
+    .catch(function(err) {
+      console.warn('Stats load failed:', err);
+      setZeros();
     });
   })();
   </script>
 
   <!-- Featured Products -->
   <section class="section section--featured-bg"
-    style="background-image: url('assets/images/bg-1.png'); background-size: cover; background-position: center;">
+    style="background: #312b0f;">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
         <h2 class="text-light" data-i18n="auctionsPage.featuredTitle">Featured Products</h2>
@@ -193,11 +225,19 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="featured-auctions">
         <!-- Populated by JavaScript -->
       </div>
+
+      <!-- Load More -->
+      <div id="featured-load-more-wrap" style="display:none; text-align:center; margin-top:2.5rem;">
+        <button id="featured-load-more-btn" class="btn btn--outline-light"
+          data-i18n="common.loadMore"
+          style="border-color:rgba(255,255,255,.45); color:#fff; padding:12px 36px; font-size:13px; letter-spacing:1.6px; text-transform:uppercase; cursor:pointer; background:transparent; border-width:1px; border-style:solid; border-radius:2px; transition:background .2s,color .2s;"
+          onmouseover="this.style.background='rgba(255,255,255,.12)'"
+          onmouseout="this.style.background='transparent'">للمزيد</button>
+      </div>
     </div>
   </section>
 
   <!-- Section Divider -->
-  <hr class="section-divider">
 
   <!-- Ending Soon -->
   <section class="section section--featured-bg"
@@ -215,7 +255,6 @@
   </section>
 
   <!-- Section Divider -->
-  <hr class="section-divider">
 
   <!-- Premium CTA Band -->
   <section class="cta-band">
@@ -232,12 +271,14 @@
         تصفّح المزادات الحالية، أنشئ حسابًا، وابدأ بالمزايدة على قطع مختارة بعناية.
       </p>
 
-      <div class="cta-band__actions">
-        <a href="pages/auctions.html" class="btn btn-cta-band-primary" data-i18n="cta.browseAuctions">تصفح المزادات</a>
-        <a href="pages/register.html" class="btn btn-cta-band-secondary" data-i18n="cta.createAccount">إنشاء حساب</a>
+      <div class="cta-band__actions" id="cta-band-actions">
+        <a href="pages/auctions.html" class="btn btn-cta-band-primary" id="cta-browse-btn" data-i18n="cta.browseAuctions">تصفح المزادات</a>
+        <a href="pages/register.html" class="btn btn-cta-band-secondary" id="cta-register-btn" data-i18n="cta.createAccount">إنشاء حساب</a>
       </div>
     </div>
   </section>
+
+  <!-- Section Divider -->
 
   <!-- Footer -->
   <footer class="footer">
@@ -296,62 +337,67 @@
   <script src="js/auth.js"></script>
   <script src="js/countdown.js"></script>
   <script src="js/watchlist.js"></script>
+  <script src="js/lot-cards.js"></script>
   <script>
     // Load featured products from API
     async function loadFeaturedAuctions() {
       try {
         const { lots } = await lotsAPI.getAll();
         const now = new Date();
-        const activeFeatured = (lots || []).filter((lot) => {
-          const startDate = lot.start_date ? new Date(lot.start_date) : null;
-          const endDate = lot.end_date ? new Date(lot.end_date) : null;
-          const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
-          return isLiveWindow && lot.status === 'active';
-        });
+        const allLots = lots || [];
 
-        activeFeatured.sort((a, b) => {
-          const aCount = Number(a.bid_count || 0);
-          const bCount = Number(b.bid_count || 0);
-          if (bCount !== aCount) return bCount - aCount;
-          return Number(b.current_bid || 0) - Number(a.current_bid || 0);
-        });
+        // Priority 1: manually marked is_featured — regardless of auction status
+        const manualFeatured = allLots.filter(l => !!l.is_featured);
+
+        // Priority 2 (fallback): lots currently in an active live window, sorted by activity
+        let pool;
+        if (manualFeatured.length > 0) {
+          pool = manualFeatured;
+        } else {
+          pool = allLots.filter(lot => {
+            const startDate = lot.start_date ? parseDateSafe(lot.start_date) : null;
+            const endDate   = lot.end_date   ? parseDateSafe(lot.end_date)   : null;
+            const isLive    = (!startDate || startDate <= now) && endDate && endDate > now;
+            return isLive && lot.status === 'active';
+          });
+          pool.sort((a, b) => {
+            const diff = Number(b.bid_count || 0) - Number(a.bid_count || 0);
+            return diff !== 0 ? diff : Number(b.current_bid || 0) - Number(a.current_bid || 0);
+          });
+        }
 
         const container = document.getElementById('featured-auctions');
 
-        if (activeFeatured.length === 0) {
+        if (pool.length === 0) {
           container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No featured products available</p>';
           if (window.i18n) window.i18n.translatePage();
           return;
         }
 
-        container.innerHTML = activeFeatured.slice(0, 3).map((lot) => {
-          const lTitle = localizedField(lot, 'title');
-          const lCat = localizedField(lot, 'category');
-          const categoryGroup = lot.category_title || lot.auction_title || '';
-          const image = lot.primary_image || lot.image_data || lot.auction_image || 'assets/images/placeholder.jpg';
-          const amount = lot.current_bid && Number(lot.current_bid) > 0 ? Number(lot.current_bid) : Number(lot.starting_bid || 0);
-          const amountLabel = lot.current_bid && Number(lot.current_bid) > 0 ? 'Current Bid' : 'Starting Bid';
-          const badge = isEndingSoon(lot.end_date)
-            ? `<span class="badge badge-accent">${i18n.t('auction.endingSoon')}</span>`
-            : `<span class="badge badge-success">${i18n.t('auction.live')}</span>`;
+        const MAX_INITIAL  = 3;
+        const MAX_TOTAL    = 9;
+        const featuredLots = pool.slice(0, MAX_TOTAL);
 
-          return `
-          <a href="pages/lot.html?id=${lot.id}" class="card">
-            <img loading="lazy" src="${image}" alt="${lTitle}" class="card-image">
-            <div class="card-content">
-              <div class="label mb-2">${lCat || 'Product'}</div>
-              <h3 class="card-title">${lTitle}</h3>
-              <p class="card-subtitle">Lot #${lot.lot_number}${categoryGroup ? ` • ${categoryGroup}` : ''}</p>
-            </div>
-            <div class="card-footer">
-              <span class="text-sm text-muted">${amountLabel}: ${formatCurrency(amount)}</span>
-              ${badge}
-            </div>
-          </a>
-        `;
-        }).join('');
+        function renderFeaturedCards(count) {
+          container.innerHTML = featuredLots.slice(0, count).map(lot =>
+            buildGalleryCard(lot).replace('href="lot.html?', 'href="pages/lot.html?')
+          ).join('');
+          initCardSliders(container);
+          if (window.i18n) window.i18n.translatePage();
+        }
 
-        // Translate the newly added dynamic content
+        renderFeaturedCards(MAX_INITIAL);
+
+        const loadMoreWrap = document.getElementById('featured-load-more-wrap');
+        const loadMoreBtn  = document.getElementById('featured-load-more-btn');
+        if (featuredLots.length > MAX_INITIAL && loadMoreWrap && loadMoreBtn) {
+          loadMoreWrap.style.display = 'block';
+          loadMoreBtn.addEventListener('click', () => {
+            renderFeaturedCards(MAX_TOTAL);
+            loadMoreWrap.style.display = 'none';
+          });
+        }
+
         if (window.i18n) window.i18n.translatePage();
       } catch (error) {
         console.error('Failed to load featured products:', error);
@@ -373,12 +419,13 @@
         const fortyEightHoursFromNow = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
         const endingSoon = auctions.filter(auction => {
-          const endDate = new Date(auction.end_date);
+          const endDate = parseDateSafe(auction.end_date);
+          if (!endDate) return false;
           return endDate > now && endDate <= fortyEightHoursFromNow;
         });
 
         // Sort by end date (soonest first)
-        endingSoon.sort((a, b) => new Date(a.end_date) - new Date(b.end_date));
+        endingSoon.sort((a, b) => parseDateSafe(a.end_date) - parseDateSafe(b.end_date));
 
         // Take top 4
         const topEndingSoon = endingSoon.slice(0, 4);
@@ -528,9 +575,24 @@
     }
 
     // Load data after i18n is ready (so i18n.t() works in card templates)
+    function updateCtaForAuthState() {
+      const loggedIn = typeof getCurrentUser === 'function' && !!getCurrentUser();
+      const actions     = document.getElementById('cta-band-actions');
+      const registerBtn = document.getElementById('cta-register-btn');
+      if (!actions || !registerBtn) return;
+      if (loggedIn) {
+        registerBtn.style.display = 'none';
+        actions.style.justifyContent = 'center';
+      } else {
+        registerBtn.style.display = '';
+        actions.style.justifyContent = '';
+      }
+    }
+
     function initPageData() {
       loadFeaturedAuctions();
       loadEndingSoon();
+      updateCtaForAuthState();
     }
 
     if (window.i18n && window.i18n.isInitialized) {
@@ -552,6 +614,18 @@
   <!-- Initialize AOS -->
   <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"
     onload="AOS.init({once:true,offset:100,duration:800,easing:'ease-out-cubic'})"></script>
+  <!-- Set --header-h CSS var so hero frame centers correctly below the header -->
+  <script>
+    function setHeaderHeight() {
+      var h = (document.getElementById('site-header') || {}).offsetHeight || 90;
+      document.documentElement.style.setProperty('--header-h', h + 'px');
+    }
+    setHeaderHeight();
+    window.addEventListener('resize', setHeaderHeight);
+    // Re-run after header partial loads (may be injected async)
+    setTimeout(setHeaderHeight, 300);
+    setTimeout(setHeaderHeight, 800);
+  </script>
 </body>
 
 </html>
