@@ -126,7 +126,10 @@ function buildGalleryCard(lot) {
   const images = getLotImages(lot);
   const imgHTML = buildCardImageHTML(images, lotTag, '');
 
-  const lotUrl = `lot.html?id=${lot.id}&view=collection`;
+  // Resolve lot page path — works from both root (index.html) and pages/ subfolder
+  const _inPages = window.location.pathname.includes('/pages/');
+  const _lotBase = _inPages ? 'lot.html' : 'pages/lot.html';
+  const lotUrl = `${_lotBase}?id=${lot.id}&view=collection`;
 
   // WhatsApp inquiry — separate <a> so it is NOT nested inside another <a>
   const waNumber = window.TURATHYA_WA_NUMBER || '966500000000';
