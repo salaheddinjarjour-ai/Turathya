@@ -22,6 +22,7 @@ const lots_2 = __importDefault(require("./routes/lots"));
 const bids_1 = __importDefault(require("./routes/bids"));
 const watchlist_1 = __importDefault(require("./routes/watchlist"));
 const search_1 = __importDefault(require("./routes/search"));
+const share_1 = __importDefault(require("./routes/share"));
 const handlers_1 = require("./socket/handlers");
 const liveAuctionNotifier_1 = require("./services/liveAuctionNotifier");
 // Load environment variables
@@ -124,6 +125,8 @@ app.use('/api/lots', lots_2.default);
 app.use('/api/bids', bids_1.default);
 app.use('/api/watchlist', watchlist_1.default);
 app.use('/api/search', search_1.default);
+// Public share page — no CORS restriction (needed by crawlers/bots)
+app.use('/share', share_1.default);
 // 404 handler
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });

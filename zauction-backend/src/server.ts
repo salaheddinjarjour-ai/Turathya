@@ -16,6 +16,7 @@ import lotsRoutes from './routes/lots';
 import bidsRoutes from './routes/bids';
 import watchlistRoutes from './routes/watchlist';
 import searchRoutes from './routes/search';
+import shareRoutes from './routes/share';
 import { initializeSocketHandlers } from './socket/handlers';
 import { startLiveAuctionNotifier } from './services/liveAuctionNotifier';
 
@@ -134,6 +135,9 @@ app.use('/api/lots', lotsRoutes);
 app.use('/api/bids', bidsRoutes);
 app.use('/api/watchlist', watchlistRoutes);
 app.use('/api/search', searchRoutes);
+
+// Public share page — no CORS restriction (needed by crawlers/bots)
+app.use('/share', shareRoutes);
 
 // 404 handler
 app.use((req, res) => {

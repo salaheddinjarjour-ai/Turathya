@@ -426,6 +426,17 @@
                 const ogImg = document.getElementById('og-image');
                 if (ogImg && imgSrc && !imgSrc.startsWith('data:')) ogImg.setAttribute('content', imgSrc);
 
+                // Expose shareable URL (points to server-side OG endpoint)
+                const API_BASE = window.API_BASE || window.location.origin.replace(':5050','') || 'https://turathya.com';
+                // Use backend port 3000 or the /api path
+                const shareUrl = window.location.origin.includes('turathya.com')
+                    ? `https://turathya.com/share/lot/${lot.id}`
+                    : `https://api.turathya.com/share/lot/${lot.id}`;
+                window.__lotShareUrl = shareUrl;
+                // Update canonical
+                const canonical = document.querySelector('link[rel="canonical"]');
+                if (canonical) canonical.setAttribute('href', shareUrl);
+
                 if (forceGallery || lotState === 'gallery') {
                     renderCollectionDetail(lot);
                 } else {
