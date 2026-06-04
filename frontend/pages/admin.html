@@ -375,18 +375,48 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label" data-i18n="auction.startDate">تاريخ بداية المزاد <span style="opacity:.6;font-weight:400;">(اختياري — اتركه فارغاً للمعرض)</span></label>
-                                            <input type="datetime-local" class="form-input" name="startDate" id="lot-start-date" onchange="_adminCheckDates()">
+                                    <!-- ── Placement Mode Selector ───────────────────── -->
+                                    <div class="form-group" style="margin-bottom:1.2rem;">
+                                        <label class="form-label" style="margin-bottom:.6rem;">موضع القطعة</label>
+                                        <div id="lot-placement-tabs" style="display:flex;gap:8px;flex-wrap:wrap;">
+                                            <button type="button" class="placement-btn active" data-mode="gallery"
+                                                onclick="_setPlacementMode('gallery')"
+                                                style="flex:1;min-width:110px;padding:10px 14px;border-radius:8px;border:2px solid #6d4c41;background:#6d4c41;color:#fff;font-weight:600;cursor:pointer;transition:all .2s;font-size:.85rem;">
+                                                🖼️ معرض فقط
+                                            </button>
+                                            <button type="button" class="placement-btn" data-mode="auction"
+                                                onclick="_setPlacementMode('auction')"
+                                                style="flex:1;min-width:110px;padding:10px 14px;border-radius:8px;border:2px solid rgba(198,164,108,.3);background:transparent;color:var(--theme-text);font-weight:600;cursor:pointer;transition:all .2s;font-size:.85rem;">
+                                                🔨 مزاد فقط
+                                            </button>
+                                            <button type="button" class="placement-btn" data-mode="both"
+                                                onclick="_setPlacementMode('both')"
+                                                style="flex:1;min-width:110px;padding:10px 14px;border-radius:8px;border:2px solid rgba(198,164,108,.3);background:transparent;color:var(--theme-text);font-weight:600;cursor:pointer;transition:all .2s;font-size:.85rem;">
+                                                🔀 معرض + مزاد
+                                            </button>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="form-label" data-i18n="auction.endDate">تاريخ نهاية المزاد <span style="opacity:.6;font-weight:400;">(اختياري)</span></label>
-                                            <input type="datetime-local" class="form-input" name="endDate" id="lot-end-date" onchange="_adminCheckDates()">
-                                        </div>
+                                        <p id="lot-placement-hint" style="font-size:.8rem;color:var(--theme-text-muted);margin-top:.5rem;">
+                                            القطعة ستظهر في المعرض فقط مع زر استفسار واتساب، بدون تاريخ مزاد.
+                                        </p>
+                                        <!-- Hidden field sent to backend -->
+                                        <input type="hidden" name="show_in_gallery" id="lot-show-in-gallery" value="false">
                                     </div>
-                                    <div id="lot-date-warning" style="display:none;background:rgba(200,80,50,.1);border:1px solid rgba(200,80,50,.4);border-radius:6px;padding:10px 14px;font-size:0.85rem;color:#c85032;margin-top:-8px;">
-                                        &#9888; يجب تحديد تاريخ البداية <strong>والنهاية</strong> معاً، أو تركهما فارغين. لا يمكن تحديد تاريخ واحد فقط.
+
+                                    <!-- ── Date fields — shown only for Auction / Both modes ── -->
+                                    <div id="lot-date-section" style="display:none;">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">تاريخ بداية المزاد</label>
+                                                <input type="datetime-local" class="form-input" name="startDate" id="lot-start-date">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">تاريخ نهاية المزاد</label>
+                                                <input type="datetime-local" class="form-input" name="endDate" id="lot-end-date">
+                                            </div>
+                                        </div>
+                                        <div id="lot-date-warning" style="display:none;background:rgba(200,80,50,.1);border:1px solid rgba(200,80,50,.4);border-radius:6px;padding:10px 14px;font-size:0.85rem;color:#c85032;margin-top:-8px;">
+                                            &#9888; يجب تحديد تاريخ البداية <strong>والنهاية</strong> معاً.
+                                        </div>
                                     </div>
 
                                     <div class="form-row">
@@ -700,6 +730,53 @@
     </script>
 
     <script>
+    /* ── Placement mode controller ──────────────────────────────── */
+    var _currentPlacementMode = 'gallery';
+
+    var _placementHints = {
+        gallery: 'القطعة ستظهر في المعرض فقط مع زر استفسار واتساب، بدون تاريخ مزاد.',
+        auction: 'القطعة ستظهر في صفحة المزادات فقط مع عداد تنازلي وزر مزايدة.',
+        both:    'القطعة ستظهر في المعرض (للاستفسار) وفي المزادات (للمزايدة) في نفس الوقت.'
+    };
+
+    function _setPlacementMode(mode) {
+        _currentPlacementMode = mode;
+
+        // Update button styles
+        document.querySelectorAll('.placement-btn').forEach(function(btn) {
+            var isActive = btn.dataset.mode === mode;
+            var colors = {
+                gallery: '#6d4c41',
+                auction: '#1565c0',
+                both:    '#2e7d32'
+            };
+            var col = colors[btn.dataset.mode] || '#888';
+            btn.style.background   = isActive ? col : 'transparent';
+            btn.style.color        = isActive ? '#fff' : 'var(--theme-text)';
+            btn.style.borderColor  = isActive ? col : 'rgba(198,164,108,.3)';
+        });
+
+        // Show/hide date section
+        var dateSection = document.getElementById('lot-date-section');
+        if (dateSection) dateSection.style.display = (mode === 'gallery') ? 'none' : 'block';
+
+        // If switching to gallery, clear dates
+        if (mode === 'gallery') {
+            var s = document.getElementById('lot-start-date');
+            var e = document.getElementById('lot-end-date');
+            if (s) s.value = '';
+            if (e) e.value = '';
+        }
+
+        // Set show_in_gallery hidden field
+        var sig = document.getElementById('lot-show-in-gallery');
+        if (sig) sig.value = (mode === 'gallery' || mode === 'both') ? 'true' : 'false';
+
+        // Update hint text
+        var hint = document.getElementById('lot-placement-hint');
+        if (hint) hint.textContent = _placementHints[mode] || '';
+    }
+
     function _adminCheckDates() {
         var s = document.getElementById('lot-start-date');
         var e = document.getElementById('lot-end-date');
@@ -709,6 +786,16 @@
         var hasE = !!(e.value && e.value.trim());
         w.style.display = (hasS !== hasE) ? 'block' : 'none';
     }
+
+    /* ── Pre-fill placement mode when editing a lot ─────────────── */
+    window._adminRestorePlacementMode = function(lot) {
+        var hasDates = !!(lot.start_date && lot.end_date);
+        var inGallery = lot.show_in_gallery === true || lot.show_in_gallery === 't';
+        var mode = 'gallery';
+        if (hasDates && inGallery)  mode = 'both';
+        else if (hasDates)          mode = 'auction';
+        _setPlacementMode(mode);
+    };
     </script>
 </body>
 

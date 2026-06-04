@@ -86,7 +86,7 @@ router.post('/', [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { auction_id, category_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100, start_date, end_date } = req.body;
+        const { auction_id, category_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100, start_date, end_date, show_in_gallery = false } = req.body;
         const resolvedCategoryId = category_id || auction_id || null;
         // Validate group exists only when provided
         let auctionTitle = null;
@@ -103,8 +103,8 @@ router.post('/', [
           category_en, category_ar, condition_en, condition_ar,
           provenance_en, provenance_ar,
           estimate_low, estimate_high, starting_bid, reserve_price,
-          bid_increment, start_date, end_date, status, created_at, updated_at
-        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, 'active', NOW(), NOW())
+          bid_increment, start_date, end_date, show_in_gallery, status, created_at, updated_at
+        ) VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, 'active', NOW(), NOW())
         RETURNING *`, [resolvedCategoryId, lot_number,
             title || title_en || title_ar,
             description || description_en || description_ar,
@@ -115,7 +115,7 @@ router.post('/', [
             category_en, category_ar, condition_en, condition_ar,
             provenance_en, provenance_ar,
             estimate_low, estimate_high, starting_bid, reserve_price,
-            bid_increment, start_date || null, end_date || null]);
+            bid_increment, start_date || null, end_date || null, show_in_gallery === true || show_in_gallery === 'true']);
         res.status(201).json({
             message: 'Lot created successfully',
             lot: result.rows[0]

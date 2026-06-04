@@ -292,10 +292,13 @@
         }
 
         function applyFilters() {
-            // Gallery page: show ONLY lots without auction dates assigned
+            // Gallery page: show lots that:
+            //  1. Have no auction dates (pure gallery items), OR
+            //  2. Have dates but show_in_gallery = true (Both mode)
             filteredLots = allLots.filter(lot => {
-                const isGallery = !lot.start_date && !lot.end_date;
-                if (!isGallery) return false;
+                const hasNoDates    = !lot.start_date && !lot.end_date;
+                const showInGallery = lot.show_in_gallery === true || lot.show_in_gallery === 't';
+                if (!hasNoDates && !showInGallery) return false;
                 if (filters.categoryId && (lot.category_id || lot.auction_id) !== filters.categoryId) return false;
                 if (filters.productType && lot.category !== filters.productType) return false;
                 return true;

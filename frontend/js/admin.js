@@ -544,6 +544,8 @@ async function handleAuctionForm(event) {
 
         // Reset form
         form.reset();
+        // Reset placement to gallery mode
+        if (typeof _setPlacementMode === 'function') _setPlacementMode('gallery');
         form.dataset.editingId = '';
         form.querySelector('button[type="submit"]').textContent = t('admin.createAuction');
 
@@ -610,6 +612,10 @@ function editAuction(auctionId) {
         const submitBtn = form.querySelector('button[type="submit"]');
         if (submitBtn) submitBtn.textContent = t('admin.updateAuction');
 
+        // Restore placement mode for this lot
+        if (typeof window._adminRestorePlacementMode === 'function') {
+            window._adminRestorePlacementMode(lot);
+        }
         // Scroll to form
         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }).catch(error => {
@@ -666,7 +672,8 @@ async function handleLotForm(event) {
         start_date: startDateLocal ? new Date(startDateLocal).toISOString() : null,
         end_date:   endDateLocal   ? new Date(endDateLocal).toISOString()   : null,
         // Featured flag
-        is_featured: formData.get('isFeatured') === '1'
+        is_featured: formData.get('isFeatured') === '1',
+        show_in_gallery: formData.get('show_in_gallery') === 'true'
     };
 
     try {
