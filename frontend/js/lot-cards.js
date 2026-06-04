@@ -106,6 +106,7 @@ function getLotImages(lot) {
 }
 
 /* ─── Gallery Card (collection / home — no price) ────── */
+/* ─── Gallery Card (collection / home — no price) ────── */
 function buildGalleryCard(lot) {
   const LABELS = { 'auction.lot': 'Lot' };
   const T = (k) => {
@@ -124,8 +125,17 @@ function buildGalleryCard(lot) {
   const catGrp  = lot.category_title || lot.auction_title || '';
   const lotTag  = lot.lot_number ? `LOT ${lot.lot_number}` : '';
   const images  = getLotImages(lot);
-
   const imgHTML = buildCardImageHTML(images, lotTag, '');
+
+  // WhatsApp inquiry button
+  const waNumber = window.TURATHYA_WA_NUMBER || '966500000000';
+  const lang     = localStorage.getItem('lang') || 'ar';
+  const isAr     = lang === 'ar';
+  const waMsg    = encodeURIComponent(isAr
+    ? `\u0645\u0631\u062d\u0628\u0627\u064b\u060c \u0623\u0648\u062f \u0627\u0644\u0627\u0633\u062a\u0641\u0633\u0627\u0631 \u0639\u0646 \u0627\u0644\u0642\u0637\u0639\u0629: ${title}`
+    : `Hello, I would like to inquire about: ${title}`);
+  const waLabel  = isAr ? '\u0627\u0633\u062a\u0641\u0633\u0627\u0631 \u0639\u0628\u0631 \u0648\u0627\u062a\u0633\u0627\u0628' : 'Inquire via WhatsApp';
+  const waHref   = `https://wa.me/${waNumber}?text=${waMsg}`;
 
   return `
     <a href="lot.html?id=${lot.id}&view=collection" class="lot-card lot-card-fade">
@@ -134,10 +144,19 @@ function buildGalleryCard(lot) {
         <div class="lot-cat">${cat}</div>
         <h3 class="lot-title">${title}</h3>
         ${catGrp ? `<p class="lot-sub">${catGrp}</p>` : ''}
-        ${desc ? `<p class="lot-desc">${desc.slice(0, 120)}${desc.length > 120 ? '…' : ''}</p>` : ''}
+        ${desc ? `<p class="lot-desc">${desc.slice(0, 120)}${desc.length > 120 ? '\u2026' : ''}</p>` : ''}
+        <div class="lot-divider"></div>
+        <a href="${waHref}" target="_blank" rel="noopener noreferrer"
+           class="lot-wa-inquiry-btn" onclick="event.stopPropagation();" aria-label="${waLabel}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          ${waLabel}
+        </a>
       </div>
     </a>`;
 }
+
 
 /* ─── Auction Card (auctions page — with price + timer) ─ */
 function buildAuctionCard(lot, isPast) {

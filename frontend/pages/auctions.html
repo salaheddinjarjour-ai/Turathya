@@ -190,21 +190,24 @@
         let allLots = [];
 
         function isLiveLot(lot) {
-            // Must be an auction item — collection-only items never appear here
-            if (typeof hasAuction === 'function' && !hasAuction(lot)) return false;
-            const now = new Date();
-            const startDate = lot.start_date ? new Date(lot.start_date) : null;
-            const endDate = lot.end_date ? new Date(lot.end_date) : null;
-            if (!endDate || Number.isNaN(endDate.getTime())) return false;
-            if (startDate && !Number.isNaN(startDate.getTime()) && startDate > now) return false;
-            return endDate > now && lot.status === 'active';
+            // A lot is "live/upcoming" if it has BOTH auction dates and is not yet ended
+            // Uses getLotState() from utils.js for consistency
+            if (typeof getLotState === 'function') {
+                const state = getLotState(lot);
+                return state === 'active' || state === 'upcoming';
+            }
+            if (!lot.start_date || !lot.end_date) return false;
+            const endDate = new Date(lot.end_date);
+            return endDate > new Date();
         }
 
         function isEndedLot(lot) {
-            // Must be an auction item — collection-only items never appear here
-            if (typeof hasAuction === 'function' && !hasAuction(lot)) return false;
-            const endDate = lot.end_date ? new Date(lot.end_date) : null;
-            return !!endDate && !Number.isNaN(endDate.getTime()) && endDate < new Date();
+            // A lot is "ended" if it has auction dates and the end_date has passed
+            if (typeof getLotState === 'function') {
+                return getLotState(lot) === 'ended';
+            }
+            if (!lot.end_date) return false;
+            return new Date(lot.end_date) < new Date();
         }
 
         // ── Card renderer → delegates to shared lot-cards.js ──

@@ -61,7 +61,7 @@
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="m14.47 13.77-1.41 1.41L5 7.12 6.41 5.7l8.06 8.07zm-3.84-9.94L9.2 5.25l1.42 1.42 1.41-1.42-1.4-1.42zm9.2 9.2-1.42 1.42 1.42 1.41 1.41-1.41-1.41-1.42zm-3.54 3.53 2.12 2.13 1.41-1.41-2.12-2.13-1.41 1.41zM10 3L3 10l7 7 7-7-7-7zm0 12.59L5.41 11 10 6.41 14.59 11 10 15.59z" />
-                    </svg> <span data-i18n="admin.auctions">Auctions</span>
+                    </svg> <span data-i18n="admin.collections">المجموعات</span>
                 </a>
                 <a href="#" class="nav-item" data-view="lots">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@
 
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <span class="stat-label" data-i18n="admin.totalAuctions">Total Auctions</span>
+                        <span class="stat-label" data-i18n="admin.totalCollections">إجمالي المجموعات</span>
                         <div class="stat-value" id="stat-total-auctions">0</div>
                     </div>
                     <div class="stat-card">
@@ -146,7 +146,7 @@
                 <div class="quick-actions">
                     <div class="action-card" onclick="switchView('auctions');">
                         <div class="action-icon">+</div>
-                        <div class="action-text" data-i18n="admin.createNewAuction">Create New Auction</div>
+                        <div class="action-text" data-i18n="admin.createNewCollection">إنشاء مجموعة جديدة</div>
                     </div>
                     <div class="action-card" onclick="switchView('users');">
                         <div class="action-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -167,11 +167,11 @@
             <!-- AUCTIONS VIEW -->
             <div id="view-auctions" class="admin-view">
                 <header class="page-header">
-                    <h1 class="page-title" data-i18n="admin.manageAuctions">Manage Auctions</h1>
+                    <h1 class="page-title" data-i18n="admin.manageCollections">إدارة المجموعات</h1>
                 </header>
 
                 <div class="admin-section mb-8">
-                    <h2 class="mb-6" data-i18n="admin.createEditAuction">Create / Edit Auction</h2>
+                    <h2 class="mb-6" data-i18n="admin.createEditCollection">إنشاء / تعديل مجموعة</h2>
                     <form id="auction-form" class="admin-form">
                         <div class="form-row">
                             <div class="form-group">
@@ -219,9 +219,9 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" data-i18n="admin.auctionImage">Auction Cover Image</label>
+                                <label class="form-label" data-i18n="admin.collectionImage">صورة غلاف المجموعة</label>
                                 <input type="file" class="form-input" name="auctionImage" accept="image/*">
-                                <small class="text-muted" data-i18n="admin.auctionImageHelp">Upload a cover image for this auction (optional)</small>
+                                <small class="text-muted" data-i18n="admin.collectionImageHelp">ارفع صورة غلاف للمجموعة (اختياري)</small>
                             </div>
                         </div>
 
@@ -233,12 +233,12 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" data-i18n="admin.createAuction">Create Auction</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="admin.createCollection">إنشاء مجموعة</button>
                     </form>
                 </div>
 
                 <div class="admin-section">
-                    <h2 class="mb-6" data-i18n="admin.existingAuctions">Existing Auctions</h2>
+                    <h2 class="mb-6" data-i18n="admin.existingCollections">المجموعات الموجودة</h2>
                     <div class="table-container">
                         <table class="table" id="auctions-table">
                             <thead>
@@ -377,13 +377,16 @@
 
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="auction.startDate">Auction Starts <span style="opacity:.6;font-weight:400;">(optional)</span></label>
-                                            <input type="datetime-local" class="form-input" name="startDate">
+                                            <label class="form-label" data-i18n="auction.startDate">تاريخ بداية المزاد <span style="opacity:.6;font-weight:400;">(اختياري — اتركه فارغاً للمعرض)</span></label>
+                                            <input type="datetime-local" class="form-input" name="startDate" id="lot-start-date" onchange="_adminCheckDates()">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" data-i18n="auction.endDate">Auction Ends <span style="opacity:.6;font-weight:400;">(optional)</span></label>
-                                            <input type="datetime-local" class="form-input" name="endDate">
+                                            <label class="form-label" data-i18n="auction.endDate">تاريخ نهاية المزاد <span style="opacity:.6;font-weight:400;">(اختياري)</span></label>
+                                            <input type="datetime-local" class="form-input" name="endDate" id="lot-end-date" onchange="_adminCheckDates()">
                                         </div>
+                                    </div>
+                                    <div id="lot-date-warning" style="display:none;background:rgba(200,80,50,.1);border:1px solid rgba(200,80,50,.4);border-radius:6px;padding:10px 14px;font-size:0.85rem;color:#c85032;margin-top:-8px;">
+                                        &#9888; يجب تحديد تاريخ البداية <strong>والنهاية</strong> معاً، أو تركهما فارغين. لا يمكن تحديد تاريخ واحد فقط.
                                     </div>
 
                                     <div class="form-row">
@@ -433,42 +436,6 @@
                             <button type="submit" class="btn btn-primary btn-lg" data-i18n="admin.createLot">Create
                                 Lot</button>
                         </div>
-                    </form>
-
-                    <!-- Media Upload Section -->
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="admin.lotMedia">Lot Media (Images & Videos)</label>
-                        <p style="font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 1rem;"
-                            data-i18n="admin.lotMediaHelp">
-                            Upload images and videos for this lot. The first item will be the cover image.
-                        </p>
-
-                        <div class="media-upload-zone" id="lot-media-upload-zone">
-                            <input type="file" id="lot-media-input" multiple accept="image/*,video/*"
-                                style="display: none" onchange="lotMediaManager.handleFilesSelect(event)">
-                            <button type="button" class="btn btn-secondary"
-                                onclick="document.getElementById('lot-media-input').click()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="17 8 12 3 7 8"></polyline>
-                                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                                </svg>
-                                <span data-i18n="admin.addImagesVideos">Add Images/Videos</span>
-                            </button>
-                            <div class="media-error" id="lot-media-error"
-                                style="display: none; color: var(--color-error); margin-top: 0.5rem; font-size: 0.875rem;">
-                            </div>
-                        </div>
-
-                        <!-- Media Preview Grid -->
-                        <div id="lot-media-preview-grid" class="media-preview-grid"
-                            style="display: none; margin-top: 1rem;">
-                            <!-- Media items will be added here by JavaScript -->
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" data-i18n="admin.createLot">Create Lot</button>
                     </form>
                 </div>
 
@@ -730,6 +697,18 @@
             // Default View
             switchView('dashboard');
         });
+    </script>
+
+    <script>
+    function _adminCheckDates() {
+        var s = document.getElementById('lot-start-date');
+        var e = document.getElementById('lot-end-date');
+        var w = document.getElementById('lot-date-warning');
+        if (!s || !e || !w) return;
+        var hasS = !!(s.value && s.value.trim());
+        var hasE = !!(e.value && e.value.trim());
+        w.style.display = (hasS !== hasE) ? 'block' : 'none';
+    }
     </script>
 </body>
 

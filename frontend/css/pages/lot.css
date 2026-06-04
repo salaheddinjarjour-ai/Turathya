@@ -607,3 +607,50 @@ html[dir="rtl"] .bid-modal-header-inner {
 html[dir="rtl"] .bid-stat-block {
     direction: rtl;
 }
+/* ── Gallery/Collection WA inquiry button ───────────── */
+.collection-detail__wa-section {
+    padding-top: 0;
+}
+.collection-detail__wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: background 0.2s ease, transform 0.2s ease,
+                box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(37,211,102,.3);
+}
+.collection-detail__wa-btn:hover {
+    background: #1ebe5d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37,211,102,.4);
+}
+
+/* Ended auction: final price highlight */
+.lot-ended-banner {
+    background: rgba(0,0,0,.05);
+    border: 1px solid rgba(198,164,108,.3);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.lot-ended-banner .ended-label {
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-text-muted, #888);
+    margin-bottom: 6px;
+}
+.lot-ended-banner .ended-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #C6A46C;
+}

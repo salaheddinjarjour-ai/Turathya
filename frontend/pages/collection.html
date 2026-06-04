@@ -103,7 +103,7 @@
         <div class="col-hero__overlay"></div>
         <div class="col-hero__content">
             <h1 class="col-hero__title" data-i18n="nav.collection">Collection</h1>
-            <p class="col-hero__sub" data-i18n="collection.subtitle">All lots, past and present.</p>
+            <p class="col-hero__sub" data-i18n="collection.subtitle">قطع نادرة للاستفسار والاقتناء — لم تدخل المزاد بعد.</p>
             <div class="col-hero__line"></div>
         </div>
     </section>
@@ -115,11 +115,9 @@
             <div class="filters-wrapper mb-12">
 
                 <div class="filter-group">
-                    <label data-i18n="collection.filterStatus">الحالة</label>
+                    <label data-i18n="collection.filterStatus">المعرض</label>
                     <div class="filter-tabs">
-                        <button class="active" data-status="all" data-i18n="common.all">الكل</button>
-                        <button data-status="active" data-i18n="auction.live">مباشر</button>
-                        <button data-status="closed" data-i18n="auction.ended">منتهي</button>
+                        <button class="active" data-status="gallery" data-i18n="collection.gallery">معرض الفن</button>
                     </div>
                 </div>
 
@@ -294,25 +292,10 @@
         }
 
         function applyFilters() {
-            const now = new Date();
+            // Gallery page: show ONLY lots without auction dates assigned
             filteredLots = allLots.filter(lot => {
-                const startDate = lot.start_date ? new Date(lot.start_date) : null;
-                const endDate   = lot.end_date   ? new Date(lot.end_date)   : null;
-                const isLiveWindow = (!startDate || startDate <= now) && endDate && endDate > now;
-                const isClosed = endDate && endDate < now;
-                // Collection-only items (no auction dates) are always shown under 'all'
-                const isCollectionOnly = !startDate && !endDate;
-
-                if (filters.status === 'active') {
-                    // Collection-only items have no active window — exclude them from 'active' filter
-                    if (isCollectionOnly) return false;
-                    if (!isLiveWindow || lot.status !== 'active') return false;
-                }
-                if (filters.status === 'closed') {
-                    // Collection-only items are never 'closed' — exclude them
-                    if (isCollectionOnly) return false;
-                    if (!isClosed) return false;
-                }
+                const isGallery = !lot.start_date && !lot.end_date;
+                if (!isGallery) return false;
                 if (filters.categoryId && (lot.category_id || lot.auction_id) !== filters.categoryId) return false;
                 if (filters.productType && lot.category !== filters.productType) return false;
                 return true;
@@ -346,14 +329,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initCollection();
 
-            document.querySelectorAll('.filter-tabs button').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    document.querySelectorAll('.filter-tabs button').forEach(b => b.classList.remove('active'));
-                    e.currentTarget.classList.add('active');
-                    filters.status = e.currentTarget.dataset.status;
-                    applyFilters();
-                });
-            });
+            // Status filter removed: collection page is gallery-only
 
             document.getElementById('group-select').addEventListener('change', e => {
                 filters.categoryId = e.target.value;

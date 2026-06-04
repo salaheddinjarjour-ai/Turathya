@@ -386,74 +386,88 @@ async function confirmDeleteAuction(auctionId) {
 
 // ==================== LOAD LOTS ====================
 
+function _adminLotState(lot) {
+    var now = new Date();
+    var start = lot.start_date ? new Date(lot.start_date) : null;
+    var end   = lot.end_date   ? new Date(lot.end_date)   : null;
+    if (!start && !end) return 'gallery';
+    if (end && end < now) return 'ended';
+    if (start && start > now) return 'upcoming';
+    return 'active';
+}
+
+function _buildLotRow(lot) {
+    var estimate = (lot.estimate_low && lot.estimate_high)
+        ? ('$' + Number(lot.estimate_low).toLocaleString() + ' - $' + Number(lot.estimate_high).toLocaleString())
+        : 'N/A';
+    var currentBid = (lot.current_bid && parseFloat(lot.current_bid) > 0)
+        ? ('$' + parseFloat(lot.current_bid).toLocaleString())
+        : t('admin.noBids');
+    var bidderSafe = (lot.bidder_name || '').replace(/'/g, "\\'");
+    var titleSafe  = (lot.title || '').replace(/'/g, "\\'");
+    var highestBidder = lot.bidder_name
+        ? '<a href="#" onclick="showBidderInfo(\'' + lot.id + '\',\'' + bidderSafe + '\',' + lot.lot_number + ');return false;" class="text-accent" style="cursor:pointer;text-decoration:underline;">' + lot.bidder_name + '</a>'
+        : '<span class="text-muted">-</span>';
+    var featColor = lot.is_featured ? '#C6A46C' : '#ccc';
+    var featBtn   = '<button onclick="toggleLotFeatured(\'' + lot.id + '\',' + (!!lot.is_featured) + ')" title="' + (lot.is_featured ? 'Remove from homepage' : 'Feature on homepage') + '" style="background:none;border:none;cursor:pointer;font-size:1.3rem;line-height:1;padding:2px 6px;color:' + featColor + ';transition:color .2s;" onmouseover="this.style.color=\'#C6A46C\'" onmouseout="this.style.color=\'' + featColor + '\'">&#9733;</button>';
+    return '<tr>'
+        + '<td>' + lot.lot_number + '</td>'
+        + '<td>' + (lot.title || '-') + '</td>'
+        + '<td>' + (lot.auction_title || '-') + '</td>'
+        + '<td>' + estimate + '</td>'
+        + '<td>' + currentBid + '</td>'
+        + '<td>' + highestBidder + '</td>'
+        + '<td style="text-align:center;">' + featBtn + '</td>'
+        + '<td>'
+        + '<button class="btn btn-ghost btn-sm" onclick="editLot(\'' + lot.id + '\')">' + t('buttons.edit') + '</button> '
+        + '<button class="btn btn-ghost btn-sm" onclick="confirmDeleteLot(\'' + lot.id + '\',' + lot.lot_number + ',\'' + titleSafe + '\')">' + t('buttons.delete') + '</button>'
+        + '</td>'
+        + '</tr>';
+}
+
+function _lotsGroupHeader(label, bgColor, count) {
+    return '<tr style="background:' + bgColor + ';pointer-events:none;">'
+        + '<td colspan="8" style="padding:8px 14px;font-size:0.75rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#fff;border:none;">'
+        + label + ' <span style="opacity:.65;font-weight:400;">(' + count + ')</span>'
+        + '</td></tr>';
+}
+
 window.loadLots = async function () {
     try {
         const { lots } = await adminAPI.lots.getAll();
         const tbody = document.querySelector('#lots-table tbody');
         if (!tbody) return;
 
-        if (lots.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" style="padding: 0;">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">
-                                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-                            </div>
-                            <h3 class="empty-state-title" data-i18n="admin.noLots">No Lots Found</h3>
-                            <p class="empty-state-text" data-i18n="admin.noLotsDesc">Add lots to your auctions to display them here.</p>
-                        </div>
-                    </td>
-                </tr>`;
-        } else {
-            tbody.innerHTML = lots.map(lot => {
-                const estimate = lot.estimate_low && lot.estimate_high
-                    ? `$${lot.estimate_low.toLocaleString()} - $${lot.estimate_high.toLocaleString()}`
-                    : 'N/A';
-                const currentBid = lot.current_bid && parseFloat(lot.current_bid) > 0
-                    ? `$${parseFloat(lot.current_bid).toLocaleString()}`
-                    : t('admin.noBids');
-
-                // Highest bidder display
-                const highestBidder = lot.bidder_name
-                    ? `<a href="#" onclick="showBidderInfo('${lot.id}', '${(lot.title || '').replace(/'/g, "\\'")}', ${lot.lot_number}); return false;" class="text-accent" style="cursor: pointer; text-decoration: underline;">${lot.bidder_name}</a>`
-                    : `<span class="text-muted">${t('admin.noBids')}</span>`;
-
-                // Use the lot's actual status field
-                const statusBadgeClass = lot.status === 'active' ? 'success' : 'secondary';
-                const statusText = lot.status.charAt(0).toUpperCase() + lot.status.slice(1);
-
-                return `
-                    <tr>
-                        <td>${lot.lot_number}</td>
-                        <td>${lot.title}</td>
-                        <td>${lot.auction_title || 'N/A'}</td>
-                        <td>${estimate}</td>
-                        <td>${currentBid}</td>
-                        <td>${highestBidder}</td>
-                        <td><span class="badge badge-${statusBadgeClass}">${statusText}</span></td>
-                        <td style="text-align:center;">
-                            <button
-                                onclick="toggleLotFeatured('${lot.id}', ${!!lot.is_featured})"
-                                title="${lot.is_featured ? 'Remove from homepage' : 'Feature on homepage'}"
-                                style="background:none;border:none;cursor:pointer;font-size:1.3rem;line-height:1;padding:2px 6px;color:${lot.is_featured ? '#C6A46C' : '#ccc'};transition:color .2s;"
-                                onmouseover="this.style.color='#C6A46C'"
-                                onmouseout="this.style.color='${lot.is_featured ? '#C6A46C' : '#ccc'}'"
-                            >★</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-ghost btn-sm" onclick="editLot('${lot.id}')">${t('buttons.edit')}</button>
-                            <button class="btn btn-ghost btn-sm" onclick="confirmDeleteLot('${lot.id}', ${lot.lot_number}, '${(lot.title || '').replace(/'/g, "\\'")}')">&#8203;${t('buttons.delete')}</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+        if (!lots || lots.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="padding:0;">'
+                + '<div class="empty-state">'
+                + '<div class="empty-state-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>'
+                + '<h3 class="empty-state-title" data-i18n="admin.noLots">No Lots Found</h3>'
+                + '<p class="empty-state-text" data-i18n="admin.noLotsDesc">Add lots to display them here.</p>'
+                + '</div></td></tr>';
+            return;
         }
+
+        // Group lots by their computed state
+        var gallery  = lots.filter(function(l){ return _adminLotState(l) === 'gallery';  });
+        var active   = lots.filter(function(l){ return _adminLotState(l) === 'active';   });
+        var upcoming = lots.filter(function(l){ return _adminLotState(l) === 'upcoming'; });
+        var ended    = lots.filter(function(l){ return _adminLotState(l) === 'ended';    });
+
+        var html = '';
+        if (active.length)   html += _lotsGroupHeader('[Active]  \u0645\u0632\u0627\u062f \u0646\u0634\u0637 - Active Auction', '#2e7d32', active.length)   + active.map(_buildLotRow).join('');
+        if (upcoming.length) html += _lotsGroupHeader('[Soon]    \u0642\u0627\u062f\u0645 - Upcoming Auction',                   '#1565c0', upcoming.length) + upcoming.map(_buildLotRow).join('');
+        if (gallery.length)  html += _lotsGroupHeader('[Gallery] \u0645\u0639\u0631\u0636 - Gallery',                           '#6d4c41', gallery.length)  + gallery.map(_buildLotRow).join('');
+        if (ended.length)    html += _lotsGroupHeader('[Ended]   \u0627\u0646\u062a\u0647\u0649 - Ended',                       '#37474f', ended.length)   + ended.map(_buildLotRow).join('');
+
+        tbody.innerHTML = html;
+        if (window.i18n) window.i18n.translatePage();
     } catch (error) {
         console.error('Failed to load lots:', error);
         showError(t('notifications.failedLoadLots'));
     }
 }
+
 
 async function confirmDeleteLot(lotId, lotNumber, title) {
     if (!confirm(tt('admin.deleteLotConfirm', { lotNumber, title }))) {
@@ -613,6 +627,16 @@ async function handleLotForm(event) {
     // Extract and convert lot-level dates (optional)
     const startDateLocal = formData.get('startDate');
     const endDateLocal = formData.get('endDate');
+
+    // Task 2: both-dates-or-neither validation
+    const hasStart = !!(startDateLocal && startDateLocal.trim());
+    const hasEnd   = !!(endDateLocal   && endDateLocal.trim());
+    const warningEl = document.getElementById('lot-date-warning');
+    if (warningEl) warningEl.style.display = (hasStart !== hasEnd) ? 'block' : 'none';
+    if (hasStart !== hasEnd) {
+        showError('يجب تحديد تاريخ البداية والنهاية معاً، أو تركهما فارغين. Both dates must be set together.');
+        return;
+    }
 
     const lotData = {
         category_id: formData.get('categoryId') || formData.get('auctionId'),

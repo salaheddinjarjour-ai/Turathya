@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
         (SELECT u.email FROM bids b JOIN users u ON b.user_id = u.id WHERE b.lot_id = l.id ORDER BY b.amount DESC LIMIT 1) as bidder_email,
         (SELECT u.phone FROM bids b JOIN users u ON b.user_id = u.id WHERE b.lot_id = l.id ORDER BY b.amount DESC LIMIT 1) as bidder_phone
       FROM lots l
-      JOIN auctions a ON l.auction_id = a.id
+      LEFT JOIN auctions a ON l.auction_id = a.id
       WHERE 1=1
     `;
         const params = [];
@@ -71,7 +71,15 @@ router.post('/', [
     (0, express_validator_1.body)('starting_bid').isFloat({ min: 0 }),
     (0, express_validator_1.body)('bid_increment').optional().isFloat({ min: 0 }),
     (0, express_validator_1.body)('start_date').optional().isISO8601(),
-    (0, express_validator_1.body)('end_date').optional().isISO8601()
+    (0, express_validator_1.body)('end_date').optional().isISO8601(),
+    // Custom: both dates must be provided together
+    (0, express_validator_1.body)('start_date').custom((val, { req }) => {
+        const has_start = !!val;
+        const has_end = !!(req.body?.end_date);
+        if (has_start !== has_end)
+            throw new Error('Both start_date and end_date must be provided together, or neither.');
+        return true;
+    })
 ], async (req, res) => {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -79,14 +87,15 @@ router.post('/', [
             return res.status(400).json({ errors: errors.array() });
         }
         const { auction_id, category_id, lot_number, title, description, category, condition, provenance, title_en, title_ar, description_en, description_ar, category_en, category_ar, condition_en, condition_ar, provenance_en, provenance_ar, estimate_low, estimate_high, starting_bid, reserve_price, bid_increment = 100, start_date, end_date } = req.body;
-        const resolvedCategoryId = category_id || auction_id;
-        if (!resolvedCategoryId) {
-            return res.status(400).json({ error: 'category_id is required' });
-        }
-        // Check auction exists
-        const auctionCheck = await database_1.pool.query('SELECT id, title FROM auctions WHERE id = $1', [resolvedCategoryId]);
-        if (auctionCheck.rows.length === 0) {
-            return res.status(404).json({ error: 'Auction not found' });
+        const resolvedCategoryId = category_id || auction_id || null;
+        // Validate group exists only when provided
+        let auctionTitle = null;
+        if (resolvedCategoryId) {
+            const auctionCheck = await database_1.pool.query('SELECT id, title FROM auctions WHERE id = $1', [resolvedCategoryId]);
+            if (auctionCheck.rows.length === 0) {
+                return res.status(404).json({ error: 'Collection/group not found' });
+            }
+            auctionTitle = auctionCheck.rows[0]?.title;
         }
         const result = await database_1.pool.query(`INSERT INTO lots (
           id, auction_id, lot_number, title, description, category, condition,
@@ -113,7 +122,7 @@ router.post('/', [
         });
         void (0, whatsappBridge_1.notifyNewLotCreated)({
             ...result.rows[0],
-            auction_title: auctionCheck.rows[0]?.title
+            auction_title: auctionTitle
         }).catch((error) => {
             console.error('Automated WhatsApp notification (new product) failed:', error);
         });
@@ -138,6 +147,20 @@ router.patch('/:id', async (req, res) => {
             }
             delete updates.category_id;
         }
+        // Validate: both dates or neither
+        const newStart = 'start_date' in updates ? updates.start_date : undefined;
+        const newEnd = 'end_date' in updates ? updates.end_date : undefined;
+        if ((newStart && !newEnd) || (!newStart && newEnd)) {
+            // One date being cleared — fetch the other from DB
+            const existing = await database_1.pool.query('SELECT start_date, end_date FROM lots WHERE id = $1', [id]);
+            if (existing.rows.length) {
+                const merged_start = newStart !== undefined ? newStart : existing.rows[0].start_date;
+                const merged_end = newEnd !== undefined ? newEnd : existing.rows[0].end_date;
+                if ((!!merged_start) !== (!!merged_end)) {
+                    return res.status(400).json({ error: 'Both start_date and end_date must be set together, or both must be cleared.' });
+                }
+            }
+        }
         const fields = Object.keys(updates);
         if (fields.length === 0) {
             return res.status(400).json({ error: 'No fields to update' });
@@ -150,9 +173,18 @@ router.patch('/:id', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Lot not found' });
         }
+        // Audit log: record state transition
+        const lot = result.rows[0];
+        const hasAuctionDates = !!(lot.start_date && lot.end_date);
+        const now = new Date();
+        const lotState = !hasAuctionDates ? 'gallery'
+            : (new Date(lot.end_date) < now ? 'ended'
+                : (new Date(lot.start_date) <= now ? 'active_auction' : 'upcoming_auction'));
+        console.log(`[AUDIT] Lot ${id} updated by ${req.user?.email || 'admin'} at ${now.toISOString()} — state: ${lotState}`);
         res.json({
             message: 'Lot updated successfully',
-            lot: result.rows[0]
+            lot,
+            state: lotState
         });
     }
     catch (error) {

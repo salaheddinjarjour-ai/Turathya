@@ -1,0 +1,76 @@
+/* ═══════════════════════════════════════════════════
+   TURATHYA — WhatsApp Floating Button
+   Shown on every page, bottom-right corner.
+   ═══════════════════════════════════════════════════ */
+
+#turathya-wa-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #25D366;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px 12px 14px;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.38), 0 2px 8px rgba(0,0,0,0.18);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.22s ease,
+              background 0.18s ease;
+  animation: wa-fab-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.8s both;
+}
+
+#turathya-wa-fab:hover {
+  background: #1ebe5d;
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.48), 0 3px 10px rgba(0,0,0,0.2);
+}
+
+#turathya-wa-fab:active {
+  transform: scale(0.97);
+}
+
+#turathya-wa-fab svg {
+  flex-shrink: 0;
+}
+
+#turathya-wa-fab .wa-fab-label {
+  white-space: nowrap;
+}
+
+@keyframes wa-fab-pop {
+  from { opacity: 0; transform: scale(0.5) translateY(20px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0);    }
+}
+
+/* RTL: flip to bottom-left */
+[dir="rtl"] #turathya-wa-fab {
+  right: auto;
+  left: 28px;
+}
+
+/* Mobile: compact — icon only */
+@media (max-width: 480px) {
+  #turathya-wa-fab {
+    padding: 14px;
+    border-radius: 50%;
+    bottom: 20px;
+    right: 16px;
+  }
+  [dir="rtl"] #turathya-wa-fab {
+    right: auto;
+    left: 16px;
+  }
+  #turathya-wa-fab .wa-fab-label {
+    display: none;
+  }
+}

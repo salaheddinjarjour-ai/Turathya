@@ -258,8 +258,28 @@
 .lot-timer.ending-soon-timer { color: #C05A28; font-weight: var(--weight-semibold); }
 
 /* ── Gallery mode: hide price row ───────────────────── */
-.lot-card:not(.has-auction) .lot-price-row,
-.lot-card:not(.has-auction) .lot-divider { display: none; }
+.lot-card:not(.has-auction) .lot-price-row { display: none; }
+
+/* WhatsApp inquiry button on gallery cards */
+.lot-wa-inquiry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #25D366;
+  color: #fff !important;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: background 0.18s ease, transform 0.18s ease;
+  white-space: nowrap;
+}
+.lot-wa-inquiry-btn:hover {
+  background: #1ebe5d;
+  transform: translateY(-1px);
+}
 
 /* ── Dark theme / OS dark mode ──────────────────────── */
 @media (prefers-color-scheme: dark) {
