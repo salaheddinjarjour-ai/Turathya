@@ -74,11 +74,11 @@ async function serveOgPage(id: string, req: Request, res: Response): Promise<voi
             priceText = `التقدير: $${Number(lot.estimate_low).toLocaleString()} – $${Number(lot.estimate_high).toLocaleString()}`;
         }
 
-        // OG image — must be an absolute public URL (data: URIs not supported)
-        const primaryImage = lot.primary_image as string | null;
-        const ogImage = (primaryImage && !primaryImage.startsWith('data:'))
-            ? primaryImage
-            : `${SITE_URL}/assets/images/og-default.png`;
+        // OG image — always use the /api/lots/:id/og-image endpoint which:
+        //   • decodes base64 data: URIs from DB and serves them as real HTTP images
+        //   • redirects to external URLs (Cloudinary, etc.) directly
+        // This gives WhatsApp/Facebook a real, crawlable image URL.
+        const ogImage = `${SITE_URL}/api/lots/${encodeURIComponent(id)}/og-image`;
 
         // Meta description
         const metaDesc = [

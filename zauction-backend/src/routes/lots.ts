@@ -137,4 +137,59 @@ router.get('/:id/bids', async (req, res) => {
     }
 });
 
+// ── Public OG image endpoint ─────────────────────────────────────────
+// Serves the lot's primary image as a real HTTP image response so that
+// social crawlers (WhatsApp, Facebook, etc.) can use it as og:image.
+// Works with both data: URIs stored in DB and external CDN URLs.
+router.get('/:id/og-image', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await pool.query(`
+            SELECT COALESCE(
+                (SELECT url FROM lot_media
+                 WHERE lot_id = l.id AND media_type = 'image'
+                 ORDER BY display_order LIMIT 1),
+                l.image_data
+            ) as primary_image
+            FROM lots l
+            WHERE l.id = $1
+        `, [id]);
+
+        if (result.rows.length === 0 || !result.rows[0].primary_image) {
+            // Redirect to default OG image
+            return res.redirect('/assets/images/og-default.png');
+        }
+
+        const img = result.rows[0].primary_image as string;
+
+        // External URL — redirect to it
+        if (!img.startsWith('data:')) {
+            res.setHeader('Cache-Control', 'public, max-age=86400');
+            return res.redirect(img);
+        }
+
+        // data: URI — decode and serve as real image
+        // Format: data:<mimeType>;base64,<data>
+        const matches = img.match(/^data:([^;]+);base64,(.+)$/s);
+        if (!matches) {
+            return res.redirect('/assets/images/og-default.png');
+        }
+
+        const mimeType = matches[1];  // e.g. "image/jpeg"
+        const base64Data = matches[2];
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader('Content-Length', buffer.length);
+        res.setHeader('Cache-Control', 'public, max-age=86400'); // 24h cache
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.send(buffer);
+
+    } catch (error) {
+        console.error('OG image error:', error);
+        res.redirect('/assets/images/og-default.png');
+    }
+});
+
 export default router;
