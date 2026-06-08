@@ -481,7 +481,7 @@ function isApproved() {
 // Redirect if not logged in
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = '//login';
+        window.location.href = '/login';
         return false;
     }
     return true;
@@ -605,9 +605,12 @@ const bidStatusWidget = {
         return lang === 'ar' ? 'ar-EG' : 'en-US';
     },
 
-    getLotHref(lotId) {
-        const inPagesDir = window.location.pathname.includes('/pages/');
-        return `${inPagesDir ? '' : 'pages/'}lot.html?id=${lotId}`;
+    getLotHref(lotId, lot) {
+        // Use SEO slug URL if we have the full lot object; fallback to /lot/<uuid>
+        if (lot && typeof getLotUrl === 'function') {
+            return getLotUrl(lot);
+        }
+        return `/lot/${encodeURIComponent(lotId)}`;
     },
 
     shouldShow() {
@@ -616,7 +619,7 @@ const bidStatusWidget = {
         if (user.role === 'admin') return false;
 
         const path = window.location.pathname.toLowerCase();
-        return !path.includes('//login') && !path.includes('//register');
+        return !path.includes('/login') && !path.includes('/register');
     },
 
     ensureElement() {
@@ -905,7 +908,7 @@ const livePageRefresh = {
             };
         }
 
-        if (path.endsWith('//auctions')) {
+        if (path.endsWith('/auctions')) {
             return async () => {
                 if (typeof loadFeaturedAuctions === 'function') await loadFeaturedAuctions();
                 if (typeof loadOngoingAuctions === 'function') await loadOngoingAuctions();
@@ -913,26 +916,26 @@ const livePageRefresh = {
             };
         }
 
-        if (path.endsWith('//auction')) {
+        if (path.endsWith('/auction')) {
             return async () => {
                 if (typeof loadLots === 'function') await loadLots();
             };
         }
 
-        if (path.endsWith('/pages/lot.html')) {
+        if (path.endsWith('/pages/lot.html') || path.startsWith('/lot/')) {
             return async () => {
                 if (typeof loadLot === 'function') await loadLot();
             };
         }
 
-        if (path.endsWith('//account')) {
+        if (path.endsWith('/account')) {
             return async () => {
                 if (typeof loadBids === 'function') await loadBids();
                 if (typeof loadWatchlist === 'function') await loadWatchlist();
             };
         }
 
-        if (path.endsWith('//collection')) {
+        if (path.endsWith('/collection')) {
             return async () => {
                 if (typeof initCollection === 'function') await initCollection();
             };
@@ -943,9 +946,9 @@ const livePageRefresh = {
 
     getIntervalMs() {
         const path = window.location.pathname.toLowerCase();
-        if (path.endsWith('/pages/lot.html')) return 10000;
-        if (path.endsWith('//auction')) return 15000;
-        if (path.endsWith('//account')) return 5000;
+        if (path.endsWith('/pages/lot.html') || path.startsWith('/lot/')) return 10000;
+        if (path.endsWith('/auction')) return 15000;
+        if (path.endsWith('/account')) return 5000;
         return 30000;
     },
 
