@@ -127,9 +127,13 @@ function buildGalleryCard(lot) {
   const imgHTML = buildCardImageHTML(images, lotTag, '');
 
   // Resolve lot page path — works from both root (index.html) and pages/ subfolder
-  const _inPages = window.location.pathname.includes('/pages/');
-  const _lotBase = _inPages ? 'lot.html' : 'pages/lot.html';
-  const lotUrl = `${_lotBase}?id=${lot.id}&view=collection`;
+  // Build SEO slug URL (e.g. /lot/antique-vase-lot-203-<uuid>)
+  const lotUrl = (typeof getLotUrl === 'function')
+    ? getLotUrl(lot, { view: 'collection' })
+    : (() => {
+        const _inPages = window.location.pathname.includes('/pages/');
+        return (_inPages ? 'lot.html' : 'pages/lot.html') + '?id=' + lot.id + '&view=collection';
+      })();
 
   // WhatsApp inquiry — separate <a> so it is NOT nested inside another <a>
   const waNumber = window.TURATHYA_WA_NUMBER || '966500000000';
@@ -222,7 +226,7 @@ function buildAuctionCard(lot, isPast) {
   const archiveParam = isPast ? '&archive=true' : '';
 
   return `
-    <a href="lot.html?id=${lot.id}${archiveParam}" class="${cardClass}">
+    <a href="${(typeof getLotUrl === 'function') ? getLotUrl(lot, archiveParam ? {archive:true} : {}) : ('lot.html?id=' + lot.id + archiveParam)}" class="${cardClass}">
       ${imgHTML}
       <div class="lot-body">
         <div class="lot-cat">${cat}</div>

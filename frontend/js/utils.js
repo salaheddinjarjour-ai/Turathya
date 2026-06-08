@@ -208,6 +208,77 @@ function getAuctionHref(auction, basePath = '') {
 
 // ==================== URL HELPERS ====================
 
+
+// ══════════════════════════════════════════════════════════════════
+//  Slug URL helpers — SEO-friendly product URLs
+//  Format: /lot/<title-slug>-<uuid>
+//  Example: /lot/antique-gold-watch-lot-203-f7fe478f-ef66-...
+// ══════════════════════════════════════════════════════════════════
+
+/**
+ * Transliterate Arabic characters to Latin for URL slugs.
+ * Falls back to English title if available.
+ */
+function makeLotSlug(lot) {
+    // Prefer English title for slug (cleanest for SEO)
+    const title = (lot.title_en || lot.title || lot.title_ar || '').trim();
+    const lotNum = lot.lot_number ? `lot-${lot.lot_number}` : '';
+
+    const arabicMap = {
+        'أ':'a','إ':'a','آ':'a','ا':'a','ب':'b','ت':'t','ث':'th','ج':'j',
+        'ح':'h','خ':'kh','د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh',
+        'ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q',
+        'ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ؤ':'w','ي':'y',
+        'ئ':'y','ى':'a','ة':'h','ء':'','لا':'la','ال':'al'
+    };
+
+    let slug = title.toLowerCase();
+    // Replace Arabic letters
+    Object.entries(arabicMap).forEach(([ar, lat]) => {
+        slug = slug.split(ar).join(lat);
+    });
+
+    slug = slug
+        .replace(/[^a-z0-9\s-]/g, '')   // remove non-latin chars
+        .replace(/\s+/g, '-')             // spaces → dashes
+        .replace(/-+/g, '-')               // collapse multiple dashes
+        .replace(/^-|-$/g, '')             // trim leading/trailing dashes
+        .slice(0, 60);                     // max 60 chars for title part
+
+    const parts = [slug, lotNum, lot.id].filter(Boolean);
+    return parts.join('-');
+}
+
+/**
+ * Build a canonical SEO-friendly URL for a lot.
+ * Returns absolute URL like /lot/antique-gold-watch-lot-203-<uuid>
+ */
+function getLotUrl(lot, opts) {
+    opts = opts || {};
+    const slug = makeLotSlug(lot);
+    const base  = '/lot/' + slug;
+    const params = new URLSearchParams();
+    if (opts.view)    params.set('view', opts.view);
+    if (opts.archive) params.set('archive', '1');
+    const qs = params.toString();
+    return qs ? base + '?' + qs : base;
+}
+
+/**
+ * Extract lot UUID from either:
+ *   /lot/<slug>-<uuid>            (new SEO URL)
+ *   ?id=<uuid>                    (legacy URL)
+ */
+function getLotIdFromUrl() {
+    // Try slug URL first
+    const pathMatch = window.location.pathname.match(
+        /\/lot\/.+-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i
+    );
+    if (pathMatch) return pathMatch[1];
+    // Fallback to ?id= query param (backward compat)
+    return new URLSearchParams(window.location.search).get('id');
+}
+
 function getUrlParameter(name) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);

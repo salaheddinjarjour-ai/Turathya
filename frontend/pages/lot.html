@@ -191,7 +191,11 @@
         setTimeout(setHeaderHeight, 100);
     </script>
     <script>
-        const lotId = getUrlParameter('id');
+        // Support both /lot/<slug>-<uuid> (SEO URL) and ?id=<uuid> (legacy)
+        const lotId = (typeof getLotIdFromUrl === 'function')
+            ? getLotIdFromUrl()
+            : getUrlParameter('id');
+
 
         function refreshLotData() {
             loadLot();

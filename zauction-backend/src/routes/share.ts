@@ -23,8 +23,27 @@ function escHtml(str: string): string {
         .replace(/"/g, '&quot;');
 }
 
+
+// ── Slug generator (mirrors frontend getLotUrl) ────────────────────
+function makeLotSlug(lot: any): string {
+    const title = (lot.title_en || lot.title || lot.title_ar || '').trim();
+    const lotNum = lot.lot_number ? `lot-${lot.lot_number}` : '';
+    const arabicMap: Record<string, string> = {
+        'أ':'a','إ':'a','آ':'a','ا':'a','ب':'b','ت':'t','ث':'th','ج':'j',
+        'ح':'h','خ':'kh','د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh',
+        'ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q',
+        'ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ؤ':'w','ي':'y',
+        'ئ':'y','ى':'a','ة':'h','ء':''
+    };
+    let slug = title.toLowerCase();
+    Object.entries(arabicMap).forEach(([ar, lat]) => { slug = slug.split(ar).join(lat); });
+    slug = slug.replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')
+               .replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    return [slug, lotNum, lot.id].filter(Boolean).join('-');
+}
+
 async function serveOgPage(id: string, req: Request, res: Response): Promise<void> {
-    const fallbackUrl = `${SITE_URL}/pages/lot.html?id=${encodeURIComponent(id)}`;
+    const fallbackUrl = `${SITE_URL}/pages/lot.html?id=${encodeURIComponent(id)}`; // legacy fallback
 
     try {
         if (!id) {
@@ -88,7 +107,9 @@ async function serveOgPage(id: string, req: Request, res: Response): Promise<voi
         ].filter(Boolean).join(' • ').slice(0, 300);
 
         const ogTitle    = `${title}${lotTag ? ` — ${lotTag}` : ''} | ${SITE_NAME}`;
-        const lotPageUrl = `${SITE_URL}/pages/lot.html?id=${encodeURIComponent(id)}`;
+        // Build canonical SEO slug URL
+        const slug = makeLotSlug(lot);
+        const lotPageUrl = `${SITE_URL}/lot/${encodeURIComponent(slug)}`;
 
         // Detect social/search bots by User-Agent
         const ua    = req.headers['user-agent'] || '';
@@ -161,6 +182,17 @@ router.get('/lot/:id', (req: Request, res: Response) => {
 // passing the id as a query param.
 router.get('/lot-by-id', (req: Request, res: Response) => {
     const id = (req.query.id as string) || '';
+    serveOgPage(id, req, res);
+});
+
+// ── Route 3: /share/lot-by-slug?path=/lot/<slug>-<uuid>  ─────────
+// nginx proxies bot requests from /lot/<slug> here.
+// We extract the UUID from the end of the slug path.
+router.get('/lot-by-slug', (req: Request, res: Response) => {
+    const path = (req.query.path as string) || '';
+    // Extract UUID from end: e.g. /lot/antique-vase-lot-203-f7fe478f-ef66-49cd-84ea-51fd1f2509ad
+    const uuidMatch = path.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(?:[/?].*)?$/i);
+    const id = uuidMatch ? uuidMatch[1] : '';
     serveOgPage(id, req, res);
 });
 

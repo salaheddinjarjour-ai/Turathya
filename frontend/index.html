@@ -380,7 +380,7 @@
 
         function renderFeaturedCards(count) {
           container.innerHTML = featuredLots.slice(0, count).map(lot =>
-            buildGalleryCard(lot).replace('href="lot.html?', 'href="pages/lot.html?')
+            buildGalleryCard(lot)
           ).join('');
           initCardSliders(container);
           if (window.i18n) window.i18n.translatePage();
@@ -555,7 +555,7 @@
               const lTitle = localizedField(lot, 'title');
               const lCat = localizedField(lot, 'category');
               return `
-                <a href="pages/lot.html?id=${lot.id}" class="suggestion-card">
+                <a href="${(typeof getLotUrl === 'function') ? getLotUrl(lot) : ('pages/lot.html?id=' + lot.id)}" class="suggestion-card">
                   <img loading="lazy" src="${lot.primary_image || 'assets/images/placeholder.jpg'}" alt="${lTitle}" class="suggestion-card-image">
                   <div class="suggestion-card-content">
                     <div class="suggestion-card-title">${lTitle}</div>
