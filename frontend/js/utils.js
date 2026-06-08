@@ -203,7 +203,7 @@ function getAuctionHref(auction, basePath = '') {
     if (parseInt(auction.lot_count) === 1 && auction.single_lot_id) {
         return `${basePath}lot.html?id=${auction.single_lot_id}`;
     }
-    return `${basePath}auction.html?id=${auction.id}`;
+    return `${basePath}/auction?id=${auction.id}`;
 }
 
 // ==================== URL HELPERS ====================
@@ -563,7 +563,7 @@ function logout() {
     updateHeaderAuthState();
     
     // Redirect to home
-    window.location.href = '../index.html';
+    window.location.href = '/';
 }
 
 // ==================== TOAST NOTIFICATIONS ====================

@@ -21,7 +21,7 @@
    HOW TO CHANGE SLIDER CONTENT
    Edit the SLIDES array below. Each entry needs:
      {
-       src:      'path/to/image.jpg',   // relative to index.html
+       src:      'path/to/image.jpg',   // relative to /
        label:    'Category',            // eyebrow text (ALL CAPS rendered via CSS)
        title:    'Auction title',       // shown below label
        bid:      'Current bid: SAR …'  // or 'Estimate: …'
@@ -47,7 +47,7 @@
      selected from the TURATHYA catalogue. Overlay text is minimal:
      a category eyebrow, a concise title, and a bid price label.
 
-     Paths are relative to index.html (root of /frontend/).
+     Paths are relative to / (root of /frontend/).
   ────────────────────────────────────────────────────────────── */
   /* ──────────────────────────────────────────────────────────────
      FALLBACK SLIDES — only used if API is unavailable or empty

@@ -11,7 +11,7 @@ let currentLotData = null;
 async function showBidModal(lotId) {
     // Check if user is logged in
     if (!getToken()) {
-        window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
         return;
     }
 

@@ -26,7 +26,7 @@ async function loadWatchlistCache() {
 
 async function toggleWatchlist(lotId) {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
         return;
     }
 

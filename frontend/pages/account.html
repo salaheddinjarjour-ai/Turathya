@@ -246,7 +246,7 @@
                 return `
                     <tr>
                         <td><a href="lot.html?id=${bid.lot_id}" class="text-accent">${bid.lot_title || i18n.t('account.unknownLot')}</a></td>
-                        <td><a href="auction.html?id=${bid.auction_id}" class="text-sm text-muted">${bid.auction_title || 'Auction'}</a></td>
+                        <td><a href="/auction?id=${bid.auction_id}" class="text-sm text-muted">${bid.auction_title || 'Auction'}</a></td>
                         <td>${formatCurrency(bid.amount)}</td>
                         <td>${formatCurrency(liveCurrentBid)}</td>
                         <td>${statusBadge}</td>
@@ -322,12 +322,12 @@
             const currentUser = getCurrentUser();
 
             if (!currentUser) {
-                window.location.href = 'login.html';
+                window.location.href = '/login';
                 return;
             }
 
             if (currentUser.role === 'admin') {
-                window.location.href = 'admin.html';
+                window.location.href = '/admin';
                 return;
             }
 

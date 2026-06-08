@@ -126,7 +126,7 @@ function buildGalleryCard(lot) {
   const images = getLotImages(lot);
   const imgHTML = buildCardImageHTML(images, lotTag, '');
 
-  // Resolve lot page path — works from both root (index.html) and pages/ subfolder
+  // Resolve lot page path — works from both root (/) and pages/ subfolder
   // Build SEO slug URL (e.g. /lot/antique-vase-lot-203-<uuid>)
   const lotUrl = (typeof getLotUrl === 'function')
     ? getLotUrl(lot, { view: 'collection' })

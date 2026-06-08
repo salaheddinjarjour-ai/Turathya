@@ -120,7 +120,7 @@
 
                     <p class="text-center text-sm text-muted mt-6">
                         <span data-i18n="auth.alreadyHaveAccount">لديك حساب بالفعل؟;</span>
-                        <a href="login.html" class="text-accent" data-i18n="auth.haveAccount">تسجيل الدخول</a>
+                        <a href="/login" class="text-accent" data-i18n="auth.haveAccount">تسجيل الدخول</a>
                     </p>
                 </div>
             </div>
@@ -136,7 +136,7 @@
         // Redirect if already logged in
         const currentUser = getCurrentUser();
         if (currentUser) {
-            window.location.href = 'account.html';
+            window.location.href = '/account';
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -231,9 +231,9 @@
 
                 alert(window.i18n?.t?.('auth.accountCreated') || 'تم إنشاء الحساب بنجاح! جلستك نشطة.');
                 if (result?.user?.role === 'admin') {
-                    window.location.href = 'admin.html';
+                    window.location.href = '/admin';
                 } else {
-                    window.location.href = 'account.html';
+                    window.location.href = '/account';
                 }
             } catch (error) {
                 errorElement.textContent = error.message || (window.i18n?.t?.('auth.registrationFailed')) || 'فشل التسجيل. حاول مرة أخرى.';

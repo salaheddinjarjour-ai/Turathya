@@ -127,7 +127,7 @@ const authAPI = {
 
     logout() {
         clearAuth();
-        window.location.href = '../index.html';
+        window.location.href = '/';
     },
 
     forgotPassword: {
@@ -481,7 +481,7 @@ function isApproved() {
 // Redirect if not logged in
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = '/login.html';
+        window.location.href = '//login';
         return false;
     }
     return true;
@@ -496,7 +496,7 @@ function requireAdmin() {
             ? i18n.t('admin.accessDenied')
             : 'Admin access required';
         alert(message);
-        window.location.href = '/index.html';
+        window.location.href = '/';
         return false;
     }
     return true;
@@ -616,7 +616,7 @@ const bidStatusWidget = {
         if (user.role === 'admin') return false;
 
         const path = window.location.pathname.toLowerCase();
-        return !path.includes('/login.html') && !path.includes('/register.html');
+        return !path.includes('//login') && !path.includes('//register');
     },
 
     ensureElement() {
@@ -898,14 +898,14 @@ const livePageRefresh = {
     getHandler() {
         const path = window.location.pathname.toLowerCase();
 
-        if (path.endsWith('/index.html') || path === '/' || path.endsWith('/frontend/')) {
+        if (path.endsWith('//') || path === '/' || path.endsWith('/frontend/')) {
             return async () => {
                 if (typeof loadFeaturedAuctions === 'function') await loadFeaturedAuctions();
                 if (typeof loadEndingSoon === 'function') await loadEndingSoon();
             };
         }
 
-        if (path.endsWith('/pages/auctions.html')) {
+        if (path.endsWith('//auctions')) {
             return async () => {
                 if (typeof loadFeaturedAuctions === 'function') await loadFeaturedAuctions();
                 if (typeof loadOngoingAuctions === 'function') await loadOngoingAuctions();
@@ -913,7 +913,7 @@ const livePageRefresh = {
             };
         }
 
-        if (path.endsWith('/pages/auction.html')) {
+        if (path.endsWith('//auction')) {
             return async () => {
                 if (typeof loadLots === 'function') await loadLots();
             };
@@ -925,14 +925,14 @@ const livePageRefresh = {
             };
         }
 
-        if (path.endsWith('/pages/account.html')) {
+        if (path.endsWith('//account')) {
             return async () => {
                 if (typeof loadBids === 'function') await loadBids();
                 if (typeof loadWatchlist === 'function') await loadWatchlist();
             };
         }
 
-        if (path.endsWith('/pages/collection.html')) {
+        if (path.endsWith('//collection')) {
             return async () => {
                 if (typeof initCollection === 'function') await initCollection();
             };
@@ -944,8 +944,8 @@ const livePageRefresh = {
     getIntervalMs() {
         const path = window.location.pathname.toLowerCase();
         if (path.endsWith('/pages/lot.html')) return 10000;
-        if (path.endsWith('/pages/auction.html')) return 15000;
-        if (path.endsWith('/pages/account.html')) return 5000;
+        if (path.endsWith('//auction')) return 15000;
+        if (path.endsWith('//account')) return 5000;
         return 30000;
     },
 

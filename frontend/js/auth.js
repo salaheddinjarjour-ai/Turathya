@@ -9,7 +9,7 @@
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname);
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
         return false;
     }
     return true;
@@ -17,7 +17,7 @@ function requireLogin() {
 
 function requireAdmin() {
     if (!isAdmin()) {
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return false;
     }
     return true;

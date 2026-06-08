@@ -152,31 +152,31 @@ class I18n {
 
         // Update links
         const links = {
-            'logo-link':     `${rootPath}index.html`,
-            'auctions-link': `${pagesPath}auctions.html`,
-            'collection-link': `${pagesPath}collection.html`,
-            'about-link':    `${pagesPath}info/about-us.html`,
-            'contact-link':  `${pagesPath}info/contact.html`,
-            'account-link':  `${pagesPath}account.html`,
-            'admin-link':    `${pagesPath}admin.html`,
-            'login-link':    `${pagesPath}login.html`,
-            'register-link': `${pagesPath}register.html`,
+            'logo-link':     `${rootPath}/`,
+            'auctions-link': `${pagesPath}/auctions`,
+            'collection-link': `${pagesPath}/collection`,
+            'about-link':    `${pagesPath}/about-us`,
+            'contact-link':  `${pagesPath}/contact`,
+            'account-link':  `${pagesPath}/account`,
+            'admin-link':    `${pagesPath}/admin`,
+            'login-link':    `${pagesPath}/login`,
+            'register-link': `${pagesPath}/register`,
             // User menu dropdown
-            'user-login-link':    `${pagesPath}login.html`,
-            'user-register-link': `${pagesPath}register.html`,
-            'user-forgot-link':   `${pagesPath}login.html?forgot=1`,
+            'user-login-link':    `${pagesPath}/login`,
+            'user-register-link': `${pagesPath}/register`,
+            'user-forgot-link':   `${pagesPath}/login?forgot=1`,
             'user-profile-link':  `${pagesPath}profile.html`,
-            'user-auctions-link': `${pagesPath}my-auctions.html`,
+            'user-auctions-link': `${pagesPath}my-/auctions`,
             'user-settings-link': `${pagesPath}settings.html`,
             // Mobile overlay mirrors
-            'm-auctions-link':   `${pagesPath}auctions.html`,
-            'm-collection-link': `${pagesPath}collection.html`,
-            'm-about-link':      `${pagesPath}info/about-us.html`,
-            'm-contact-link':    `${pagesPath}info/contact.html`,
-            'm-account-link':    `${pagesPath}account.html`,
-            'm-admin-link':      `${pagesPath}admin.html`,
-            'm-login-link':      `${pagesPath}login.html`,
-            'm-register-link':   `${pagesPath}register.html`
+            'm-auctions-link':   `${pagesPath}/auctions`,
+            'm-collection-link': `${pagesPath}/collection`,
+            'm-about-link':      `${pagesPath}/about-us`,
+            'm-contact-link':    `${pagesPath}/contact`,
+            'm-account-link':    `${pagesPath}/account`,
+            'm-admin-link':      `${pagesPath}/admin`,
+            'm-login-link':      `${pagesPath}/login`,
+            'm-register-link':   `${pagesPath}/register`
         };
 
         Object.entries(links).forEach(([id, href]) => {
@@ -202,7 +202,7 @@ class I18n {
             // Determine root path based on current location
             // Simple heuristic: count depth from root
             // We assume frontend/ is root. 
-            // paths: /index.html (depth 0), /pages/auctions.html (depth 1), /pages/info/about.html (depth 2)
+            // paths: // (depth 0), //auctions (depth 1), //about (depth 2)
 
             const path = window.location.pathname;
             // Determine depth by checking for /pages/ and /info/
@@ -220,13 +220,13 @@ class I18n {
             footerContainer.innerHTML = html;
 
             // Update footer links to be relative to current page
-            // The partial has links like "pages/info/about.html" (relative to root)
+            // The partial has links like "/about" (relative to root)
             // We need to prepend rootPath to them?
-            // If rootPath is './', links are "pages/info/..." (Correct for index.html)
+            // If rootPath is './', links are "pages/info/..." (Correct for /)
             // If rootPath is '../', links become "../pages/info/..."
-            // From pages/auctions.html: "../pages/info/about.html" -> goes up to root, then down to pages/info. Correct.
+            // From /auctions: "/about" -> goes up to root, then down to pages/info. Correct.
             // If rootPath is '../../', links become "../../pages/info/..."
-            // From pages/info/about.html: "../../pages/info/about.html" -> goes up to root, then down. Correct.
+            // From /about: "/about" -> goes up to root, then down. Correct.
 
             const links = footerContainer.querySelectorAll('a');
             links.forEach(link => {
@@ -243,7 +243,7 @@ class I18n {
 
     setActiveNavLink() {
         const currentPath = window.location.pathname.toLowerCase();
-        const currentFile = currentPath.split('/').pop() || 'index.html';
+        const currentFile = currentPath.split('/').pop() || '/';
         const navLinks = document.querySelectorAll('.nav-link');
 
         navLinks.forEach(link => {

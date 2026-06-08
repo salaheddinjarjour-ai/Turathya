@@ -384,5 +384,5 @@ class MediaUploadManager {
     }
 }
 
-// Global instance (initialized in admin.html)
+// Global instance (initialized in /admin)
 let mediaUploadManager = null;

@@ -39,7 +39,7 @@
         <!-- Sidebar Navigation -->
         <aside class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-header">
-                <a href="../index.html" class="admin-logo">
+                <a href="/" class="admin-logo">
                     <img loading="lazy" src="../assets/images/logo_burgundy.png" alt="TURATHYA Admin"
                         style="height: 40px; width: auto;">
                 </a>
@@ -90,7 +90,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <a href="../index.html" class="nav-item">
+                <a href="/" class="nav-item">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                     </svg> <span data-i18n="admin.backToSite">Back to Site</span>
@@ -634,11 +634,11 @@
         // Check if user is logged in and is admin
         const currentUser = getCurrentUser();
         if (!currentUser) {
-            window.location.href = 'login.html?redirect=admin.html';
+            window.location.href = '/login?redirect=/admin';
         } else if (currentUser.role !== 'admin') {
             const deniedMessage = (typeof i18n !== 'undefined' && i18n?.t) ? i18n.t('admin.accessDenied') : 'Access denied. Admin privileges required.';
             alert(deniedMessage);
-            window.location.href = 'account.html';
+            window.location.href = '/account';
         }
 
         // Update welcome message - Moved to DOMContentLoaded after i18n init

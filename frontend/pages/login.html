@@ -186,7 +186,7 @@
 
                         <p class="text-center text-sm text-muted mt-4">
                             <span data-i18n="auth.noAccount">Don't have an account?</span>
-                            <a href="register.html" class="text-accent" data-i18n="auth.signUp">Register here</a>
+                            <a href="/register" class="text-accent" data-i18n="auth.signUp">Register here</a>
                         </p>
                     </div>
 
@@ -445,9 +445,9 @@
             try {
                 const result = await authAPI.login(phone, password);
                 if (result.user.role === 'admin') {
-                    window.location.replace('admin.html');
+                    window.location.replace('/admin');
                 } else {
-                    window.location.replace('account.html');
+                    window.location.replace('/account');
                 }
             } catch (err) {
                 errorEl.textContent = err.message || (window.i18n?.t?.('auth.loginFailed')) || 'Login failed.';

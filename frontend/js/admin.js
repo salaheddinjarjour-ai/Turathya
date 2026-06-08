@@ -296,7 +296,7 @@ window.loadWhatsAppIntegration = async function () {
 
 // Require admin access
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('admin.html')) {
+    if (window.location.pathname.includes('/admin')) {
         requireAdmin();
     }
 });
