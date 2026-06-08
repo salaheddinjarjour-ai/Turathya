@@ -54,25 +54,16 @@ class I18n {
         if (!headerContainer) return;
 
         try {
-            // Determine root path based on current location
-            const path = window.location.pathname;
-            let basePath = '';
-
-            if (path.includes('/pages/info/') || path.includes('\\pages\\info\\')) {
-                basePath = '../../';
-            } else if (path.includes('/pages/') || path.includes('\\pages\\')) {
-                basePath = '../';
-            }
-
-            const response = await fetch(`${basePath}partials/header.html?v=${new Date().getTime()}`);
+            // With clean URLs all pages are at root level — always fetch from /partials/
+            const response = await fetch(`/partials/header.html?v=${new Date().getTime()}`);
             if (!response.ok) throw new Error('Header not found');
 
             const html = await response.text();
             headerContainer.innerHTML = html;
 
-            // Update navigation links based on current directory
-            const isInSubdir = basePath !== '';
-            this.updateNavigationPaths(isInSubdir, basePath);
+            // Update navigation links — always absolute clean URLs
+            this.updateNavigationPaths(false, '');
+
 
             // Set active nav link based on current page
             this.setActiveNavLink();
@@ -143,40 +134,31 @@ class I18n {
     }
 
     updateNavigationPaths(isInSubdir, basePath = '') {
-        // If basePath is provided (e.g. '../../'), use it for root links.
-        // If not, calculate default behavior.
-        if (basePath === '' && isInSubdir) basePath = '../';
-
-        const rootPath = basePath;
-        const pagesPath = basePath + 'pages/';
-
-        // Update links
+        // With clean URLs all pages live at root level (/auctions, /collection, etc.)
+        // Use absolute paths so links work correctly from any page depth.
         const links = {
-            'logo-link':     `${rootPath}/`,
-            'auctions-link': `${pagesPath}/auctions`,
-            'collection-link': `${pagesPath}/collection`,
-            'about-link':    `${pagesPath}/about-us`,
-            'contact-link':  `${pagesPath}/contact`,
-            'account-link':  `${pagesPath}/account`,
-            'admin-link':    `${pagesPath}/admin`,
-            'login-link':    `${pagesPath}/login`,
-            'register-link': `${pagesPath}/register`,
+            'logo-link':          '/',
+            'auctions-link':      '/auctions',
+            'collection-link':    '/collection',
+            'about-link':         '/about-us',
+            'contact-link':       '/contact',
+            'account-link':       '/account',
+            'admin-link':         '/admin',
+            'login-link':         '/login',
+            'register-link':      '/register',
             // User menu dropdown
-            'user-login-link':    `${pagesPath}/login`,
-            'user-register-link': `${pagesPath}/register`,
-            'user-forgot-link':   `${pagesPath}/login?forgot=1`,
-            'user-profile-link':  `${pagesPath}profile.html`,
-            'user-auctions-link': `${pagesPath}my-/auctions`,
-            'user-settings-link': `${pagesPath}settings.html`,
+            'user-login-link':    '/login',
+            'user-register-link': '/register',
+            'user-forgot-link':   '/login?forgot=1',
             // Mobile overlay mirrors
-            'm-auctions-link':   `${pagesPath}/auctions`,
-            'm-collection-link': `${pagesPath}/collection`,
-            'm-about-link':      `${pagesPath}/about-us`,
-            'm-contact-link':    `${pagesPath}/contact`,
-            'm-account-link':    `${pagesPath}/account`,
-            'm-admin-link':      `${pagesPath}/admin`,
-            'm-login-link':      `${pagesPath}/login`,
-            'm-register-link':   `${pagesPath}/register`
+            'm-auctions-link':    '/auctions',
+            'm-collection-link':  '/collection',
+            'm-about-link':       '/about-us',
+            'm-contact-link':     '/contact',
+            'm-account-link':     '/account',
+            'm-admin-link':       '/admin',
+            'm-login-link':       '/login',
+            'm-register-link':    '/register'
         };
 
         Object.entries(links).forEach(([id, href]) => {
@@ -184,12 +166,10 @@ class I18n {
             if (link) link.setAttribute('href', href);
         });
 
-        // Logo path is always logo_burgundy.png
-        // Home page appearance (white) is handled via CSS filter in landing.css:
-        // #landing-page .header .logo img { filter: brightness(0) invert(1) contrast(1.2); }
+        // Logo: always use absolute path
         const logoImg = document.querySelector('.logo img');
         if (logoImg) {
-            logoImg.src = `${rootPath}assets/images/logo_burgundy.png`;
+            logoImg.src = '/assets/images/logo_burgundy.png';
         }
     }
 
@@ -199,40 +179,27 @@ class I18n {
         if (!footerContainer) return;
 
         try {
-            // Determine root path based on current location
-            // Simple heuristic: count depth from root
-            // We assume frontend/ is root. 
-            // paths: // (depth 0), //auctions (depth 1), //about (depth 2)
-
-            const path = window.location.pathname;
-            // Determine depth by checking for /pages/ and /info/
-            let rootPath = './';
-            if (path.includes('/pages/info/') || path.includes('\\pages\\info\\')) {
-                rootPath = '../../';
-            } else if (path.includes('/pages/') || path.includes('\\pages\\')) {
-                rootPath = '../';
-            }
-
-            const response = await fetch(`${rootPath}partials/footer.html?v=${new Date().getTime()}`);
+            // With clean URLs all pages are at root level — always fetch from /partials/
+            const response = await fetch(`/partials/footer.html?v=${new Date().getTime()}`);
             if (!response.ok) throw new Error('Footer not found');
 
             const html = await response.text();
             footerContainer.innerHTML = html;
 
-            // Update footer links to be relative to current page
-            // The partial has links like "/about" (relative to root)
-            // We need to prepend rootPath to them?
-            // If rootPath is './', links are "pages/info/..." (Correct for /)
-            // If rootPath is '../', links become "../pages/info/..."
-            // From /auctions: "/about" -> goes up to root, then down to pages/info. Correct.
-            // If rootPath is '../../', links become "../../pages/info/..."
-            // From /about: "/about" -> goes up to root, then down. Correct.
-
+            // Footer links that are already absolute (/about-us, /contact etc.)
+            // work correctly from any page — no path manipulation needed.
+            // Only fix relative links (without leading /) that might remain.
             const links = footerContainer.querySelectorAll('a');
             links.forEach(link => {
                 const href = link.getAttribute('href');
-                if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
-                    link.setAttribute('href', rootPath + href);
+                if (href
+                    && !href.startsWith('http')
+                    && !href.startsWith('#')
+                    && !href.startsWith('/')
+                    && !href.startsWith('mailto:')
+                ) {
+                    // Make relative link absolute
+                    link.setAttribute('href', '/' + href);
                 }
             });
 
@@ -265,17 +232,8 @@ class I18n {
                 return;
             }
 
-            // Determine root path based on current location
-            const path = window.location.pathname;
-            let basePath = '';
-
-            if (path.includes('/pages/info/') || path.includes('\\pages\\info\\')) {
-                basePath = '../../';
-            } else if (path.includes('/pages/') || path.includes('\\pages\\')) {
-                basePath = '../';
-            }
-
-            const response = await fetch(`${basePath}locales/${lang}.json?v=${new Date().getTime()}`);
+            // With clean URLs, always load translations from /locales/ (absolute)
+            const response = await fetch(`/locales/${lang}.json?v=${new Date().getTime()}`);
             if (!response.ok) {
                 throw new Error(`Failed to load ${lang} translations`);
             }
