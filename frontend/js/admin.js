@@ -612,14 +612,18 @@ function editAuction(auctionId) {
         const submitBtn = form.querySelector('button[type="submit"]');
         if (submitBtn) submitBtn.textContent = t('admin.updateAuction');
 
-        // Restore placement mode for this lot
-        if (typeof window._adminRestorePlacementMode === 'function') {
-            window._adminRestorePlacementMode(lot);
-        }
         // Scroll to form
         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }).catch(error => {
         console.error('Failed to load auction for editing:', error);
+        // Leave the form in create mode. If it kept a stale editingId, the next
+        // submit would silently PATCH this auction instead of creating a new one.
+        const form = document.getElementById('auction-form');
+        if (form) {
+            form.dataset.editingId = '';
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.textContent = t('admin.createAuction');
+        }
         showError(t('notifications.failedLoadAuctionDetails'));
     });
 }
@@ -788,10 +792,22 @@ function editLot(lotId) {
         const submitBtn = form.querySelector('button[type="submit"]');
         if (submitBtn) submitBtn.textContent = t('admin.updateLot');
 
+        // Restore placement mode (gallery / auction / both) for this lot
+        if (typeof window._adminRestorePlacementMode === 'function') {
+            window._adminRestorePlacementMode(lot);
+        }
+
         // Scroll to form
         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }).catch(error => {
         console.error('Failed to load lot for editing:', error);
+        // Same guard as editAuction — never leave a stale editingId behind.
+        const form = document.getElementById('lot-form');
+        if (form) {
+            form.dataset.editingId = '';
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.textContent = t('admin.createLot');
+        }
         showError(t('notifications.failedLoadLotDetails'));
     });
 }
