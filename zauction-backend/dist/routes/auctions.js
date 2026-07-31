@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const database_1 = require("../config/database");
+const imageResponse_1 = require("../utils/imageResponse");
 const router = (0, express_1.Router)();
 // Get auctions (public)
 router.get('/', async (req, res) => {
@@ -48,11 +49,31 @@ router.get('/', async (req, res) => {
             query += ' ORDER BY a.end_date ASC';
         }
         const result = await database_1.pool.query(query, params);
-        res.json({ auctions: result.rows });
+        // Return an image URL instead of inlined base64 — see utils/imageResponse.
+        const auctions = result.rows.map((auction) => ({
+            ...auction,
+            image_data: (0, imageResponse_1.toImageRef)(auction.image_data, `/api/auctions/${auction.id}/image`)
+        }));
+        res.json({ auctions });
     }
     catch (error) {
         console.error('Get auctions error:', error);
         res.status(500).json({ error: 'Failed to get auctions' });
+    }
+});
+// Auction cover image — served as a real HTTP image so it can be cached and
+// lazy-loaded, rather than inlined as base64 into every JSON response.
+router.get('/:id/image', async (req, res) => {
+    try {
+        const result = await database_1.pool.query('SELECT image_data FROM auctions WHERE id = $1', [req.params.id]);
+        if (result.rows.length === 0) {
+            return res.redirect('/assets/images/og-default.png');
+        }
+        return (0, imageResponse_1.sendStoredImage)(res, result.rows[0].image_data);
+    }
+    catch (error) {
+        console.error('Auction image error:', error);
+        return res.redirect('/assets/images/og-default.png');
     }
 });
 // Get single auction (public)
@@ -69,7 +90,9 @@ router.get('/:id', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Auction not found' });
         }
-        res.json({ auction: result.rows[0] });
+        const auction = result.rows[0];
+        auction.image_data = (0, imageResponse_1.toImageRef)(auction.image_data, `/api/auctions/${auction.id}/image`);
+        res.json({ auction });
     }
     catch (error) {
         console.error('Get auction error:', error);
@@ -80,7 +103,11 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/lots', async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await database_1.pool.query(`SELECT l.*, a.end_date, a.image_data as auction_image,
+        const result = await database_1.pool.query(
+        // a.end_date MUST stay aliased: selected bare alongside l.* it overwrites
+        // the lot's own end_date on the result row, which made every lot on this
+        // page count down to the auction's date instead of its own.
+        `SELECT l.*, a.end_date as auction_end_date,
         l.title_en, l.title_ar, l.description_en, l.description_ar,
         l.category_en, l.category_ar,
         (SELECT COUNT(*) FROM lot_media WHERE lot_id = l.id) as media_count,
@@ -92,7 +119,12 @@ router.get('/:id/lots', async (req, res) => {
        JOIN auctions a ON l.auction_id = a.id
        WHERE l.auction_id = $1
        ORDER BY l.lot_number ASC`, [id]);
-        res.json({ lots: result.rows });
+        const lots = result.rows.map((lot) => ({
+            ...lot,
+            primary_image: (0, imageResponse_1.toImageRef)(lot.primary_image, `/api/lots/${lot.id}/og-image`),
+            image_data: (0, imageResponse_1.toImageRef)(lot.image_data, `/api/lots/${lot.id}/og-image`)
+        }));
+        res.json({ lots });
     }
     catch (error) {
         console.error('Get auction lots error:', error);

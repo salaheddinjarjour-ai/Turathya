@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const database_1 = require("../config/database");
+const imageResponse_1 = require("../utils/imageResponse");
 const router = (0, express_1.Router)();
 // Get all lots (public)
 router.get('/', async (req, res) => {
@@ -12,7 +13,6 @@ router.get('/', async (req, res) => {
                 a.title as auction_title,
                 a.start_date as auction_start_date,
                 a.end_date   as auction_end_date,
-                a.image_data as auction_image,
                 l.auction_id as category_id,
                 a.title      as category_title,
                 l.title_en, l.title_ar, l.description_en, l.description_ar,
@@ -47,7 +47,13 @@ router.get('/', async (req, res) => {
         }
         query += ' ORDER BY l.created_at DESC';
         const result = await database_1.pool.query(query, params);
-        res.json({ lots: result.rows });
+        // Hand back image URLs rather than inlined base64 — see utils/imageResponse.
+        const lots = result.rows.map((lot) => ({
+            ...lot,
+            primary_image: (0, imageResponse_1.toImageRef)(lot.primary_image, `/api/lots/${lot.id}/og-image`),
+            image_data: (0, imageResponse_1.toImageRef)(lot.image_data, `/api/lots/${lot.id}/og-image`)
+        }));
+        res.json({ lots });
     }
     catch (error) {
         console.error('Get lots error:', error);
@@ -86,6 +92,9 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Lot not found' });
         }
         const lot = lotResult.rows[0];
+        // Swap inlined base64 for image URLs — see utils/imageResponse.
+        lot.image_data = (0, imageResponse_1.toImageRef)(lot.image_data, `/api/lots/${lot.id}/og-image`);
+        lot.auction_image = (0, imageResponse_1.toImageRef)(lot.auction_image, `/api/auctions/${lot.auction_id}/image`);
         // Get media
         const mediaResult = await database_1.pool.query('SELECT * FROM lot_media WHERE lot_id = $1 ORDER BY display_order', [id]);
         lot.media = mediaResult.rows;
@@ -131,30 +140,10 @@ router.get('/:id/og-image', async (req, res) => {
             FROM lots l
             WHERE l.id = $1
         `, [id]);
-        if (result.rows.length === 0 || !result.rows[0].primary_image) {
-            // Redirect to default OG image
+        if (result.rows.length === 0) {
             return res.redirect('/assets/images/og-default.png');
         }
-        const img = result.rows[0].primary_image;
-        // External URL — redirect to it
-        if (!img.startsWith('data:')) {
-            res.setHeader('Cache-Control', 'public, max-age=86400');
-            return res.redirect(img);
-        }
-        // data: URI — decode and serve as real image
-        // Format: data:<mimeType>;base64,<data>
-        const matches = img.match(/^data:([^;]+);base64,(.+)$/s);
-        if (!matches) {
-            return res.redirect('/assets/images/og-default.png');
-        }
-        const mimeType = matches[1]; // e.g. "image/jpeg"
-        const base64Data = matches[2];
-        const buffer = Buffer.from(base64Data, 'base64');
-        res.setHeader('Content-Type', mimeType);
-        res.setHeader('Content-Length', buffer.length);
-        res.setHeader('Cache-Control', 'public, max-age=86400'); // 24h cache
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        res.send(buffer);
+        return (0, imageResponse_1.sendStoredImage)(res, result.rows[0].primary_image);
     }
     catch (error) {
         console.error('OG image error:', error);
