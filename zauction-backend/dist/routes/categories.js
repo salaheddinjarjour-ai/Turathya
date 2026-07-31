@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const database_1 = require("../config/database");
+const imageResponse_1 = require("../utils/imageResponse");
 const router = (0, express_1.Router)();
 // Get categories (public)
 router.get('/', async (req, res) => {
@@ -45,7 +46,12 @@ router.get('/', async (req, res) => {
             query += ' ORDER BY a.created_at DESC';
         }
         const result = await database_1.pool.query(query, params);
-        res.json({ categories: result.rows });
+        // Image URLs rather than inlined base64 — see utils/imageResponse.
+        const categories = result.rows.map((category) => ({
+            ...category,
+            image_data: (0, imageResponse_1.toImageRef)(category.image_data, `/api/auctions/${category.id}/image`)
+        }));
+        res.json({ categories });
     }
     catch (error) {
         console.error('Get categories error:', error);
@@ -68,7 +74,9 @@ router.get('/:id', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Category not found' });
         }
-        res.json({ category: result.rows[0] });
+        const category = result.rows[0];
+        category.image_data = (0, imageResponse_1.toImageRef)(category.image_data, `/api/auctions/${category.id}/image`);
+        res.json({ category });
     }
     catch (error) {
         console.error('Get category error:', error);
@@ -79,9 +87,14 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/products', async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await database_1.pool.query(`SELECT l.*,
-        a.title as category_title, a.image_data as category_image,
-        a.start_date, a.end_date,
+        const result = await database_1.pool.query(
+        // a.start_date / a.end_date MUST stay aliased: selected bare alongside
+        // l.* they overwrite each lot's own dates on the result row, which made
+        // every product here inherit the category's timing instead of its own.
+        `SELECT l.*,
+        a.title as category_title,
+        a.start_date as category_start_date,
+        a.end_date   as category_end_date,
         l.title_en, l.title_ar, l.description_en, l.description_ar,
         l.category_en, l.category_ar,
         l.auction_id as category_id,
@@ -94,7 +107,12 @@ router.get('/:id/products', async (req, res) => {
        JOIN auctions a ON l.auction_id = a.id
        WHERE l.auction_id = $1
        ORDER BY l.lot_number ASC`, [id]);
-        res.json({ products: result.rows });
+        const products = result.rows.map((product) => ({
+            ...product,
+            primary_image: (0, imageResponse_1.toImageRef)(product.primary_image, `/api/lots/${product.id}/og-image`),
+            image_data: (0, imageResponse_1.toImageRef)(product.image_data, `/api/lots/${product.id}/og-image`)
+        }));
+        res.json({ products });
     }
     catch (error) {
         console.error('Get category products error:', error);
