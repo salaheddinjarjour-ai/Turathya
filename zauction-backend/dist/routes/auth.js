@@ -11,13 +11,61 @@ const google_auth_library_1 = require("google-auth-library");
 const crypto_1 = require("crypto");
 const prisma_1 = require("../config/prisma");
 const auth_1 = require("../middleware/auth");
+const rateLimit_1 = require("../middleware/rateLimit");
 const whatsappBridge_1 = require("../services/whatsappBridge");
 const router = (0, express_1.Router)();
 const googleClient = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// A 6-digit OTP is only ~1M combinations, so the code alone is not a secret —
+// it is a secret *plus* a strict attempt budget. Without the budget it can be
+// enumerated inside the validity window.
+const MAX_OTP_ATTEMPTS = 5;
 const pendingRegistrations = new Map();
 const pendingResets = new Map();
+// Expired entries are otherwise only dropped when that exact phone number is
+// looked up again, so abandoned registrations accumulate for the life of the
+// process. Sweep them on a timer instead.
+const otpSweeper = setInterval(() => {
+    const now = Date.now();
+    for (const [key, pending] of pendingRegistrations) {
+        if (now > pending.expiresAt) {
+            pendingRegistrations.delete(key);
+        }
+    }
+    for (const [key, pending] of pendingResets) {
+        if (now > pending.expiresAt) {
+            pendingResets.delete(key);
+        }
+    }
+}, 5 * 60 * 1000);
+otpSweeper.unref();
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 const PHONE_REGEX = /^\+?[0-9]{6,15}$/;
+// ── Rate limits ────────────────────────────────────────────────────────────
+// Sending an OTP costs a real WhatsApp message, so cap it both per target
+// number (stops flooding one victim from many IPs) and per IP (stops one host
+// flooding many numbers). Verify/login limits blunt online guessing; the hard
+// stop on OTP guessing is the per-code attempt budget above.
+const otpRequestPerPhoneLimiter = (0, rateLimit_1.rateLimit)({
+    windowMs: 60 * 60 * 1000,
+    max: 5,
+    message: 'Too many codes requested for this number. Please try again later.',
+    keyGenerator: (req) => `phone:${normalizePhone(String(req.body?.phone || ''))}`
+});
+const otpRequestPerIpLimiter = (0, rateLimit_1.rateLimit)({
+    windowMs: 60 * 60 * 1000,
+    max: 20,
+    message: 'Too many verification codes requested. Please try again later.'
+});
+const otpVerifyLimiter = (0, rateLimit_1.rateLimit)({
+    windowMs: 10 * 60 * 1000,
+    max: 15,
+    message: 'Too many verification attempts. Please try again later.'
+});
+const loginLimiter = (0, rateLimit_1.rateLimit)({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: 'Too many login attempts. Please try again in a few minutes.'
+});
 function normalizePhone(phone) {
     return phone.replace(/[\s\-()]/g, '');
 }
@@ -45,6 +93,24 @@ function formatUserResponse(user) {
 }
 function generateOtp() {
     return (0, crypto_1.randomInt)(100000, 999999).toString();
+}
+/** Compare OTPs without leaking the match position through timing. */
+function otpMatches(expected, provided) {
+    const a = Buffer.from(String(expected), 'utf8');
+    const b = Buffer.from(String(provided), 'utf8');
+    if (a.length !== b.length) {
+        return false;
+    }
+    return (0, crypto_1.timingSafeEqual)(a, b);
+}
+/**
+ * Record a failed OTP attempt. Returns true once the budget is spent, at which
+ * point the caller must discard the pending record so the code cannot be
+ * guessed any further.
+ */
+function attemptsExhausted(pending) {
+    pending.attempts += 1;
+    return pending.attempts >= MAX_OTP_ATTEMPTS;
 }
 function isWhatsAppOtpEnabled() {
     return process.env.WHATSAPP_OTP_ENABLED !== 'false';
@@ -89,7 +155,7 @@ function getPendingRegistration(phone) {
     return pending;
 }
 // Request OTP for registration
-router.post('/register/request-otp', [
+router.post('/register/request-otp', otpRequestPerIpLimiter, otpRequestPerPhoneLimiter, [
     (0, express_validator_1.body)('password').matches(PASSWORD_REGEX).withMessage('Password must be at least 8 characters and include uppercase, lowercase, number, and special character'),
     (0, express_validator_1.body)('confirm_password').custom((value, { req }) => {
         if (value !== req.body.password) {
@@ -138,7 +204,8 @@ router.post('/register/request-otp', [
             phone: normalizedPhone,
             passwordHash,
             otp,
-            expiresAt
+            expiresAt,
+            attempts: 0
         });
         if (isWhatsAppOtpEnabled()) {
             await sendOtpViaWhatsApp(normalizedPhone, otp);
@@ -156,7 +223,7 @@ router.post('/register/request-otp', [
     }
 });
 // Verify OTP and complete registration
-router.post('/register/verify-otp', [
+router.post('/register/verify-otp', otpVerifyLimiter, [
     (0, express_validator_1.body)('phone').trim().notEmpty().withMessage('Phone number is required').custom((value) => {
         const normalized = normalizePhone(value);
         if (!PHONE_REGEX.test(normalized)) {
@@ -180,7 +247,13 @@ router.post('/register/verify-otp', [
         if (!pending) {
             return res.status(400).json({ error: 'OTP expired or not requested' });
         }
-        if (pending.otp !== otp) {
+        if (!otpMatches(pending.otp, otp)) {
+            if (attemptsExhausted(pending)) {
+                pendingRegistrations.delete(normalizedPhone);
+                return res.status(400).json({
+                    error: 'Too many incorrect attempts. Please request a new code.'
+                });
+            }
             return res.status(400).json({ error: 'Invalid OTP' });
         }
         const existingUser = await prisma_1.prisma.user.findFirst({ where: { phone: normalizedPhone } });
@@ -403,7 +476,7 @@ router.post('/register', [
     }
 });
 // ── Forgot Password: Request OTP ──────────────────────────────────────────
-router.post('/forgot-password/request-otp', [
+router.post('/forgot-password/request-otp', otpRequestPerIpLimiter, otpRequestPerPhoneLimiter, [
     (0, express_validator_1.body)('phone').trim().notEmpty().withMessage('Phone number is required').custom((value) => {
         if (!PHONE_REGEX.test(normalizePhone(value)))
             throw new Error('Phone number format is invalid');
@@ -425,7 +498,8 @@ router.post('/forgot-password/request-otp', [
         pendingResets.set(normalizedPhone, {
             phone: normalizedPhone,
             otp,
-            expiresAt: Date.now() + 10 * 60 * 1000 // 10 min
+            expiresAt: Date.now() + 10 * 60 * 1000, // 10 min
+            attempts: 0
         });
         if (isWhatsAppOtpEnabled()) {
             await sendOtpViaWhatsApp(normalizedPhone, otp);
@@ -441,7 +515,7 @@ router.post('/forgot-password/request-otp', [
     }
 });
 // ── Forgot Password: Reset ─────────────────────────────────────────────────
-router.post('/forgot-password/reset', [
+router.post('/forgot-password/reset', otpVerifyLimiter, [
     (0, express_validator_1.body)('phone').trim().notEmpty().custom((value) => {
         if (!PHONE_REGEX.test(normalizePhone(value)))
             throw new Error('Invalid phone number');
@@ -465,7 +539,13 @@ router.post('/forgot-password/reset', [
             pendingResets.delete(normalizedPhone);
             return res.status(400).json({ error: 'OTP expired or not requested. Please start over.' });
         }
-        if (pending.otp !== otp) {
+        if (!otpMatches(pending.otp, otp)) {
+            if (attemptsExhausted(pending)) {
+                pendingResets.delete(normalizedPhone);
+                return res.status(400).json({
+                    error: 'Too many incorrect attempts. Please start over.'
+                });
+            }
             return res.status(400).json({ error: 'Invalid OTP. Please check the code and try again.' });
         }
         // Find user
@@ -488,7 +568,7 @@ router.post('/forgot-password/reset', [
     }
 });
 // Login
-router.post('/login', [
+router.post('/login', loginLimiter, [
     (0, express_validator_1.body)('phone').trim().notEmpty().withMessage('Phone number is required').custom((value) => {
         const normalized = normalizePhone(value);
         if (!PHONE_REGEX.test(normalized)) {

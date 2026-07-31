@@ -28,31 +28,31 @@ model User {
 }
 
 model Auction {
-  id             String        @id @default(uuid()) @db.Uuid
-  title          String        @db.VarChar(255)
-  description    String?
-  category       String?       @db.VarChar(100)
-  location       String?       @db.VarChar(255)
-  titleEn        String?       @map("title_en") @db.VarChar(255)
-  titleAr        String?       @map("title_ar") @db.VarChar(255)
-  descriptionEn  String?       @map("description_en")
-  descriptionAr  String?       @map("description_ar")
-  categoryEn     String?       @map("category_en") @db.VarChar(100)
-  categoryAr     String?       @map("category_ar") @db.VarChar(100)
-  locationEn     String?       @map("location_en") @db.VarChar(255)
-  locationAr     String?       @map("location_ar") @db.VarChar(255)
-  startDate      DateTime?     @map("start_date") @db.Timestamptz(6)
-  endDate        DateTime?     @map("end_date")   @db.Timestamptz(6)
-  buyersPremium  Decimal       @default(0) @map("buyers_premium") @db.Decimal(5, 2)
-  imageUrl       String?       @map("image_url") @db.VarChar(500)
-  featured       Boolean       @default(false)
-  status         AuctionStatus @default(upcoming)
-  createdBy      String?       @map("created_by") @db.Uuid
-  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
-  image_data     String?
-  creator        User?         @relation(fields: [createdBy], references: [id])
-  lots           Lot[]
+  id            String        @id @default(uuid()) @db.Uuid
+  title         String        @db.VarChar(255)
+  description   String?
+  category      String?       @db.VarChar(100)
+  location      String?       @db.VarChar(255)
+  titleEn       String?       @map("title_en") @db.VarChar(255)
+  titleAr       String?       @map("title_ar") @db.VarChar(255)
+  descriptionEn String?       @map("description_en")
+  descriptionAr String?       @map("description_ar")
+  categoryEn    String?       @map("category_en") @db.VarChar(100)
+  categoryAr    String?       @map("category_ar") @db.VarChar(100)
+  locationEn    String?       @map("location_en") @db.VarChar(255)
+  locationAr    String?       @map("location_ar") @db.VarChar(255)
+  startDate     DateTime?     @map("start_date") @db.Timestamptz(6)
+  endDate       DateTime?     @map("end_date") @db.Timestamptz(6)
+  buyersPremium Decimal       @default(0) @map("buyers_premium") @db.Decimal(5, 2)
+  imageUrl      String?       @map("image_url") @db.VarChar(500)
+  featured      Boolean       @default(false)
+  status        AuctionStatus @default(upcoming)
+  createdBy     String?       @map("created_by") @db.Uuid
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  image_data    String?
+  creator       User?         @relation(fields: [createdBy], references: [id])
+  lots          Lot[]
 
   @@index([status])
   @@index([endDate])
@@ -88,10 +88,12 @@ model Lot {
   bidCount      Int         @default(0) @map("bid_count")
   status        LotStatus   @default(active)
   startDate     DateTime?   @map("start_date") @db.Timestamptz(6)
-  endDate       DateTime?   @map("end_date")   @db.Timestamptz(6)
+  endDate       DateTime?   @map("end_date") @db.Timestamptz(6)
   createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
   image_data    String?
+  showInGallery Boolean     @default(false) @map("show_in_gallery")
+  isFeatured    Boolean     @default(false) @map("is_featured")
   bids          Bid[]
   media         LotMedia[]
   auction       Auction     @relation(fields: [auctionId], references: [id], onDelete: Cascade)

@@ -9,6 +9,7 @@ const multer_1 = __importDefault(require("multer"));
 const cloudinary_1 = require("cloudinary");
 const database_1 = require("../../config/database");
 const auth_1 = require("../../middleware/auth");
+const buildUpdate_1 = require("../../utils/buildUpdate");
 const whatsappBridge_1 = require("../../services/whatsappBridge");
 const router = (0, express_1.Router)();
 // Configure Cloudinary
@@ -161,15 +162,16 @@ router.patch('/:id', async (req, res) => {
                 }
             }
         }
-        const fields = Object.keys(updates);
+        const { fields, rejected, setClause, values } = (0, buildUpdate_1.buildUpdateSet)(updates, buildUpdate_1.LOT_UPDATABLE_COLUMNS);
         if (fields.length === 0) {
-            return res.status(400).json({ error: 'No fields to update' });
+            return res.status(400).json({
+                error: 'No updatable fields provided',
+                ...(rejected.length ? { rejected_fields: rejected } : {})
+            });
         }
-        const setClause = fields.map((field, idx) => `${field} = $${idx + 2}`).join(', ');
-        const values = [id, ...fields.map(field => updates[field])];
         const result = await database_1.pool.query(`UPDATE lots SET ${setClause}, updated_at = NOW()
        WHERE id = $1
-       RETURNING *`, values);
+       RETURNING *`, [id, ...values]);
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Lot not found' });
         }

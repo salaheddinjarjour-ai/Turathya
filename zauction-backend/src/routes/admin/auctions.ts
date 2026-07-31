@@ -4,6 +4,7 @@ import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { pool } from '../../config/database';
 import { authenticate, requireAdmin, AuthRequest } from '../../middleware/auth';
+import { buildUpdateSet, AUCTION_UPDATABLE_COLUMNS } from '../../utils/buildUpdate';
 import { notifyAuctionFeatured, notifyNewAuctionCreated } from '../../services/whatsappBridge';
 
 const router = Router();
@@ -150,14 +151,17 @@ router.patch('/:id',
             const { id } = req.params;
             const updates = req.body;
 
-            // Build dynamic update query
-            const fields = Object.keys(updates);
+            // Build dynamic update query from allowlisted columns only
+            const { fields, rejected, setClause, values: setValues } =
+                buildUpdateSet(updates, AUCTION_UPDATABLE_COLUMNS);
             if (fields.length === 0) {
-                return res.status(400).json({ error: 'No fields to update' });
+                return res.status(400).json({
+                    error: 'No updatable fields provided',
+                    ...(rejected.length ? { rejected_fields: rejected } : {})
+                });
             }
 
-            const setClause = fields.map((field, idx) => `${field} = $${idx + 2}`).join(', ');
-            const values = [id, ...fields.map(field => updates[field])];
+            const values = [id, ...setValues];
 
             const result = await pool.query(
                 `UPDATE auctions SET ${setClause}, updated_at = NOW()

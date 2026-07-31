@@ -4,6 +4,7 @@ import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { pool } from '../../config/database';
 import { authenticate, requireAdmin, AuthRequest } from '../../middleware/auth';
+import { buildUpdateSet, LOT_UPDATABLE_COLUMNS } from '../../utils/buildUpdate';
 import { notifyNewLotCreated } from '../../services/whatsappBridge';
 
 const router = Router();
@@ -209,19 +210,19 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
             }
         }
 
-        const fields = Object.keys(updates);
+        const { fields, rejected, setClause, values } = buildUpdateSet(updates, LOT_UPDATABLE_COLUMNS);
         if (fields.length === 0) {
-            return res.status(400).json({ error: 'No fields to update' });
+            return res.status(400).json({
+                error: 'No updatable fields provided',
+                ...(rejected.length ? { rejected_fields: rejected } : {})
+            });
         }
-
-        const setClause = fields.map((field, idx) => `${field} = $${idx + 2}`).join(', ');
-        const values = [id, ...fields.map(field => updates[field])];
 
         const result = await pool.query(
             `UPDATE lots SET ${setClause}, updated_at = NOW()
        WHERE id = $1
        RETURNING *`,
-            values
+            [id, ...values]
         );
 
         if (result.rows.length === 0) {

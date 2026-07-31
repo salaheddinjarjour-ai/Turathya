@@ -29,6 +29,12 @@ const liveAuctionNotifier_1 = require("./services/liveAuctionNotifier");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
+// We sit behind nginx on the VPS, so the socket address is always 127.0.0.1.
+// Trusting one proxy hop makes req.ip resolve to the real client via
+// X-Forwarded-For, which the rate limiters key on. This requires nginx to send
+// `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;` — without it
+// every client collapses into a single rate-limit bucket.
+app.set('trust proxy', 1);
 function normalizeOrigin(url) {
     return url.replace(/\/+$/, '').trim();
 }

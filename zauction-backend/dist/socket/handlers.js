@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeSocketHandlers = initializeSocketHandlers;
-const database_1 = require("../config/database");
 function initializeSocketHandlers(io) {
     io.on('connection', (socket) => {
         console.log('Client connected:', socket.id);
@@ -15,31 +14,11 @@ function initializeSocketHandlers(io) {
             socket.leave(`lot-${lotId}`);
             console.log(`Socket ${socket.id} left lot-${lotId}`);
         });
-        // Handle new bid
-        socket.on('new-bid', async (data) => {
-            try {
-                const { lotId, userId, amount } = data;
-                // Get updated lot information
-                const result = await database_1.pool.query(`SELECT l.*, 
-                        (SELECT COUNT(*) FROM bids WHERE lot_id = l.id) as bid_count
-                     FROM lots l
-                     WHERE l.id = $1`, [lotId]);
-                if (result.rows.length > 0) {
-                    const lot = result.rows[0];
-                    // Broadcast to all clients in this lot's room
-                    io.to(`lot-${lotId}`).emit('lot-updated', {
-                        lotId,
-                        currentBid: lot.current_bid,
-                        bidCount: lot.bid_count,
-                        highestBidderId: lot.highest_bidder_id
-                    });
-                }
-            }
-            catch (error) {
-                console.error('Error handling new bid:', error);
-                socket.emit('bid-error', { message: 'Failed to process bid update' });
-            }
-        });
+        // NOTE: there is deliberately no client-triggered 'new-bid' handler here.
+        // Socket connections are unauthenticated (lot rooms carry public data
+        // only), so an inbound event was a free way for any anonymous client to
+        // make the server fan out a broadcast. The authoritative broadcast is
+        // emitted by POST /api/bids once the bid transaction commits.
         socket.on('disconnect', () => {
             console.log('Client disconnected:', socket.id);
         });

@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import multer from 'multer';
 import { pool } from '../../config/database';
 import { authenticate, requireAdmin, AuthRequest } from '../../middleware/auth';
+import { buildUpdateSet, AUCTION_UPDATABLE_COLUMNS } from '../../utils/buildUpdate';
 
 const router = Router();
 
@@ -123,19 +124,21 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
         const { id } = req.params;
         const updates = req.body;
 
-        const fields = Object.keys(updates);
+        // Categories are rows in the auctions table, so they share its allowlist.
+        const { fields, rejected, setClause, values } =
+            buildUpdateSet(updates, AUCTION_UPDATABLE_COLUMNS);
         if (fields.length === 0) {
-            return res.status(400).json({ error: 'No fields to update' });
+            return res.status(400).json({
+                error: 'No updatable fields provided',
+                ...(rejected.length ? { rejected_fields: rejected } : {})
+            });
         }
-
-        const setClause = fields.map((field, idx) => `${field} = $${idx + 2}`).join(', ');
-        const values = [id, ...fields.map((field) => updates[field])];
 
         const result = await pool.query(
             `UPDATE auctions SET ${setClause}, updated_at = NOW()
          WHERE id = $1
          RETURNING *, id as category_id`,
-            values
+            [id, ...values]
         );
 
         if (result.rows.length === 0) {
