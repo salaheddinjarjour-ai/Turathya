@@ -65,20 +65,36 @@ router.get('/', async (req, res) => {
 });
 // Create lot
 router.post('/', [
-    (0, express_validator_1.body)('auction_id').optional().isUUID(),
-    (0, express_validator_1.body)('category_id').optional().isUUID(),
-    (0, express_validator_1.body)('lot_number').isInt({ min: 1 }),
-    (0, express_validator_1.body)('title').trim().notEmpty(),
-    (0, express_validator_1.body)('starting_bid').isFloat({ min: 0 }),
-    (0, express_validator_1.body)('bid_increment').optional().isFloat({ min: 0 }),
-    (0, express_validator_1.body)('start_date').optional().isISO8601(),
-    (0, express_validator_1.body)('end_date').optional().isISO8601(),
+    // NOTE: `optional()` alone only skips `undefined`. The admin form sends
+    // explicit nulls for every field the user left blank, so each of these
+    // needs `nullable: true` — otherwise a gallery-only lot (no dates, no
+    // starting bid) is rejected with a 400 that the UI cannot explain.
+    (0, express_validator_1.body)('auction_id').optional({ nullable: true }).isUUID(),
+    (0, express_validator_1.body)('category_id').optional({ nullable: true }).isUUID(),
+    (0, express_validator_1.body)('lot_number').isInt({ min: 1 }).withMessage('Lot number is required and must be a positive whole number.'),
+    (0, express_validator_1.body)('title').trim().notEmpty().withMessage('A title is required (English or Arabic).'),
+    // Optional: gallery-only pieces are displayed for enquiry and never bid on.
+    (0, express_validator_1.body)('starting_bid').optional({ nullable: true }).isFloat({ min: 0 }),
+    (0, express_validator_1.body)('bid_increment').optional({ nullable: true }).isFloat({ min: 0 }),
+    (0, express_validator_1.body)('start_date').optional({ nullable: true }).isISO8601(),
+    (0, express_validator_1.body)('end_date').optional({ nullable: true }).isISO8601(),
     // Custom: both dates must be provided together
     (0, express_validator_1.body)('start_date').custom((val, { req }) => {
         const has_start = !!val;
         const has_end = !!(req.body?.end_date);
         if (has_start !== has_end)
             throw new Error('Both start_date and end_date must be provided together, or neither.');
+        return true;
+    }),
+    // A lot with a bidding window must also have a starting bid, or it renders
+    // a countdown that nothing can be bid against. This mirrors the
+    // `lot_has_auction` rule in routes/lots.ts and the guard in routes/bids.ts.
+    (0, express_validator_1.body)('starting_bid').custom((val, { req }) => {
+        const hasWindow = !!(req.body?.start_date && req.body?.end_date);
+        const hasBid = val !== null && val !== undefined && val !== '' && Number(val) > 0;
+        if (hasWindow && !hasBid) {
+            throw new Error('An auction item needs a starting bid greater than 0.');
+        }
         return true;
     })
 ], async (req, res) => {

@@ -58,7 +58,17 @@ async function apiRequest(endpoint, options = {}) {
     const data = await response.json();
 
     if (!response.ok) {
-        const error = new Error(data.error || 'Request failed');
+        // express-validator replies with { errors: [{ msg, path }] } rather than
+        // { error }. Without this the admin only ever saw "Request failed" and had
+        // no way to know which field was rejected.
+        let message = data.error;
+        if (!message && Array.isArray(data.errors) && data.errors.length) {
+            message = data.errors
+                .map(e => (e.path && e.msg ? `${e.path}: ${e.msg}` : e.msg))
+                .filter(Boolean)
+                .join(' · ');
+        }
+        const error = new Error(message || 'Request failed');
         error.response = data;
         throw error;
     }
